@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kenalan Dulu, Baru Desain! — Persona & Desain · SMP Kelas 7</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#453A4E; --ink-soft:#6B5F75; --cream:#FDF7EF;
+    --peach:#FFF1E8; --peach2:#FFCBB5;
+    --mint:#EAF7F0;  --mint2:#BFEAD2;
+    --butter:#FFF6DF;--butter2:#FFE39A;
+    --lav:#F3F0FC;   --lav2:#DCD2F7;
+    --pink:#FFF0F5;  --pink2:#FFC9DC;
+    --sky:#E9F1FB;   --sky2:#C5DCF2;
+    --coral:#FF7E67; --teal:#3FBF8F; --sun:#FFC531;
+    --shadow:6px 6px 0 var(--ink);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--ink);background:var(--cream);overflow:hidden}
+  h1,h2,h3,.disp{font-family:'Fredoka',sans-serif}
+
+  /* ===== CHROME ===== */
+  #bar{position:fixed;top:0;left:0;height:6px;background:var(--coral);width:0;z-index:60;transition:width .4s ease;border-radius:0 4px 4px 0}
+  .pagenum{position:fixed;left:26px;bottom:22px;z-index:60;font-family:'Fredoka';font-weight:600;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:7px 16px;box-shadow:4px 4px 0 var(--ink);font-size:14px;letter-spacing:.06em}
+  .dots{position:fixed;left:50%;transform:translateX(-50%);bottom:24px;z-index:60;display:flex;gap:9px}
+  .dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--ink);background:#fff;cursor:pointer;transition:.25s;padding:0}
+  .dot.on{background:var(--sun);transform:scale(1.35)}
+  .navbtns{position:fixed;right:26px;bottom:18px;z-index:60;display:flex;gap:10px}
+  .nav{width:52px;height:52px;border-radius:50%;background:#fff;border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink);cursor:pointer;display:grid;place-items:center;transition:.15s;color:var(--ink)}
+  .nav:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .nav:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+  .nav:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:4px 4px 0 var(--ink)}
+
+  /* ===== SLIDES ===== */
+  .slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transform:translateX(46px);transition:opacity .5s ease,transform .55s cubic-bezier(.22,.9,.32,1),visibility .5s;overflow:auto;padding:56px 40px 100px}
+  .slide.active{opacity:1;visibility:visible;transform:none;z-index:5}
+  .slide::before,.slide::after{content:'';position:absolute;border-radius:50%;z-index:0}
+  .slide::before{width:44vw;height:44vw;top:-20vw;right:-14vw;background:var(--bA);opacity:.75}
+  .slide::after{width:34vw;height:34vw;bottom:-16vw;left:-12vw;background:var(--bB);opacity:.7}
+  [data-theme="peach"] {background:var(--peach);--bA:var(--peach2);--bB:var(--butter2)}
+  [data-theme="cream"] {background:var(--cream);--bA:var(--mint2);--bB:var(--pink2)}
+  [data-theme="butter"]{background:var(--butter);--bA:var(--butter2);--bB:var(--mint2)}
+  [data-theme="mint"]  {background:var(--mint);--bA:var(--mint2);--bB:var(--peach2)}
+  [data-theme="lav"]   {background:var(--lav);--bA:var(--lav2);--bB:var(--peach2)}
+  [data-theme="pink"]  {background:var(--pink);--bA:var(--pink2);--bB:var(--sky2)}
+  [data-theme="sky"]   {background:var(--sky);--bA:var(--sky2);--bB:var(--butter2)}
+
+  .wrap{position:relative;z-index:2;width:min(1180px,100%)}
+  .anim{opacity:0}
+  .slide.active .anim{animation:rise .7s cubic-bezier(.22,.9,.32,1) forwards;animation-delay:calc(var(--d,0)*.09s)}
+  @keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+
+  .kicker{display:inline-flex;align-items:center;gap:8px;font-family:'Fredoka';font-weight:600;font-size:13px;letter-spacing:.14em;text-transform:uppercase;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:8px 18px;box-shadow:4px 4px 0 var(--ink)}
+  .kicker svg{width:16px;height:16px}
+  h2.title{font-size:clamp(30px,3.6vw,48px);font-weight:700;margin:18px 0 8px;line-height:1.12}
+  p.lead{font-size:clamp(15px,1.3vw,19px);color:var(--ink-soft);max-width:680px;font-weight:500}
+  .hl{background:linear-gradient(transparent 62%,var(--butter2) 62%);padding:0 3px;border-radius:3px}
+  .hl.m{background:linear-gradient(transparent 62%,var(--mint2) 62%)}
+  .hl.p{background:linear-gradient(transparent 62%,var(--pink2) 62%)}
+  .hl.l{background:linear-gradient(transparent 62%,var(--lav2) 62%)}
+  .card{background:#fff;border:3px solid var(--ink);border-radius:20px;box-shadow:var(--shadow)}
+  .btn{display:inline-flex;align-items:center;gap:10px;font-family:'Fredoka';font-weight:600;font-size:17px;color:var(--ink);background:var(--coral);border:3px solid var(--ink);border-radius:14px;padding:13px 26px;box-shadow:5px 5px 0 var(--ink);cursor:pointer;transition:.15s}
+  .btn svg{width:20px;height:20px}
+  .btn:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+  .btn.sun{background:var(--sun)} .btn.mint{background:var(--mint2)}
+  .hidden{display:none !important}
+  .deco{position:absolute;z-index:1;pointer-events:none;color:var(--ink);opacity:.55}
+  .deco svg{width:100%;height:100%}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}50%{transform:translateY(-14px) rotate(var(--r,0deg))}}
+  .bob{animation:bob 4.5s ease-in-out infinite}
+
+  /* ===== HERO ===== */
+  .s-hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center}
+  .badge-row{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap}
+  .badge{display:inline-flex;align-items:center;gap:8px;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:8px 16px;font-weight:700;font-size:14px;box-shadow:3px 3px 0 var(--ink)}
+  .badge svg{width:17px;height:17px}
+  .b1{background:var(--mint2)} .b2{background:var(--pink2)} .b3{background:var(--butter2)}
+  .art-stage{position:relative;display:grid;place-items:center;min-height:480px}
+  .art-stage>svg{width:min(400px,90%);filter:drop-shadow(8px 10px 0 rgba(69,58,78,.18))}
+  .fchip{position:absolute;display:grid;place-items:center;border:3px solid var(--ink);border-radius:50%;box-shadow:4px 4px 0 var(--ink)}
+  .fchip svg{width:52%;height:52%}
+  .fc1{width:74px;height:74px;background:var(--coral);color:#fff;top:36px;left:34px;--r:-8deg}
+  .fc2{width:64px;height:64px;background:var(--sun);top:118px;right:26px;--r:10deg}
+  .fc3{width:70px;height:70px;background:var(--teal);color:#fff;bottom:92px;left:14px;--r:6deg}
+  .fc4{width:60px;height:60px;background:var(--lav2);bottom:34px;right:48px;--r:-10deg}
+  .fc5{width:52px;height:52px;background:var(--pink2);top:8px;right:130px;--r:14deg}
+  .fc6{width:50px;height:50px;background:var(--mint2);top:200px;left:-4px;--r:0deg}
+
+  /* ===== GOALS ===== */
+  .goal-list{margin-top:30px;display:flex;flex-direction:column;gap:16px;max-width:880px}
+  .goal{display:flex;align-items:center;gap:22px;background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:16px 24px}
+  .goal:nth-child(odd){margin-right:56px}.goal:nth-child(even){margin-left:56px}
+  .gnum{flex:0 0 56px;height:56px;border-radius:50%;border:3px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:24px}
+  .g1{background:var(--coral);color:#fff}.g2{background:var(--sun)}.g3{background:var(--mint2)}.g4{background:var(--pink2)}
+  .goal h3{font-size:19px;font-weight:600;margin-bottom:3px}
+  .goal p{font-size:14.5px;color:var(--ink-soft);font-weight:500}
+
+  /* ===== WARM-UP ===== */
+  .wu-shell{margin-top:26px;display:grid;grid-template-columns:330px 1fr;gap:32px;align-items:start}
+  .wu-poster{border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);overflow:hidden;background:#fff}
+  .wp-media{height:210px;display:grid;place-items:center;border-bottom:2.5px solid var(--ink)}
+  .wp-media svg{width:100%;height:100%}
+  .wp-cap{padding:14px 18px}
+  .wp-cap h4{font-family:'Fredoka';font-size:21px;line-height:1.15}
+  .wp-cap .sub{font-size:13.5px;font-weight:600;margin-top:4px}
+  .wp-cap .hash{margin-top:6px;font-size:12.5px;font-weight:700;color:var(--ink-soft)}
+  .wp-cap .cta{display:inline-flex;align-items:center;gap:7px;margin-top:9px;font-family:'Fredoka';font-weight:700;font-size:13px;padding:7px 14px;border:2.5px solid var(--ink);border-radius:999px}
+  .wp-cap .cta svg{width:14px;height:14px}
+  .wu-q{font-family:'Fredoka';font-weight:600;font-size:clamp(19px,1.8vw,23px);margin-bottom:14px}
+  .wu-opts{display:flex;flex-direction:column;gap:12px;max-width:430px}
+  .wu-opt{display:flex;align-items:center;gap:13px;text-align:left;background:#fff;border:3px solid var(--ink);border-radius:14px;padding:12px 18px;font-family:'Plus Jakarta Sans';font-weight:600;font-size:15.5px;cursor:pointer;transition:.15s;color:var(--ink);box-shadow:4px 4px 0 var(--ink)}
+  .wu-opt:hover:not(:disabled){transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .wu-opt:disabled{cursor:default}
+  .wu-opt .letter{flex:0 0 34px;height:34px;border-radius:10px;border:2.5px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;background:var(--butter2)}
+  .wu-opt.good{background:var(--mint2)} .wu-opt.good .letter{background:var(--teal);color:#fff}
+  .wu-opt.bad{background:var(--pink2)} .wu-opt.bad .letter{background:var(--coral);color:#fff}
+  .wu-fb{margin-top:16px;display:flex;gap:12px;align-items:flex-start;background:var(--butter);border:2.5px solid var(--ink);border-radius:14px;padding:14px 18px;font-size:14.5px;font-weight:600;line-height:1.55;max-width:430px}
+  .wu-fb svg{width:20px;height:20px;flex:0 0 20px;margin-top:2px}
+  .wu-next{margin-top:14px}
+  .wu-done{background:#fff;border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);padding:30px 34px;max-width:640px;text-align:center}
+  .wu-done .tro{width:84px;height:84px;border-radius:50%;background:var(--sun);border:3px solid var(--ink);display:grid;place-items:center;margin:0 auto 14px;box-shadow:4px 4px 0 var(--ink)}
+  .wu-done .tro svg{width:40px;height:40px}
+  .wu-done h3{font-size:26px;margin-bottom:8px}
+  .wu-done p{font-weight:600;color:var(--ink-soft);line-height:1.6}
+  .wu-done .sc{font-family:'Fredoka';font-weight:700;font-size:19px;color:var(--teal);margin-top:10px}
+
+  /* ===== DEFINISI ===== */
+  .s-def .wrap{display:grid;grid-template-columns:1.08fr .92fr;gap:40px;align-items:center}
+  .define{margin-top:24px;background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:22px 26px;font-size:clamp(16px,1.45vw,20px);font-weight:600;line-height:1.6}
+  .define .q{color:var(--coral);font-family:'Fredoka'}
+  .analog{margin-top:18px;display:flex;gap:16px;align-items:flex-start;background:var(--lav);border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:18px 22px}
+  .analog .ic{flex:0 0 46px;height:46px;border-radius:50%;background:var(--lav2);display:grid;place-items:center;border:2.5px solid var(--ink)}
+  .analog .ic svg{width:24px;height:24px}
+  .analog p{font-size:15.5px;font-weight:500;line-height:1.55}
+  .whylist{margin-top:24px;padding:22px 24px}
+  .whylist h3{display:flex;align-items:center;gap:10px;font-size:18px;margin-bottom:12px}
+  .whylist h3 svg{width:20px;height:20px;color:var(--coral)}
+  .wl{display:flex;gap:11px;font-size:14.5px;font-weight:600;padding:8px 0;line-height:1.5;border-top:2px dashed rgba(69,58,78,.2)}
+  .wl:first-of-type{border-top:none}
+  .wl svg{width:18px;height:18px;flex:0 0 18px;margin-top:2px;color:var(--teal)}
+
+  /* ===== PERSONA VS TARGET ===== */
+  .vs2{margin-top:28px;display:grid;grid-template-columns:1fr 84px 1fr;gap:0;align-items:stretch}
+  .vs2-col{border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);padding:26px 28px;background:#fff;text-align:center}
+  .vs2-col.tm{background:var(--butter)}
+  .vs2-col.ps{background:var(--pink)}
+  .vs2-col .lab{font-family:'Fredoka';font-weight:700;font-size:14px;letter-spacing:.12em;text-transform:uppercase;display:inline-block;border:2.5px solid var(--ink);border-radius:999px;padding:6px 16px;margin-bottom:16px}
+  .tm .lab{background:var(--butter2)} .ps .lab{background:var(--pink2)}
+  .vs2-col .bigline{font-family:'Fredoka';font-weight:700;font-size:clamp(20px,2vw,26px);line-height:1.25;margin-bottom:10px}
+  .vs2-col p{font-size:14.5px;font-weight:500;color:var(--ink-soft);line-height:1.55}
+  .vs2-col .miniava{width:64px;height:64px;border-radius:50%;border:3px solid var(--ink);overflow:hidden;margin:0 auto 10px}
+  .vs2-col .miniava svg{width:100%;height:100%}
+  .vs2-mid{display:grid;place-items:center}
+  .vs2-badge{width:60px;height:60px;border-radius:50%;background:var(--coral);color:#fff;border:3px solid var(--ink);display:grid;place-items:center;box-shadow:4px 4px 0 var(--ink)}
+  .vs2-badge svg{width:27px;height:27px}
+  .vs-note{margin-top:22px;background:#fff;border:3px solid var(--ink);border-left:14px solid var(--sun);border-radius:16px;box-shadow:var(--shadow);padding:15px 22px;font-weight:600;font-size:15px;line-height:1.55;max-width:860px}
+
+  /* ===== FLIP KOMPONEN ===== */
+  .fgrid{margin-top:26px;display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .fcard{perspective:1100px;min-height:215px;cursor:pointer}
+  .finner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.3,.8,.3,1)}
+  .fcard.flipped .finner{transform:rotateY(180deg)}
+  .fface{position:absolute;inset:0;backface-visibility:hidden;border:3px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 var(--ink);padding:18px 20px;display:flex;flex-direction:column}
+  .ffront{background:#fff}
+  .fback{background:var(--mint2);transform:rotateY(180deg)}
+  .fhead{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+  .fic{width:44px;height:44px;border-radius:13px;border:2.5px solid var(--ink);display:grid;place-items:center;flex:0 0 44px}
+  .fic svg{width:21px;height:21px}
+  .ffront h3{font-size:17.5px;line-height:1.2}
+  .ffront .hint{margin-top:auto;display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;color:var(--ink-soft)}
+  .ffront .hint svg{width:15px;height:15px}
+  .fback .tag{font-family:'Fredoka';font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;background:var(--ink);color:#fff;border-radius:999px;padding:4px 12px;align-self:flex-start;margin-bottom:10px}
+  .fback p{font-size:13.8px;font-weight:600;line-height:1.55;flex:1}
+  .fback .eg{font-size:12.5px;font-weight:700;opacity:.75;margin-top:8px;border-top:2px dashed rgba(69,58,78,.4);padding-top:8px}
+
+  /* ===== KARTU PERSONA ===== */
+  .pc-grid{margin-top:26px;display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+  .p-card{background:#fff;border:3px solid var(--ink);border-radius:20px;box-shadow:var(--shadow);padding:18px 15px;text-align:center;transition:.18s}
+  .p-card:hover{transform:translate(-3px,-3px);box-shadow:8px 8px 0 var(--ink)}
+  .p-ava{width:74px;height:74px;margin:0 auto 10px;border-radius:50%;border:3px solid var(--ink);overflow:hidden}
+  .p-ava svg{width:100%;height:100%}
+  .p-card h3{font-size:17.5px}
+  .p-card .age{font-size:12px;font-weight:700;color:var(--ink-soft);margin:2px 0 10px}
+  .p-row{display:flex;gap:8px;text-align:left;font-size:12.2px;font-weight:600;line-height:1.45;padding:6px 0;border-top:2px dashed rgba(69,58,78,.22)}
+  .p-row svg{width:14px;height:14px;flex:0 0 14px;margin-top:2px}
+  .p-row b{font-weight:800;flex:0 0 58px}
+  .av1{background:var(--butter2)} .av2{background:var(--lav2)} .av3{background:var(--mint2)} .av4{background:var(--sky2)}
+
+  /* ===== MAPPING ===== */
+  .map-list{margin-top:26px;display:flex;flex-direction:column;gap:14px;max-width:940px}
+  .map-row{background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:var(--shadow);padding:14px 20px;cursor:pointer;transition:.15s;text-align:left;font-family:'Plus Jakarta Sans';color:var(--ink)}
+  .map-row:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .mr-top{display:flex;gap:14px;align-items:center}
+  .mr-ic{width:42px;height:42px;border-radius:12px;border:2.5px solid var(--ink);display:grid;place-items:center;flex:0 0 42px}
+  .mr-ic svg{width:19px;height:19px}
+  .mr-trait{flex:1}
+  .mr-trait b{font-family:'Fredoka';font-size:15.5px;font-weight:600;display:block}
+  .mr-trait span{font-size:13px;font-weight:600;color:var(--ink-soft)}
+  .mr-q{display:flex;gap:7px;align-items:center;font-size:12.5px;font-weight:800;color:var(--coral);white-space:nowrap}
+  .mr-q svg{width:15px;height:15px;transition:transform .3s}
+  .map-row.open .mr-q svg{transform:rotate(90deg)}
+  .mr-dec{display:none;margin-top:12px;background:var(--mint);border:2.5px solid var(--ink);border-radius:12px;padding:11px 16px;font-size:14px;font-weight:600;line-height:1.55;gap:10px;align-items:flex-start}
+  .map-row.open .mr-dec{display:flex}
+  .mr-dec svg{width:18px;height:18px;flex:0 0 18px;margin-top:2px;color:var(--teal)}
+  .map-note{margin-top:20px;display:inline-flex;gap:10px;align-items:center;background:var(--ink);color:#fff;border-radius:999px;padding:11px 22px;font-family:'Fredoka';font-weight:600;font-size:14px;box-shadow:var(--shadow)}
+  .map-note svg{width:17px;height:17px;color:var(--sun)}
+  .map-note b{color:var(--sun)}
+
+  /* ===== LAB MESIN PERSONA ===== */
+  .lab{margin-top:24px;display:grid;grid-template-columns:340px 1fr;gap:32px;align-items:start}
+  .lp{border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);min-height:420px;padding:26px 22px;position:relative;transition:background .45s;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px;background:var(--lav2)}
+  .lp-plat{position:absolute;top:14px;left:14px;display:inline-flex;gap:7px;align-items:center;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:6px 13px;font-family:'Fredoka';font-weight:700;font-size:12.5px;box-shadow:3px 3px 0 var(--ink)}
+  .lp-plat svg{width:15px;height:15px}
+  .lp-title{font-family:'Fredoka';font-weight:700;font-size:30px;line-height:1.12;transition:.3s}
+  .lp-sub{font-weight:600;font-size:14px;line-height:1.5;max-width:260px}
+  .lp-price{font-family:'Fredoka';font-weight:700;font-size:14.5px;border:2.5px solid var(--ink);border-radius:10px;padding:5px 12px;background:#fff;box-shadow:3px 3px 0 var(--ink)}
+  .lp-hash{font-weight:700;font-size:13px;opacity:.75}
+  .lp-cta{display:inline-flex;gap:8px;align-items:center;font-family:'Fredoka';font-weight:700;font-size:14.5px;padding:9px 18px;border:2.5px solid var(--ink);border-radius:999px;box-shadow:3px 3px 0 var(--ink);transition:.35s}
+  .lp-cta svg{width:15px;height:15px}
+  .lp-deco{position:absolute;top:60px;right:18px;width:52px;height:52px;border-radius:50%;border:3px solid var(--ink);display:grid;place-items:center;box-shadow:3px 3px 0 var(--ink);transition:.35s}
+  .lp-deco svg{width:24px;height:24px}
+  .lp-pick{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .lpb{border:2.5px solid var(--ink);border-radius:14px;background:#fff;padding:10px 6px;cursor:pointer;font-family:'Fredoka';font-weight:600;font-size:12.5px;box-shadow:3px 3px 0 var(--ink);transition:.15s;display:flex;flex-direction:column;align-items:center;gap:7px;color:var(--ink)}
+  .lpb .ava{width:46px;height:46px;border-radius:50%;border:2.5px solid var(--ink);overflow:hidden}
+  .lpb .ava svg{width:100%;height:100%}
+  .lpb:hover{transform:translateY(-2px)}
+  .lpb.on{background:var(--ink);color:#fff}
+  .lp-card{background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:var(--shadow);padding:15px 18px;margin-top:16px}
+  .lp-card h4{font-family:'Fredoka';font-size:17px;display:flex;align-items:center;gap:11px}
+  .lp-card h4 .cava{width:36px;height:36px;border-radius:50%;border:2.5px solid var(--ink);overflow:hidden;flex:0 0 36px}
+  .lp-card h4 .cava svg{width:100%;height:100%}
+  .lp-card h4 small{font-size:11.5px;font-weight:700;color:var(--ink-soft);display:block}
+  .lp-rows{display:flex;flex-direction:column;margin-top:8px}
+  .lp-rows .r{display:flex;gap:8px;font-size:12.6px;font-weight:600;padding:5px 0;border-top:2px dashed rgba(69,58,78,.2);text-align:left;line-height:1.45}
+  .lp-rows .r b{min-width:80px;flex:0 0 80px}
+  .lp-why{margin-top:16px;background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:var(--shadow);padding:15px 18px}
+  .lp-why h4{font-family:'Fredoka';font-size:16.5px;margin-bottom:8px;display:flex;gap:9px;align-items:center}
+  .lp-why h4 svg{width:18px;height:18px;color:var(--coral)}
+  .lp-why li{display:flex;gap:9px;font-size:13.2px;font-weight:600;line-height:1.5;padding:6px 0;border-top:2px dashed rgba(69,58,78,.18);list-style:none}
+  .lp-why li:first-of-type{border-top:none}
+  .lp-why li svg{width:15px;height:15px;flex:0 0 15px;margin-top:2px;color:var(--teal)}
+  .lab-seen{margin-top:14px;font-family:'Fredoka';font-weight:600;font-size:13px;background:var(--butter2);border:2.5px solid var(--ink);border-radius:999px;display:inline-flex;align-items:center;gap:8px;padding:6px 14px;box-shadow:3px 3px 0 var(--ink)}
+  .lab-seen svg{width:14px;height:14px}
+
+  /* ===== GAME ===== */
+  .snip{display:block;border:2.5px solid var(--ink);border-radius:12px;padding:11px 14px;font-family:'Fredoka';font-weight:700;font-size:14px;margin-bottom:12px;text-align:center;line-height:1.35}
+  .match-list{margin-top:26px;display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .m-card{background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:18px 20px}
+  .m-card.solved{background:var(--mint)}
+  .m-card h3{font-size:14.5px;font-weight:600;line-height:1.5;margin-bottom:12px}
+  .m-card h3 b{font-family:'Fredoka'}
+  .m-opts{display:flex;gap:9px;flex-wrap:wrap}
+  .m-opt{display:inline-flex;align-items:center;gap:7px;font-family:'Fredoka';font-weight:600;font-size:13.5px;border:2.5px solid var(--ink);border-radius:999px;padding:8px 15px;background:#fff;cursor:pointer;box-shadow:3px 3px 0 var(--ink);transition:.15s;color:var(--ink)}
+  .m-opt .mdot{width:11px;height:11px;border-radius:50%;border:2px solid var(--ink)}
+  .m-opt:hover:not(:disabled){transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--ink)}
+  .m-opt:disabled{cursor:default}
+  .m-opt.good{background:var(--teal);color:#fff}
+  .m-opt.bad{background:var(--pink2)}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+  .m-opt.shake{animation:shake .3s}
+  .m-why{margin-top:12px;background:var(--butter);border:2.5px solid var(--ink);border-radius:12px;padding:10px 14px;font-size:13px;font-weight:600;line-height:1.5;display:flex;gap:9px}
+  .m-why svg{width:17px;height:17px;flex:0 0 17px;margin-top:1px}
+  .m-score{margin-top:22px;display:flex;justify-content:space-between;align-items:center;background:var(--ink);color:#fff;border-radius:16px;padding:14px 24px;max-width:560px;box-shadow:var(--shadow)}
+  .m-score b{font-family:'Fredoka';font-size:20px;color:var(--sun)}
+
+  /* ===== QUIZ ===== */
+  .quiz-shell{max-width:780px;margin:0 auto}
+  .q-meta{display:flex;justify-content:space-between;align-items:center;margin:20px 0 16px}
+  .q-badge{font-family:'Fredoka';font-weight:700;background:var(--coral);color:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:7px 18px;box-shadow:3px 3px 0 var(--ink);font-size:14px}
+  .q-score{font-family:'Fredoka';font-weight:700;background:var(--sun);border:2.5px solid var(--ink);border-radius:999px;padding:7px 18px;box-shadow:3px 3px 0 var(--ink);font-size:14px;display:flex;align-items:center;gap:7px}
+  .q-score svg{width:16px;height:16px}
+  .q-card{padding:28px 32px}
+  .q-q{font-size:clamp(19px,1.8vw,25px);font-weight:600;line-height:1.4;margin-bottom:20px}
+  .q-opts{display:flex;flex-direction:column;gap:12px}
+  .opt{display:flex;align-items:center;gap:16px;text-align:left;background:#fff;border:3px solid var(--ink);border-radius:14px;padding:13px 18px;font-family:'Plus Jakarta Sans';font-weight:600;font-size:16px;cursor:pointer;transition:.15s;color:var(--ink);box-shadow:4px 4px 0 var(--ink)}
+  .opt:hover:not(:disabled){transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .opt:disabled{cursor:default}
+  .opt .letter{flex:0 0 36px;height:36px;border-radius:10px;border:2.5px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;background:var(--lav2)}
+  .opt.good{background:var(--mint2)} .opt.good .letter{background:var(--teal);color:#fff}
+  .opt.bad{background:var(--pink2);opacity:.9} .opt.bad .letter{background:var(--coral);color:#fff}
+  .q-foot{margin-top:18px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+  .q-why{display:flex;gap:12px;align-items:flex-start;background:var(--butter);border:2.5px solid var(--ink);border-radius:14px;padding:14px 18px;font-size:14.5px;font-weight:600;line-height:1.5;flex:1}
+  .q-why svg{width:20px;height:20px;flex:0 0 20px;margin-top:2px}
+  .q-done{text-align:center;padding:38px 30px}
+  .q-done .tro{width:96px;height:96px;border-radius:50%;background:var(--sun);border:3px solid var(--ink);display:grid;place-items:center;margin:0 auto 18px;box-shadow:5px 5px 0 var(--ink)}
+  .q-done .tro svg{width:48px;height:48px}
+  .q-done h3{font-size:30px;margin-bottom:8px}
+  .q-done .big{font-family:'Fredoka';font-size:56px;font-weight:700;color:var(--coral);margin:6px 0 10px}
+  .q-done p{font-weight:600;color:var(--ink-soft);margin-bottom:22px}
+
+  /* ===== MISI ===== */
+  .s-misi .wrap{display:grid;grid-template-columns:1.12fr .88fr;gap:38px;align-items:start}
+  .steps{margin-top:24px;display:flex;flex-direction:column;gap:14px}
+  .step{display:flex;gap:18px;align-items:flex-start;background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:var(--shadow);padding:15px 20px}
+  .step:nth-child(even){margin-left:44px}
+  .snum{flex:0 0 46px;height:46px;border-radius:50%;border:3px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:19px}
+  .st1{background:var(--coral);color:#fff}.st2{background:var(--sun)}.st3{background:var(--mint2)}.st4{background:var(--pink2)}
+  .step h3{font-size:16.5px;font-weight:600}
+  .step p{font-size:13.5px;color:var(--ink-soft);font-weight:500;margin-top:2px;line-height:1.5}
+  .side-card{margin-top:24px;padding:22px 24px;background:var(--lav)}
+  .side-card h3{display:flex;align-items:center;gap:10px;font-size:18px;margin-bottom:12px}
+  .side-card h3 svg{width:20px;height:20px;color:var(--coral)}
+  .tip{display:flex;gap:10px;font-size:14px;font-weight:600;padding:7px 0;line-height:1.5}
+  .tip svg{width:18px;height:18px;flex:0 0 18px;margin-top:2px;color:var(--teal)}
+  .blank-card{margin-top:18px;padding:18px 22px;background:#fff;border:3px dashed var(--ink);border-radius:16px}
+  .blank-card h4{font-family:'Fredoka';font-size:15.5px;margin-bottom:10px;display:flex;gap:8px;align-items:center}
+  .blank-card h4 svg{width:17px;height:17px}
+  .bl{display:flex;gap:8px;font-size:13px;font-weight:600;padding:4px 0}
+  .bl b{flex:0 0 92px}
+  .bl span{flex:1;border-bottom:2px dotted var(--ink-soft);min-height:18px}
+  .mini-rubrik{margin-top:18px;padding:18px 22px;background:#fff}
+  .rubrik-row{display:flex;justify-content:space-between;font-size:13.5px;font-weight:700;padding:6px 0;border-top:2px dashed rgba(69,58,78,.25)}
+  .rubrik-row:first-of-type{border-top:none}
+  .rubrik-row span:last-child{color:var(--coral);font-family:'Fredoka'}
+
+  /* ===== PENUTUP ===== */
+  .s-end .wrap{display:grid;grid-template-columns:1fr .85fr;gap:44px;align-items:center}
+  .refl{margin-top:24px;display:flex;flex-direction:column;gap:14px;max-width:600px}
+  .refl-item{display:flex;gap:16px;align-items:center;background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:var(--shadow);padding:14px 20px}
+  .rnum{flex:0 0 44px;height:44px;border-radius:50%;border:2.5px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:18px}
+  .r1{background:var(--coral);color:#fff}.r2{background:var(--mint2)}.r3{background:var(--pink2)}
+  .refl-item p{font-size:15.5px;font-weight:600}
+  .end-art{position:relative;display:grid;place-items:center;min-height:420px}
+  .quote{position:relative;background:var(--sun);border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);padding:30px 34px;text-align:center;max-width:380px;transform:rotate(-2deg)}
+  .quote h3{font-size:25px;line-height:1.3;margin-bottom:10px}
+  .quote p{font-weight:600;font-size:14.5px}
+  .end-btn{margin-top:26px}
+
+  #confetti{position:fixed;inset:0;z-index:100;pointer-events:none}
+
+  @media (max-width:960px){
+    .s-hero .wrap,.s-def .wrap,.s-misi .wrap,.s-end .wrap{grid-template-columns:1fr}
+    .wu-shell,.lab{grid-template-columns:1fr}
+    .pc-grid{grid-template-columns:1fr 1fr}
+    .fgrid{grid-template-columns:1fr 1fr}
+    .vs2{grid-template-columns:1fr}
+    .vs2-mid{margin:14px 0}
+    .lp-pick{grid-template-columns:1fr 1fr}
+    .match-list{grid-template-columns:1fr}
+    .goal:nth-child(odd),.goal:nth-child(even){margin:0}
+    .step:nth-child(even){margin-left:0}
+    .art-stage,.end-art{min-height:340px}
+    .slide{padding:40px 20px 110px}
+  }
+</style>
+</head>
+<body>
+
+<!-- Avatar yang dipakai berulang -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <g id="av-dodi">
+    <circle cx="40" cy="44" r="24" fill="#FFD9B8" stroke="#453A4E" stroke-width="3"/>
+    <path d="M16 40 q2-20 24-20 q22 0 24 20 q-7-9-24-9 q-17 0-24 9z" fill="#4A3728" stroke="#453A4E" stroke-width="3"/>
+    <circle cx="32" cy="47" r="2.7" fill="#453A4E"/><circle cx="48" cy="47" r="2.7" fill="#453A4E"/>
+    <path d="M33 55 q7 6 14 0" fill="none" stroke="#453A4E" stroke-width="2.8" stroke-linecap="round"/>
+    <circle cx="26" cy="53" r="3.5" fill="#FFB3B3"/><circle cx="54" cy="53" r="3.5" fill="#FFB3B3"/>
+  </g>
+  <g id="av-salsa">
+    <path d="M18 32 q-6 24 0 40 l9-2 q-5-16-1-32z" fill="#5B4230" stroke="#453A4E" stroke-width="2.5"/>
+    <path d="M62 32 q6 24 0 40 l-9-2 q5-16 1-32z" fill="#5B4230" stroke="#453A4E" stroke-width="2.5"/>
+    <circle cx="40" cy="34" r="24" fill="#5B4230" stroke="#453A4E" stroke-width="3"/>
+    <circle cx="40" cy="46" r="19" fill="#FFD9B8" stroke="#453A4E" stroke-width="3"/>
+    <path d="M21 44 q19-17 38 0 q-9-11-19-11 q-10 0-19 11z" fill="#5B4230" stroke="#453A4E" stroke-width="2.5"/>
+    <circle cx="33" cy="49" r="2.6" fill="#453A4E"/><circle cx="47" cy="49" r="2.6" fill="#453A4E"/>
+    <path d="M34 56 q6 5 12 0" fill="none" stroke="#453A4E" stroke-width="2.6" stroke-linecap="round"/>
+    <circle cx="27" cy="54" r="3.2" fill="#FFB3B3"/><circle cx="53" cy="54" r="3.2" fill="#FFB3B3"/>
+  </g>
+  <g id="av-ratih">
+    <circle cx="40" cy="18" r="10" fill="#5B4230" stroke="#453A4E" stroke-width="3"/>
+    <circle cx="40" cy="46" r="21" fill="#F7CFA8" stroke="#453A4E" stroke-width="3"/>
+    <path d="M19 44 q3-18 21-18 q18 0 21 18 q-8-9-21-9 q-13 0-21 9z" fill="#5B4230" stroke="#453A4E" stroke-width="3"/>
+    <circle cx="33" cy="49" r="2.6" fill="#453A4E"/><circle cx="47" cy="49" r="2.6" fill="#453A4E"/>
+    <path d="M34 56 q6 5 12 0" fill="none" stroke="#453A4E" stroke-width="2.6" stroke-linecap="round"/>
+    <circle cx="27" cy="54" r="3.2" fill="#FFB3B3"/><circle cx="53" cy="54" r="3.2" fill="#FFB3B3"/>
+    <circle cx="19" cy="50" r="2.6" fill="#FFC531" stroke="#453A4E" stroke-width="2"/>
+  </g>
+  <g id="av-jaya">
+    <circle cx="40" cy="46" r="21" fill="#F2C9A0" stroke="#453A4E" stroke-width="3"/>
+    <path d="M19 42 q1-16 21-16 q20 0 21 16 l0 4 q-7-9-21-9 q-14 0-21 9z" fill="#3E3128" stroke="#453A4E" stroke-width="3"/>
+    <circle cx="33" cy="47" r="2.6" fill="#453A4E"/><circle cx="47" cy="47" r="2.6" fill="#453A4E"/>
+    <path d="M30 56 q4 3 10 3 q6 0 10-3 q-3 7-10 7 q-7 0-10-7z" fill="#3E3128" stroke="#453A4E" stroke-width="2.6"/>
+  </g>
+</defs></svg>
+
+<div id="bar"></div>
+
+<!-- ============ SLIDE 1 : JUDUL ============ -->
+<section class="slide active" data-theme="peach">
+  <div class="deco bob" style="top:14%;left:5%;width:26px;height:26px">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 2v20M2 12h20"/></svg>
+  </div>
+  <div class="deco bob" style="bottom:18%;left:12%;width:34px;height:34px;animation-delay:1.2s">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/></svg>
+  </div>
+  <div class="s-hero wrap" style="display:contents"><div class="wrap">
+    <div>
+      <span class="kicker anim" style="--d:0"><i data-lucide="user-round"></i> Digital Marketing · Lanjutan · SMP Kelas 7</span>
+      <h1 class="anim" style="--d:1;font-size:clamp(38px,4.6vw,62px);font-weight:700;line-height:1.08;margin:20px 0 14px">
+        Kenalan Dulu,<br><span class="hl">Baru Desain!</span>
+      </h1>
+      <p class="lead anim" style="--d:2">Sebelum membuat desain, kita berkenalan dulu dengan <b>persona</b> —
+      "kartu kenalan" pembeli ideal kita. Dari kartu itu, warna, kata, dan tempat desain jadi jelas sendiri!</p>
+      <div class="badge-row anim" style="--d:3">
+        <span class="badge b1"><i data-lucide="id-card"></i> Kartu Persona</span>
+        <span class="badge b3"><i data-lucide="wand-2"></i> Mesin Persona</span>
+        <span class="badge b2"><i data-lucide="puzzle"></i> Game &amp; Kuis</span>
+      </div>
+    </div>
+    <div class="art-stage anim" style="--d:2">
+      <svg viewBox="0 0 380 470" aria-hidden="true">
+        <ellipse cx="190" cy="240" rx="168" ry="212" fill="#DCD2F7"/>
+        <g transform="rotate(-3 190 235)">
+          <rect x="80" y="68" width="232" height="330" rx="20" fill="#FFFFFF" stroke="#453A4E" stroke-width="5"/>
+          <rect x="80" y="68" width="232" height="56" rx="20" fill="#FF7E67" stroke="#453A4E" stroke-width="5"/>
+          <rect x="80" y="100" width="232" height="24" fill="#FF7E67"/>
+          <text x="196" y="105" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="20" fill="#fff">KARTU PERSONA</text>
+          <circle cx="146" cy="182" r="42" fill="#FFD9B8" stroke="#453A4E" stroke-width="4"/>
+          <use href="#av-salsa" x="106" y="142"/>
+          <text x="204" y="176" font-family="Fredoka, sans-serif" font-weight="700" font-size="24" fill="#453A4E">Salsa</text>
+          <text x="204" y="200" font-family="Plus Jakarta Sans, sans-serif" font-weight="600" font-size="14" fill="#6B5F75">15 tahun · remaja</text>
+          <rect x="106" y="248" width="178" height="13" rx="6.5" fill="#FFE39A" stroke="#453A4E" stroke-width="3"/>
+          <rect x="106" y="276" width="146" height="13" rx="6.5" fill="#BFEAD2" stroke="#453A4E" stroke-width="3"/>
+          <rect x="106" y="304" width="166" height="13" rx="6.5" fill="#DCD2F7" stroke="#453A4E" stroke-width="3"/>
+          <rect x="106" y="332" width="126" height="13" rx="6.5" fill="#FFC9DC" stroke="#453A4E" stroke-width="3"/>
+          <rect x="106" y="360" width="152" height="26" rx="13" fill="#FFC531" stroke="#453A4E" stroke-width="3"/>
+          <text x="182" y="378" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="13" fill="#453A4E">#estetik #fyp</text>
+        </g>
+        <path d="M46 96 c0-13 14-19 22-10 c8-9 22-3 22 10 c0 14-22 26-22 26 s-22-12-22-26z" fill="#FF7E67" stroke="#453A4E" stroke-width="4"/>
+        <path d="M318 388 l7 16 17 2-13 12 4 17-15-9-15 9 4-17-13-12 17-2z" fill="#FFC531" stroke="#453A4E" stroke-width="3.5"/>
+        <circle cx="58" cy="360" r="13" fill="#BFEAD2" stroke="#453A4E" stroke-width="3.5"/>
+      </svg>
+      <span class="fchip fc1 bob"><i data-lucide="user-round"></i></span>
+      <span class="fchip fc2 bob" style="animation-delay:.8s"><i data-lucide="palette"></i></span>
+      <span class="fchip fc3 bob" style="animation-delay:1.6s"><i data-lucide="smartphone"></i></span>
+      <span class="fchip fc4 bob" style="animation-delay:.4s"><i data-lucide="heart"></i></span>
+      <span class="fchip fc5 bob" style="animation-delay:2s"><i data-lucide="music-2"></i></span>
+      <span class="fchip fc6 bob" style="animation-delay:1.2s"><i data-lucide="message-circle"></i></span>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============ SLIDE 2 : TUJUAN ============ -->
+<section class="slide" data-theme="cream">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="map"></i> Rencana Belajar Hari Ini</span>
+    <h2 class="title anim" style="--d:1">Hari ini kita akan...</h2>
+    <div class="goal-list">
+      <div class="goal anim" style="--d:2">
+        <div class="gnum g1">1</div>
+        <div><h3>Pahami Apa Itu Persona</h3><p>Tahu bedanya persona dengan target market — dan kenapa persona membuat desain lebih mudah.</p></div>
+      </div>
+      <div class="goal anim" style="--d:3">
+        <div class="gnum g2">2</div>
+        <div><h3>Buat Kartu Persona</h3><p>Mengenal 6 bagian kartu persona dan melihat kartu lengkap milik "teman lama" kita.</p></div>
+      </div>
+      <div class="goal anim" style="--d:4">
+        <div class="gnum g3">3</div>
+        <div><h3>Ubah Persona Jadi Keputusan Desain</h3><p>Memakai Mesin Persona: pilih orangnya, lihat desainnya berubah, pahami alasannya.</p></div>
+      </div>
+      <div class="goal anim" style="--d:5">
+        <div class="gnum g4">4</div>
+        <div><h3>Buat Kartu &amp; Desain Milikmu</h3><p>Misi akhir: mengisi kartu persona kelompokmu lalu mendesain satu konten untuknya.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 3 : PEMANASAN ============ -->
+<section class="slide" data-theme="butter">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="hand"></i> Pemanasan · Tanya Jawab</span>
+    <h2 class="title anim" style="--d:1">Tebak: desain ini <span class="hl p">dibuat untuk siapa?</span></h2>
+    <p class="lead anim" style="--d:1.5">Perhatikan warna, kata-kata, dan isinya. Angkat tangan sebelum jawaban dibuka!</p>
+
+    <div class="wu-shell anim" style="--d:2">
+      <!-- Ronde 1 -->
+      <div class="wu" id="wu1">
+        <div class="wu-poster">
+          <div class="wp-media" style="background:var(--lav2)">
+            <svg viewBox="0 0 300 200" aria-hidden="true">
+              <rect x="130" y="20" width="13" height="44" rx="6.5" transform="rotate(14 136 42)" fill="#FF7E67" stroke="#453A4E" stroke-width="3.5"/>
+              <rect x="124" y="24" width="70" height="12" rx="6" fill="#fff" stroke="#453A4E" stroke-width="4"/>
+              <path d="M130 36 L188 36 L180 162 L138 162 Z" fill="#fff" stroke="#453A4E" stroke-width="4" stroke-linejoin="round"/>
+              <path d="M133.6 82 L184 82 L179.8 155 L138.2 155 Z" fill="#EBCB9E"/>
+              <circle cx="148" cy="144" r="5.5" fill="#7A4E2D" stroke="#453A4E" stroke-width="2.4"/>
+              <circle cx="162" cy="148" r="5.5" fill="#7A4E2D" stroke="#453A4E" stroke-width="2.4"/>
+              <circle cx="155" cy="134" r="5.5" fill="#7A4E2D" stroke="#453A4E" stroke-width="2.4"/>
+              <circle cx="169" cy="136" r="5.5" fill="#7A4E2D" stroke="#453A4E" stroke-width="2.4"/>
+              <circle cx="150" cy="110" r="2.6" fill="#453A4E"/><circle cx="164" cy="110" r="2.6" fill="#453A4E"/>
+              <path d="M151 117 q6 4.5 12 0" fill="none" stroke="#453A4E" stroke-width="2.8" stroke-linecap="round"/>
+              <circle cx="143" cy="115" r="3.2" fill="#FFB3B3"/><circle cx="171" cy="115" r="3.2" fill="#FFB3B3"/>
+              <path d="M72 72 c0-9 10-13 16-7 c6-6 16-2 16 7 c0 10-16 19-16 19 s-16-9-16-19z" fill="#FF7E67" stroke="#453A4E" stroke-width="3.5"/>
+              <path d="M234 58 l4.5 10 11 1.5-8 8 2 10.5-9.5-5.5-9.5 5.5 2-10.5-8-8 11-1.5z" fill="#FFC531" stroke="#453A4E" stroke-width="3"/>
+            </svg>
+          </div>
+          <div class="wp-cap">
+            <h4>Es Boba Cloud ☁️</h4>
+            <div class="sub">creamy, estetik, bikin mood naik!</div>
+            <div class="hash">#estetik #bobalover #fyp</div>
+          </div>
+        </div>
+        <div>
+          <div class="wu-q">Desain ini paling cocok untuk siapa?</div>
+          <div class="wu-opts">
+            <button class="wu-opt" data-ok="0"><span class="letter">A</span>Adik kelas SD</button>
+            <button class="wu-opt" data-ok="1"><span class="letter">B</span>Kakak remaja</button>
+            <button class="wu-opt" data-ok="0"><span class="letter">C</span>Bapak-bapak</button>
+          </div>
+          <div class="wu-fb hidden"><i data-lucide="circle-check"></i><span id="fb1"></span></div>
+          <button class="btn mint wu-next hidden"><i data-lucide="arrow-right"></i> Tebakan Berikutnya</button>
+        </div>
+      </div>
+
+      <!-- Ronde 2 -->
+      <div class="wu hidden" id="wu2">
+        <div class="wu-poster">
+          <div class="wp-media" style="background:var(--sky2)">
+            <svg viewBox="0 0 300 200" aria-hidden="true">
+              <g transform="translate(78,70) rotate(-18)">
+                <circle cx="0" cy="0" r="11" fill="none" stroke="#453A4E" stroke-width="5"/>
+                <rect x="-4" y="8" width="8" height="30" rx="3" fill="#453A4E"/>
+                <rect x="-4" y="28" width="14" height="6" rx="3" fill="#453A4E"/>
+              </g>
+              <circle cx="94" cy="146" r="27" fill="none" stroke="#453A4E" stroke-width="5"/>
+              <path d="M70 146 h48 M78 128 l32 36 M110 128 l-32 36" stroke="#453A4E" stroke-width="2.4" opacity=".5"/>
+              <path d="M218 42 L244 72 L218 102 L192 72 Z" fill="#FFC531" stroke="#453A4E" stroke-width="3.5"/>
+              <text x="218" y="78" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="16" fill="#453A4E">20%</text>
+              <line x1="36" y1="176" x2="264" y2="176" stroke="#453A4E" stroke-width="3" stroke-dasharray="4 10" opacity=".3"/>
+            </svg>
+          </div>
+          <div class="wp-cap">
+            <h4>Bengkel Sepeda Pak Jaya</h4>
+            <div class="sub">Servis lengkap: rantai, rem, ban</div>
+            <span class="cta" style="background:var(--sky2)"><i data-lucide="facebook"></i> Hubungi Kami</span>
+          </div>
+        </div>
+        <div>
+          <div class="wu-q">Kalau yang ini, untuk siapa?</div>
+          <div class="wu-opts">
+            <button class="wu-opt" data-ok="0"><span class="letter">A</span>Anak-anak</button>
+            <button class="wu-opt" data-ok="0"><span class="letter">B</span>Ibu rumah tangga</button>
+            <button class="wu-opt" data-ok="1"><span class="letter">C</span>Bapak-bapak</button>
+          </div>
+          <div class="wu-fb hidden"><i data-lucide="circle-check"></i><span id="fb2"></span></div>
+          <button class="btn mint wu-next hidden"><i data-lucide="arrow-right"></i> Lanjut Belajar</button>
+        </div>
+      </div>
+
+      <!-- Selesai -->
+      <div class="wu-done hidden" id="wuDone" style="grid-column:1/-1">
+        <div class="tro"><i data-lucide="trophy"></i></div>
+        <h3>Kamu bisa "membaca" desain!</h3>
+        <p>Orang yang membuat kedua poster tadi tahu <b>persis untuk siapa</b> desainnya dibuat —
+        warna, kata, dan isinya tidak dipilih sembarangan. Rahasia mereka: <b>persona</b>.
+        Hari ini kita belajar membuatnya!</p>
+        <div class="sc">Tebakan tepat: <span id="wuScoreTxt">0</span> dari 2</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 4 : APA ITU PERSONA ============ -->
+<section class="slide" data-theme="mint">
+  <div class="s-def wrap" style="display:contents"><div class="wrap">
+    <div>
+      <span class="kicker anim" style="--d:0"><i data-lucide="search"></i> Konsep Utama</span>
+      <h2 class="title anim" style="--d:1">Apa itu <span class="hl m">persona?</span></h2>
+      <div class="define anim" style="--d:2">
+        <span class="q">Catat baik-baik, ya!</span><br>
+        Persona adalah <span class="hl">deskripsi satu orang imajiner</span> — seperti kartu kenalan —
+        yang mewakili <span class="hl">kelompok pembeli</span> yang ingin kita tuju.
+      </div>
+      <div class="analog anim" style="--d:3">
+        <div class="ic"><i data-lucide="gamepad-2"></i></div>
+        <p><b>Analogi karakter game:</b> sebelum main, kamu membuat karakter dulu — namanya,
+        penampilannya, kekuatannya. Baru kemudian bermain. <b>Persona = membuat "karakter"
+        pembeli idealmu</b>, supaya mendesain terasa seperti tahu dengan siapa kita bicara.</p>
+      </div>
+    </div>
+    <div class="whylist card anim" style="--d:3">
+      <h3><i data-lucide="lightbulb"></i> Dengan persona, kita tidak menebak-nebak:</h3>
+      <div class="wl"><i data-lucide="palette"></i><span>Warna &amp; gambar mengikuti <b>selera</b> persona.</span></div>
+      <div class="wl"><i data-lucide="type"></i><span>Kata-kata ditulis seperti <b>gaya bicara</b> persona.</span></div>
+      <div class="wl"><i data-lucide="map-pin"></i><span>Konten ditaruh di tempat <b>kebiasaan online</b>-nya.</span></div>
+      <div class="wl"><i data-lucide="target"></i><span>Pesan utama lahir dari <b>kebutuhan</b>-nya.</span></div>
+      <p style="margin-top:14px;font-size:13.5px;font-weight:700;background:var(--butter);border:2.5px solid var(--ink);border-radius:12px;padding:10px 14px">
+        Setiap pilihan desain jadi punya <span class="hl">alasan yang jelas</span> — bukan asal cantik!</p>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============ SLIDE 5 : PERSONA VS TARGET MARKET ============ -->
+<section class="slide" data-theme="lav">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="git-compare"></i> Menghubungkan Pelajaran Lalu</span>
+    <h2 class="title anim" style="--d:1">Persona vs <span class="hl l">target market</span></h2>
+    <p class="lead anim" style="--d:1.5">Masih ingat pelajaran target market? Persona adalah "zoom" dari pelajaran itu.</p>
+    <div class="vs2">
+      <div class="vs2-col tm anim" style="--d:2">
+        <span class="lab">Target Market</span>
+        <div class="bigline">"Remaja<br>13–18 tahun"</div>
+        <p>Peta besar: <b>kelompok</b> banyak orang yang seleranya mirip. Masih sukar dibayangkan satu per satu.</p>
+      </div>
+      <div class="vs2-mid anim" style="--d:3"><div class="vs2-badge"><i data-lucide="zoom-in"></i></div></div>
+      <div class="vs2-col ps anim" style="--d:4">
+        <span class="lab">Persona</span>
+        <div class="miniava av2"><svg viewBox="0 0 80 80"><use href="#av-salsa"/></svg></div>
+        <div class="bigline">"Salsa,<br>15 tahun"</div>
+        <p>Zoom ke <b>satu orang contoh</b> dari kelompok itu. Sekarang mudah dibayangkan: dia suka apa, bicaranya bagaimana.</p>
+      </div>
+    </div>
+    <div class="vs-note anim" style="--d:5">
+      Persona <b>diambil dari</b> target market — bukan orang nyata, tapi <b>dirangkai dari ciri khas</b> kelompoknya.
+      Satu target market boleh punya beberapa persona.
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 6 : 6 BAGIAN KARTU ============ -->
+<section class="slide" data-theme="pink">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="id-card"></i> Kartu Persona</span>
+    <h2 class="title anim" style="--d:1">Isi kartu persona: <span class="hl p">6 bagian</span></h2>
+    <p class="lead anim" style="--d:1.5">Tebak dulu gunanya untuk desain, baru klik kartunya untuk membuka jawabannya!</p>
+    <div class="fgrid">
+      <div class="fcard anim" style="--d:2" onclick="this.classList.toggle('flipped')">
+        <div class="finner">
+          <div class="fface ffront">
+            <div class="fhead"><span class="fic" style="background:var(--butter2)"><i data-lucide="user"></i></span><h3>1. Nama &amp; Foto</h3></div>
+            <span class="hint"><i data-lucide="mouse-pointer-click"></i> klik untuk membuka</span>
+          </div>
+          <div class="fface fback">
+            <span class="tag">Gunanya</span>
+            <p>Supaya persona terasa seperti <b>orang nyata</b> yang bisa kita bayangkan saat mendesain.</p>
+            <p class="eg">Contoh: "Salsa", bukan "remaja 13–18".</p>
+          </div>
+        </div>
+      </div>
+      <div class="fcard anim" style="--d:2.4" onclick="this.classList.toggle('flipped')">
+        <div class="finner">
+          <div class="fface ffront">
+            <div class="fhead"><span class="fic" style="background:var(--pink2)"><i data-lucide="cake"></i></span><h3>2. Umur</h3></div>
+            <span class="hint"><i data-lucide="mouse-pointer-click"></i> klik untuk membuka</span>
+          </div>
+          <div class="fface fback">
+            <span class="tag">Gunanya</span>
+            <p>Menentukan <b>selera dan cara bicara</b>. Anak 9 tahun dan bapak 45 tahun menyukai hal yang berbeda.</p>
+            <p class="eg">9 tahun → ceria. 45 tahun → praktis.</p>
+          </div>
+        </div>
+      </div>
+      <div class="fcard anim" style="--d:2.8" onclick="this.classList.toggle('flipped')">
+        <div class="finner">
+          <div class="fface ffront">
+            <div class="fhead"><span class="fic" style="background:var(--mint2)"><i data-lucide="heart"></i></span><h3>3. Yang Disukai</h3></div>
+            <span class="hint"><i data-lucide="mouse-pointer-click"></i> klik untuk membuka</span>
+          </div>
+          <div class="fface fback">
+            <span class="tag">Gunanya</span>
+            <p>Bahan untuk memilih <b>warna dan gambar</b> desain. Kalau suka yang lucu, buatlah menggemaskan!</p>
+            <p class="eg">Suka kartun → gambar karakter lucu.</p>
+          </div>
+        </div>
+      </div>
+      <div class="fcard anim" style="--d:3.2" onclick="this.classList.toggle('flipped')">
+        <div class="finner">
+          <div class="fface ffront">
+            <div class="fhead"><span class="fic" style="background:var(--lav2)"><i data-lucide="smartphone"></i></span><h3>4. Kebiasaan Online</h3></div>
+            <span class="hint"><i data-lucide="mouse-pointer-click"></i> klik untuk membuka</span>
+          </div>
+          <div class="fface fback">
+            <span class="tag">Gunanya</span>
+            <p>Menentukan <b>di mana konten dipasang</b>. Yang harinya di TikTok, buat video pendek — bukan tulisan panjang.</p>
+            <p class="eg">Sering di YouTube → thumbnail menarik.</p>
+          </div>
+        </div>
+      </div>
+      <div class="fcard anim" style="--d:3.6" onclick="this.classList.toggle('flipped')">
+        <div class="finner">
+          <div class="fface ffront">
+            <div class="fhead"><span class="fic" style="background:var(--sky2)"><i data-lucide="target"></i></span><h3>5. Butuh / Masalah</h3></div>
+            <span class="hint"><i data-lucide="mouse-pointer-click"></i> klik untuk membuka</span>
+          </div>
+          <div class="fface fback">
+            <span class="tag">Gunanya</span>
+            <p>Menjadi <b>pesan utama</b> desain. Yang butuh "yakin dulu", beri info lengkap — bukan kata-kata bombastis.</p>
+            <p class="eg">Butuh yakin → harga &amp; info jelas.</p>
+          </div>
+        </div>
+      </div>
+      <div class="fcard anim" style="--d:4" onclick="this.classList.toggle('flipped')">
+        <div class="finner">
+          <div class="fface ffront">
+            <div class="fhead"><span class="fic" style="background:var(--peach2)"><i data-lucide="message-circle"></i></span><h3>6. Gaya Bahasa</h3></div>
+            <span class="hint"><i data-lucide="mouse-pointer-click"></i> klik untuk membuka</span>
+          </div>
+          <div class="fface fback">
+            <span class="tag">Gunanya</span>
+            <p>Menentukan <b>kata-kata di desain</b>. Tulis seperti cara mereka berbicara sehari-hari, biar terasa dekat.</p>
+            <p class="eg">"Estetik bangeeet!" — bukan bahasa formal.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 7 : 4 PERSONA ============ -->
+<section class="slide" data-theme="sky">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="users"></i> Kenalan Lagi</span>
+    <h2 class="title anim" style="--d:1">Kartu persona mereka <span class="hl s">sudah lengkap!</span></h2>
+    <p class="lead anim" style="--d:1.5">Masih ingat keempat mereka dari pelajaran target market? Sekarang kartunya kita isi penuh.</p>
+    <div class="pc-grid">
+      <div class="p-card anim" style="--d:2">
+        <div class="p-ava av1"><svg viewBox="0 0 80 80"><use href="#av-dodi"/></svg></div>
+        <h3>Dodi</h3><div class="age">9 tahun · SD</div>
+        <div class="p-row"><i data-lucide="heart"></i><span><b>Suka:</b> kartun &amp; warna cerah</span></div>
+        <div class="p-row"><i data-lucide="smartphone"></i><span><b>Online:</b> YouTube</span></div>
+        <div class="p-row"><i data-lucide="target"></i><span><b>Butuh:</b> seru &amp; mudah dipahami</span></div>
+        <div class="p-row"><i data-lucide="message-circle"></i><span><b>Bicara:</b> "Wah, keren banget!"</span></div>
+      </div>
+      <div class="p-card anim" style="--d:2.4">
+        <div class="p-ava av2"><svg viewBox="0 0 80 80"><use href="#av-salsa"/></svg></div>
+        <h3>Salsa</h3><div class="age">15 tahun · remaja</div>
+        <div class="p-row"><i data-lucide="heart"></i><span><b>Suka:</b> estetik, lucu, lagi tren</span></div>
+        <div class="p-row"><i data-lucide="smartphone"></i><span><b>Online:</b> TikTok &amp; Instagram</span></div>
+        <div class="p-row"><i data-lucide="target"></i><span><b>Butuh:</b> ikut yang kekinian</span></div>
+        <div class="p-row"><i data-lucide="message-circle"></i><span><b>Bicara:</b> "Estetik bangeeet!"</span></div>
+      </div>
+      <div class="p-card anim" style="--d:2.8">
+        <div class="p-ava av3"><svg viewBox="0 0 80 80"><use href="#av-ratih"/></svg></div>
+        <h3>Bu Ratih</h3><div class="age">38 tahun · ibu rumah tangga</div>
+        <div class="p-row"><i data-lucide="heart"></i><span><b>Suka:</b> info lengkap &amp; jelas</span></div>
+        <div class="p-row"><i data-lucide="smartphone"></i><span><b>Online:</b> WhatsApp &amp; Facebook</span></div>
+        <div class="p-row"><i data-lucide="target"></i><span><b>Butuh:</b> yakin dulu sebelum beli</span></div>
+        <div class="p-row"><i data-lucide="message-circle"></i><span><b>Bicara:</b> "Harganya berapa, Bu?"</span></div>
+      </div>
+      <div class="p-card anim" style="--d:3.2">
+        <div class="p-ava av4"><svg viewBox="0 0 80 80"><use href="#av-jaya"/></svg></div>
+        <h3>Pak Jaya</h3><div class="age">45 tahun · bapak-bapak</div>
+        <div class="p-row"><i data-lucide="heart"></i><span><b>Suka:</b> praktis, langsung ke inti</span></div>
+        <div class="p-row"><i data-lucide="smartphone"></i><span><b>Online:</b> Facebook</span></div>
+        <div class="p-row"><i data-lucide="target"></i><span><b>Butuh:</b> bisa dipercaya &amp; cepat</span></div>
+        <div class="p-row"><i data-lucide="message-circle"></i><span><b>Bicara:</b> "Kapan bisa selesai?"</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 8 : PERSONA → KEPUTUSAN DESAIN ============ -->
+<section class="slide" data-theme="mint">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="route"></i> Dari Persona ke Desain</span>
+    <h2 class="title anim" style="--d:1">Setiap bagian persona <span class="hl m">melahirkan keputusan</span></h2>
+    <p class="lead anim" style="--d:1.5">Contoh: kita mendesain untuk <b>Salsa</b>. Tebak dulu keputusannya, lalu klik barisnya!</p>
+    <div class="map-list">
+      <button class="map-row anim" style="--d:2" data-k="1">
+        <div class="mr-top">
+          <span class="mr-ic" style="background:var(--pink2)"><i data-lucide="cake"></i></span>
+          <span class="mr-trait"><b>Umurnya 15 tahun</b><span>lagi suka hal-hal yang tren</span></span>
+          <span class="mr-q">keputusannya? <i data-lucide="chevron-right"></i></span>
+        </div>
+        <div class="mr-dec"><i data-lucide="circle-check"></i><span>Gunakan <b>bahasa kekinian</b>: kata "estetik", "viral", dan hashtag #fyp — terasa seperti dunianya.</span></div>
+      </button>
+      <button class="map-row anim" style="--d:2.4" data-k="2">
+        <div class="mr-top">
+          <span class="mr-ic" style="background:var(--butter2)"><i data-lucide="heart"></i></span>
+          <span class="mr-trait"><b>Suka yang estetik &amp; lucu</b><span>hobi menyimpan gambar yang menggemaskan</span></span>
+          <span class="mr-q">keputusannya? <i data-lucide="chevron-right"></i></span>
+        </div>
+        <div class="mr-dec"><i data-lucide="circle-check"></i><span>Pilih <b>warna lembut</b> (ungu lavender, pink) dan <b>karakter lucu</b> dengan wajah senyum di gambar produk.</span></div>
+      </button>
+      <button class="map-row anim" style="--d:2.8" data-k="3">
+        <div class="mr-top">
+          <span class="mr-ic" style="background:var(--lav2)"><i data-lucide="smartphone"></i></span>
+          <span class="mr-trait"><b>Hari-harinya di TikTok &amp; Instagram</b><span>nonton video pendek sambil scroll cepat</span></span>
+          <span class="mr-q">keputusannya? <i data-lucide="chevron-right"></i></span>
+        </div>
+        <div class="mr-dec"><i data-lucide="circle-check"></i><span>Buat konten <b>format ponsel (vertikal)</b> dan pasang di sana — plus <b>judul yang menarik perhatian</b> di awal, sebelum discroll lewat.</span></div>
+      </button>
+      <button class="map-row anim" style="--d:3.2" data-k="4">
+        <div class="mr-top">
+          <span class="mr-ic" style="background:var(--mint2)"><i data-lucide="message-circle"></i></span>
+          <span class="mr-trait"><b>Gaya bicaranya santai</b><span>"Estetik bangeeet!"</span></span>
+          <span class="mr-q">keputusannya? <i data-lucide="chevron-right"></i></span>
+        </div>
+        <div class="mr-dec"><i data-lucide="circle-check"></i><span>Tulis <b>caption seperti gaya bicaranya</b> — santai dan hangat. Bukan bahasa baku seperti pengumuman sekolah.</span></div>
+      </button>
+    </div>
+    <div class="map-note anim" style="--d:4">
+      <i data-lucide="repeat"></i><span>Lakukan yang sama untuk persona lain — <b>tiap bagian kartu</b> menjawab satu pilihan desain.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 9 : MESIN PERSONA ============ -->
+<section class="slide" data-theme="peach">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="wand-2"></i> Mesin Persona</span>
+    <h2 class="title anim" style="--d:1">Pilih persona, <span class="hl">lihat desainnya berubah!</span></h2>
+    <p class="lead anim" style="--d:1.5">Coba keempatnya. Perhatikan: yang berubah bukan cuma warna —
+    <b>semua mengikuti isi kartu personanya</b>.</p>
+    <div class="lab anim" style="--d:2">
+      <div>
+        <div class="lp" id="lpPoster">
+          <span class="lp-plat" id="lpPlat"><i data-lucide="youtube"></i><span id="lpPlatTxt"></span></span>
+          <span class="lp-deco" id="lpDeco"><i data-lucide="clapperboard"></i></span>
+          <div class="lp-title" id="lpTitle"></div>
+          <div class="lp-sub" id="lpSub"></div>
+          <div class="lp-price" id="lpPrice"></div>
+          <div class="lp-hash" id="lpHash"></div>
+          <div class="lp-cta" id="lpCta"><i data-lucide="play"></i><span id="lpCtaTxt"></span></div>
+        </div>
+      </div>
+      <div>
+        <div class="lp-pick" id="lpPick">
+          <button class="lpb" data-k="dodi"><span class="ava av1"><svg viewBox="0 0 80 80"><use href="#av-dodi"/></svg></span>Dodi</button>
+          <button class="lpb on" data-k="salsa"><span class="ava av2"><svg viewBox="0 0 80 80"><use href="#av-salsa"/></svg></span>Salsa</button>
+          <button class="lpb" data-k="ratih"><span class="ava av3"><svg viewBox="0 0 80 80"><use href="#av-ratih"/></svg></span>Bu Ratih</button>
+          <button class="lpb" data-k="jaya"><span class="ava av4"><svg viewBox="0 0 80 80"><use href="#av-jaya"/></svg></span>Pak Jaya</button>
+        </div>
+        <div class="lp-card" id="lpCard"></div>
+        <div class="lp-why">
+          <h4><i data-lucide="search"></i> Kenapa desainnya seperti ini?</h4>
+          <ul id="lpReasons"></ul>
+        </div>
+        <span class="lab-seen"><i data-lucide="sparkles"></i> Sudah dicoba: <span id="labSeen">1</span> / 4</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 10 : GAME ============ -->
+<section class="slide" data-theme="butter">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="puzzle"></i> Ayo Main!</span>
+    <h2 class="title anim" style="--d:1">Game: <span class="hl">desain ini buatan siapa?</span></h2>
+    <p class="lead anim" style="--d:1.5">Setiap potongan desain dibuat untuk salah satu persona. Diskusikan dulu dengan teman sebangku, lalu klik namanya!</p>
+    <div class="match-list">
+      <div class="m-card anim" style="--d:2">
+        <span class="snip" style="background:var(--butter2)">SEPATU PELANGI! — TONTON SEKARANG</span>
+        <h3>Warna ramai, gambar kartun, kata ajakannya <b>"TONTON!"</b>. Persona siapa?</h3>
+        <div class="m-opts">
+          <button class="m-opt" data-ok="1"><span class="mdot" style="background:var(--butter2)"></span>Dodi</button>
+          <button class="m-opt" data-ok="0"><span class="mdot" style="background:var(--lav2)"></span>Salsa</button>
+          <button class="m-opt" data-ok="0"><span class="mdot" style="background:var(--sky2)"></span>Pak Jaya</button>
+        </div>
+        <div class="m-why hidden"><i data-lucide="circle-check"></i><span>Benar! Warna cerah, gambar kartun, dan ajakan menonton adalah tanda-tanda desain untuk Dodi.</span></div>
+      </div>
+      <div class="m-card anim" style="--d:2.4">
+        <span class="snip" style="background:var(--lav2)">es boba cloud ☁️ #estetik #fyp</span>
+        <h3>Bahasa kekinian, hashtag, huruf kecil yang santai. Persona siapa?</h3>
+        <div class="m-opts">
+          <button class="m-opt" data-ok="0"><span class="mdot" style="background:var(--mint2)"></span>Bu Ratih</button>
+          <button class="m-opt" data-ok="1"><span class="mdot" style="background:var(--lav2)"></span>Salsa</button>
+          <button class="m-opt" data-ok="0"><span class="mdot" style="background:var(--butter2)"></span>Dodi</button>
+        </div>
+        <div class="m-why hidden"><i data-lucide="circle-check"></i><span>Benar! Hashtag dan gaya bahasa kekinian adalah "tanda tangan" desain untuk Salsa.</span></div>
+      </div>
+      <div class="m-card anim" style="--d:2.8">
+        <span class="snip" style="background:var(--mint2)">Katering · Mulai Rp15.000 · Chat Sekarang</span>
+        <h3>Harga ditulis jelas dan ada tombol <b>"Chat Sekarang"</b>. Persona siapa?</h3>
+        <div class="m-opts">
+          <button class="m-opt" data-ok="0"><span class="mdot" style="background:var(--sky2)"></span>Pak Jaya</button>
+          <button class="m-opt" data-ok="0"><span class="mdot" style="background:var(--lav2)"></span>Salsa</button>
+          <button class="m-opt" data-ok="1"><span class="mdot" style="background:var(--mint2)"></span>Bu Ratih</button>
+        </div>
+        <div class="m-why hidden"><i data-lucide="circle-check"></i><span>Benar! Bu Ratih butuh yakin dulu — makanya harganya jelas dan bisa langsung bertanya lewat chat.</span></div>
+      </div>
+      <div class="m-card anim" style="--d:3.2">
+        <span class="snip" style="background:var(--sky2)">SERVIS SEPEDA — DISKON 20% · Hubungi Kami</span>
+        <h3>Langsung ke inti, angka potongan menonjol, tanpa hiasan ramai. Persona siapa?</h3>
+        <div class="m-opts">
+          <button class="m-opt" data-ok="1"><span class="mdot" style="background:var(--sky2)"></span>Pak Jaya</button>
+          <button class="m-opt" data-ok="0"><span class="mdot" style="background:var(--butter2)"></span>Dodi</button>
+          <button class="m-opt" data-ok="0"><span class="mdot" style="background:var(--mint2)"></span>Bu Ratih</button>
+        </div>
+        <div class="m-why hidden"><i data-lucide="circle-check"></i><span>Benar! Pak Jaya suka praktis — layanan, angka, dan ajakan langsung, tanpa hiasan tambahan.</span></div>
+      </div>
+    </div>
+    <div class="m-score anim" style="--d:3.6">
+      <span>Desain yang berhasil ditebak:</span><b><span id="mDone">0</span> / 4</b>
+      <span id="mMsg" style="font-weight:600;font-size:14px;color:var(--butter2)"></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 11 : KUIS ============ -->
+<section class="slide" data-theme="lav">
+  <div class="wrap quiz-shell">
+    <div style="text-align:center">
+      <span class="kicker anim" style="--d:0"><i data-lucide="trophy"></i> Kuis Seru</span>
+      <h2 class="title anim" style="--d:1">Uji Pemahaman Personamu!</h2>
+    </div>
+    <div id="quizArea" class="anim" style="--d:2"></div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 12 : MISI ============ -->
+<section class="slide" data-theme="pink">
+  <div class="s-misi wrap" style="display:contents"><div class="wrap">
+    <div>
+      <span class="kicker anim" style="--d:0"><i data-lucide="flag"></i> Giliranmu!</span>
+      <h2 class="title anim" style="--d:1">Misi: kartu persona &amp; <span class="hl p">desainnya</span></h2>
+      <p class="lead anim" style="--d:2">Kerjakan berkelompok. Ingat: <b>setiap pilihan desain harus punya alasan dari kartu persona</b>.</p>
+      <div class="steps">
+        <div class="step anim" style="--d:3"><div class="snum st1">1</div>
+          <div><h3>Pilih satu usaha/produk</h3><p>Boleh lanjutan usaha kelompokmu dari pelajaran Canva sebelumnya.</p></div></div>
+        <div class="step anim" style="--d:4"><div class="snum st2">2</div>
+          <div><h3>Isi kartu personanya</h3><p>Lengkapi 6 bagian: nama &amp; gambar, umur, disukai, kebiasaan online, kebutuhan, gaya bahasa.</p></div></div>
+        <div class="step anim" style="--d:5"><div class="snum st3">3</div>
+          <div><h3>Buat satu desain untuk persona itu</h3><p>Di kertas atau Canva. Warna, kata, gambar, dan tempatnya harus lahir dari kartu.</p></div></div>
+        <div class="step anim" style="--d:6"><div class="snum st4">4</div>
+          <div><h3>Ceritakan keduanya (2 menit)</h3><p>Baca persona → tunjukkan desain → sebutkan 3 keputusan yang lahir dari kartunya.</p></div></div>
+      </div>
+    </div>
+    <div>
+      <div class="side-card card anim" style="--d:4">
+        <h3><i data-lucide="lightbulb"></i> Cek Sebelum Presentasi</h3>
+        <div class="tip"><i data-lucide="check"></i><span>Nama &amp; umurnya terasa seperti orang nyata?</span></div>
+        <div class="tip"><i data-lucide="check"></i><span>Setiap warna dan gambar ada alasannya dari kartu?</span></div>
+        <div class="tip"><i data-lucide="check"></i><span>Kata-katanya seperti gaya bicara persona?</span></div>
+        <div class="tip"><i data-lucide="check"></i><span>Tempat konten = kebiasaan online persona?</span></div>
+        <div class="tip"><i data-lucide="check"></i><span>Pesan utamanya berasal dari kebutuhannya?</span></div>
+      </div>
+      <div class="blank-card anim" style="--d:4.5">
+        <h4><i data-lucide="id-card"></i> Kerangka kartu — salin di kertas</h4>
+        <div class="bl"><b>Nama:</b><span></span></div>
+        <div class="bl"><b>Umur:</b><span></span></div>
+        <div class="bl"><b>Suka:</b><span></span></div>
+        <div class="bl"><b>Sering di:</b><span></span></div>
+        <div class="bl"><b>Butuh:</b><span></span></div>
+        <div class="bl"><b>Bicara:</b><span></span></div>
+      </div>
+      <div class="mini-rubrik card anim" style="--d:5">
+        <h3 style="font-family:'Fredoka';font-size:17px;margin-bottom:8px;display:flex;align-items:center;gap:9px"><i data-lucide="clipboard-check" style="width:19px;height:19px"></i> Cara Penilaian</h3>
+        <div class="rubrik-row"><span>Kelengkapan kartu persona</span><span>30 poin</span></div>
+        <div class="rubrik-row"><span>Kesesuaian desain dengan persona</span><span>40 poin</span></div>
+        <div class="rubrik-row"><span>Kejelasan penjelasan alasan</span><span>30 poin</span></div>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============ SLIDE 13 : PENUTUP ============ -->
+<section class="slide" data-theme="peach">
+  <div class="deco bob" style="top:16%;right:8%;width:30px;height:30px">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 2v20M2 12h20"/></svg>
+  </div>
+  <div class="s-end wrap" style="display:contents"><div class="wrap">
+    <div>
+      <span class="kicker anim" style="--d:0"><i data-lucide="message-circle-heart"></i> Refleksi &amp; Penutup</span>
+      <h2 class="title anim" style="--d:1">Sebelum pulang, <span class="hl p">ayo curhat dikit!</span></h2>
+      <div class="refl">
+        <div class="refl-item anim" style="--d:2"><div class="rnum r1">1</div>
+          <p>Jelaskan dengan kalimatmu sendiri: apa bedanya persona dan target market?</p></div>
+        <div class="refl-item anim" style="--d:3"><div class="rnum r2">2</div>
+          <p>Bagian kartu persona mana yang paling membantu desainmu? Kenapa?</p></div>
+        <div class="refl-item anim" style="--d:4"><div class="rnum r3">3</div>
+          <p>Kalau persona-mu punya masalah "takut mahal", pesan utama desainmu jadi apa?</p></div>
+      </div>
+      <div class="end-btn anim" style="--d:5">
+        <button class="btn sun" id="partyBtn"><i data-lucide="party-popper"></i> Rayakan Hari Ini!</button>
+      </div>
+    </div>
+    <div class="end-art anim" style="--d:3">
+      <div class="quote">
+        <h3>Desain yang hebat selalu punya wajah — wajah orang yang akan melihatnya.</h3>
+        <p>Kenali dulu "teman imajiner"mu, lalu desainlah untuknya. Sampai jumpa, calon desainer berempati!</p>
+      </div>
+      <span class="fchip fc1 bob"><i data-lucide="id-card"></i></span>
+      <span class="fchip fc2 bob" style="animation-delay:.7s"><i data-lucide="palette"></i></span>
+      <span class="fchip fc4 bob" style="animation-delay:1.4s"><i data-lucide="heart"></i></span>
+      <span class="fchip fc5 bob" style="animation-delay:2s"><i data-lucide="sparkles"></i></span>
+    </div>
+  </div></div>
+</section>
+
+<!-- NAV -->
+<div class="pagenum"><span id="cur">01</span> / <span id="tot">13</span></div>
+<div class="dots" id="dots"></div>
+<div class="navbtns">
+  <button class="nav" id="prev" aria-label="Sebelumnya"><i data-lucide="chevron-left"></i></button>
+  <button class="nav" id="next" aria-label="Berikutnya"><i data-lucide="chevron-right"></i></button>
+</div>
+<canvas id="confetti"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.454.0/dist/umd/lucide.min.js"></script>
+<script>
+/* ================= NAVIGASI ================= */
+const slides=[...document.querySelectorAll('.slide')];
+const dotsBox=document.getElementById('dots');
+let cur=0;
+slides.forEach((_,i)=>{
+  const d=document.createElement('button');
+  d.className='dot'+(i===0?' on':'');d.title='Slide '+(i+1);
+  d.onclick=()=>go(i);dotsBox.appendChild(d);
+});
+const dots=[...dotsBox.children];
+document.getElementById('tot').textContent=String(slides.length).padStart(2,'0');
+function go(i){
+  cur=Math.max(0,Math.min(slides.length-1,i));
+  slides.forEach((s,k)=>s.classList.toggle('active',k===cur));
+  dots.forEach((d,k)=>d.classList.toggle('on',k===cur));
+  document.getElementById('cur').textContent=String(cur+1).padStart(2,'0');
+  document.getElementById('bar').style.width=((cur+1)/slides.length*100)+'%';
+  document.getElementById('prev').disabled=cur===0;
+  document.getElementById('next').disabled=cur===slides.length-1;
+}
+document.getElementById('prev').onclick=()=>go(cur-1);
+document.getElementById('next').onclick=()=>go(cur+1);
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();go(cur+1)}
+  if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(cur-1)}
+});
+let tx=0;
+addEventListener('touchstart',e=>tx=e.touches[0].clientX,{passive:true});
+addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-tx;
+  if(Math.abs(dx)>60) dx<0?go(cur+1):go(cur-1);
+},{passive:true});
+go(0);
+
+/* ================= PEMANASAN : TEBAK POSTER ================= */
+const wuFb={
+  wu1:{good:'Tepat! Bahasa kekinian, hashtag, warna lembut, dan gambar lucu adalah petunjuk kuat — ini gaya desain untuk remaja seperti Salsa.',
+       bad:'Masih ragu? Perhatikan petunjuknya: hashtag #fyp, kata "estetik", dan warna lembut. Siapa yang paling sering memakai gaya begini?'},
+  wu2:{good:'Betul! Langsung ke inti, angka potongan ditonjolkan, tanpa hiasan ramai — itu gaya desain untuk Pak Jaya yang suka praktis.',
+       bad:'Coba ingat-ingat: siapa yang paling menyukai info singkat, angka jelas, dan tanpa hiasan? Diskusikan sebentar!'}
+};
+let wuScore=0;
+document.querySelectorAll('.wu').forEach(wu=>{
+  const isLast=wu.id==='wu2';
+  wu.querySelectorAll('.wu-opt').forEach(btn=>{
+    btn.onclick=()=>{
+      if(wu.classList.contains('locked'))return;
+      const ok=btn.dataset.ok==="1";
+      if(ok)wuScore++;
+      wu.classList.add('locked');
+      wu.querySelectorAll('.wu-opt').forEach(b=>{
+        b.disabled=true;
+        if(b.dataset.ok==="1")b.classList.add('good');
+      });
+      if(!ok)btn.classList.add('bad');
+      const fb=wu.querySelector('.wu-fb');
+      fb.querySelector('span').textContent=wuFb[wu.id][ok?'good':'bad'];
+      fb.classList.remove('hidden');
+      const nx=wu.querySelector('.wu-next');
+      nx.classList.remove('hidden');
+      nx.onclick=()=>{
+        wu.classList.add('hidden');
+        const target=isLast?document.getElementById('wuDone'):document.getElementById('wu2');
+        target.classList.remove('hidden');
+        if(isLast){
+          document.getElementById('wuScoreTxt').textContent=wuScore;
+          celebrate(220);
+        }
+        lucide.createIcons();
+      };
+      lucide.createIcons();
+    };
+  });
+});
+
+/* ================= MAP ROWS ================= */
+const openSet=new Set();
+document.querySelectorAll('.map-row').forEach(r=>{
+  r.onclick=()=>{
+    r.classList.toggle('open');
+    if(r.classList.contains('open')){
+      openSet.add(r.dataset.k);
+      openSet.size===4?celebrate(200):celebrate(25);
+    }
+  };
+});
+
+/* ================= MESIN PERSONA ================= */
+const PERSONAS={
+  dodi:{
+    bg:'#FFE39A',plat:['youtube','YouTube'],title:'SEPATU PELANGI!',tsize:'29px',
+    sub:'Warna-warni, ringan, bikin jalan makin senang!',
+    price:'Rp99.000',hash:null,
+    cta:['play','TONTON SEKARANG'],ctaBg:'var(--coral)',ctaFg:'#fff',
+    deco:['clapperboard','var(--coral)','#fff'],
+    ava:'av-dodi',avaBg:'var(--butter2)',name:'Dodi',age:'9 tahun · SD',
+    rows:[['Suka','kartun & warna cerah'],['Sering di','YouTube'],['Butuh','seru & mudah dipahami'],['Gaya bicara','"Wah, keren banget!"']],
+    why:['Umurnya 9 tahun → warna cerah dan gambar yang ramai.','Suka video seru → gaya thumbnail YouTube dengan tulisan besar.','Dilihat sambil lalu → kata-katanya sedikit dan langsung.']
+  },
+  salsa:{
+    bg:'#DCD2F7',plat:['music-2','TikTok / Instagram'],title:'Es Boba Cloud ☁️',tsize:'29px',
+    sub:'creamy, estetik, bikin mood naik!',
+    price:null,hash:'#estetik #bobalover #fyp',
+    cta:['music-2','cek videonya'],ctaBg:'var(--lav2)',ctaFg:'var(--ink)',
+    deco:['heart','var(--pink2)','#fff'],
+    ava:'av-salsa',avaBg:'var(--lav2)',name:'Salsa',age:'15 tahun · remaja',
+    rows:[['Suka','estetik, lucu, lagi tren'],['Sering di','TikTok & Instagram'],['Butuh','ikut yang kekinian'],['Gaya bicara','"Estetik bangeeet!"']],
+    why:['Umurnya 15 tahun → bahasa kekinian dan hashtag.','Suka estetik → warna lembut dan karakter lucu.','Scroll-nya cepat → judul harus menarik perhatian di awal.']
+  },
+  ratih:{
+    bg:'#BFEAD2',plat:['message-circle','WhatsApp Status'],title:'Katering Bu Ratih',tsize:'26px',
+    sub:'Masakan rumahan, menu berganti tiap hari. Anak suka, ibu tenang!',
+    price:'Mulai Rp15.000/porsi',hash:null,
+    cta:['message-circle','Chat Sekarang'],ctaBg:'var(--teal)',ctaFg:'#fff',
+    deco:['check','var(--teal)','#fff'],
+    ava:'av-ratih',avaBg:'var(--mint2)',name:'Bu Ratih',age:'38 tahun · ibu rumah tangga',
+    rows:[['Suka','info lengkap & jelas'],['Sering di','WhatsApp & Facebook'],['Butuh','yakin dulu sebelum beli'],['Gaya bicara','"Harganya berapa, Bu?"']],
+    why:['Butuh yakin dulu → harga dan info ditulis jelas.','Suka bertanya → tombol "Chat Sekarang" paling menonjol.','Hari-harinya di WhatsApp → format status yang sederhana.']
+  },
+  jaya:{
+    bg:'#C5DCF2',plat:['facebook','Facebook'],title:'Bengkel Sepeda Pak Jaya',tsize:'24px',
+    sub:'Servis lengkap: rantai, rem, ban. Siap dipakai lagi!',
+    price:'Diskon servis 20%',hash:null,
+    cta:['facebook','Hubungi Kami'],ctaBg:'var(--sky2)',ctaFg:'var(--ink)',
+    deco:['wrench','var(--sky2)','var(--ink)'],
+    ava:'av-jaya',avaBg:'var(--sky2)',name:'Pak Jaya',age:'45 tahun · bapak-bapak',
+    rows:[['Suka','praktis, langsung ke inti'],['Sering di','Facebook'],['Butuh','bisa dipercaya & cepat'],['Gaya bicara','"Kapan bisa selesai?"']],
+    why:['Mau praktis → layanan dan potongan ditulis langsung.','Percaya angka → "20%" dibuat paling menonjol.','Berkumpul di Facebook → gaya postingan info yang jelas.']
+  }
+};
+const seen=new Set(['salsa']);
+function selectPersona(k){
+  const p=PERSONAS[k];
+  const poster=document.getElementById('lpPoster');
+  poster.style.background=p.bg;
+  document.getElementById('lpPlat').innerHTML=`<i data-lucide="${p.plat[0]}"></i><span>${p.plat[1]}</span>`;
+  const t=document.getElementById('lpTitle');
+  t.textContent=p.title; t.style.fontSize=p.tsize;
+  document.getElementById('lpSub').textContent=p.sub;
+  const pr=document.getElementById('lpPrice');
+  if(p.price){pr.textContent=p.price;pr.style.display=''}else pr.style.display='none';
+  const hs=document.getElementById('lpHash');
+  if(p.hash){hs.textContent=p.hash;hs.style.display=''}else hs.style.display='none';
+  const cta=document.getElementById('lpCta');
+  cta.innerHTML=`<i data-lucide="${p.cta[0]}"></i><span>${p.cta[1]}</span>`;
+  cta.style.background=p.ctaBg; cta.style.color=p.ctaFg;
+  const dc=document.getElementById('lpDeco');
+  dc.innerHTML=`<i data-lucide="${p.deco[0]}"></i>`;
+  dc.style.background=p.deco[1]; dc.style.color=p.deco[2];
+  document.getElementById('lpCard').innerHTML=`
+    <h4><span class="cava ${p.avaBg===''?'':''}" style="background:${p.avaBg}"><svg viewBox="0 0 80 80"><use href="#${p.ava}"/></svg></span>
+      <span>${p.name}<small>${p.age}</small></span></h4>
+    <div class="lp-rows">${p.rows.map(r=>`<div class="r"><b>${r[0]}:</b><span>${r[1]}</span></div>`).join('')}</div>`;
+  document.getElementById('lpReasons').innerHTML=p.why.map(w=>`<li><i data-lucide="circle-check"></i><span>${w}</span></li>`).join('');
+  document.querySelectorAll('.lpb').forEach(b=>b.classList.toggle('on',b.dataset.k===k));
+  lucide.createIcons();
+  seen.add(k);
+  document.getElementById('labSeen').textContent=seen.size;
+  if(seen.size===4){celebrate(200)}
+}
+document.querySelectorAll('.lpb').forEach(b=>b.onclick=()=>selectPersona(b.dataset.k));
+selectPersona('salsa');
+
+/* ================= GAME ================= */
+let mDone=0;
+document.querySelectorAll('.m-card').forEach(card=>{
+  card.querySelectorAll('.m-opt').forEach(btn=>{
+    btn.onclick=()=>{
+      if(card.classList.contains('solved'))return;
+      if(btn.dataset.ok==="1"){
+        btn.classList.add('good');
+        card.querySelectorAll('.m-opt').forEach(b=>b.disabled=true);
+        card.classList.add('solved');
+        card.querySelector('.m-why').classList.remove('hidden');
+        mDone++;
+        document.getElementById('mDone').textContent=mDone;
+        celebrate(70);
+        if(mDone===4){
+          document.getElementById('mMsg').textContent="Mantap! Kamu bisa membaca 'wajah' sebuah desain!";
+          celebrate(220);
+        }
+      }else{
+        btn.classList.add('bad','shake');
+        btn.disabled=true;
+        setTimeout(()=>btn.classList.remove('shake'),350);
+      }
+    };
+  });
+});
+
+/* ================= KUIS ================= */
+const quizData=[
+  {q:"Persona adalah...", opts:[
+    "Orang nyata yang akan membeli produk kita",
+    "Deskripsi satu orang imajiner yang mewakili kelompok pembeli",
+    "Nama toko tempat kita berjualan"],a:1,
+    why:"Betul! Persona itu 'kartu kenalan' imajiner — dirangkai dari ciri khas kelompok target market."},
+  {q:"Bagaimana hubungan target market dan persona?", opts:[
+    "Tidak ada hubungannya sama sekali",
+    "Persona adalah satu contoh orang yang diambil dari target market",
+    "Target market adalah satu contoh dari persona"],a:1,
+    why:"Tepat! Target market itu peta besar kelompoknya, persona adalah zoom ke satu orang contoh agar mudah dibayangkan."},
+  {q:"Untuk menentukan di mana konten dipasang, bagian persona yang paling membantu adalah...", opts:[
+    "Nama dan foto",
+    "Kebiasaan online",
+    "Warna kesukaan"],a:1,
+    why:"Iya! Kebiasaan online memberi tahu tempat berkumpulnya persona — di situlah konten kita ditaruh."},
+  {q:"Persona-mu punya kebutuhan 'yakin dulu sebelum membeli'. Desain yang cocok adalah...", opts:[
+    "Kata-kata bombastis tanpa info",
+    "Hanya gambar tanpa tulisan",
+    "Info lengkap, harga jelas, dan bisa bertanya dulu"],a:2,
+    why:"Betul! Kebutuhan persona menjadi pesan utama desain — yang butuh keyakinan diberi kejelasan."},
+  {q:"Kenapa mendesain dengan persona lebih baik daripada menebak-nebak?", opts:[
+    "Supaya desainnya lebih cepat selesai saja",
+    "Karena setiap pilihan desain punya alasan yang jelas dari kartunya",
+    "Karena persona membuat desain jadi lebih mahal"],a:1,
+    why:"Tepat sekali! Dengan persona, warna, kata, gambar, dan tempat semuanya punya alasan — bukan asal cantik."},
+];
+const quizArea=document.getElementById('quizArea');
+let qi=0,score=0;
+const LETTERS=['A','B','C'];
+function renderQuiz(){
+  if(qi>=quizData.length){renderDone();return}
+  const d=quizData[qi];
+  quizArea.innerHTML=`
+    <div class="q-card card">
+      <div class="q-meta">
+        <span class="q-badge">Soal ${qi+1} dari ${quizData.length}</span>
+        <span class="q-score"><i data-lucide="star"></i> Skor: ${score}</span>
+      </div>
+      <h3 class="q-q">${d.q}</h3>
+      <div class="q-opts">
+        ${d.opts.map((o,i)=>`<button class="opt" data-i="${i}"><span class="letter">${LETTERS[i]}</span>${o}</button>`).join('')}
+      </div>
+      <div class="q-foot hidden" id="qFoot">
+        <div class="q-why" id="qWhy"></div>
+        <button class="btn mint" id="qNext">${qi===quizData.length-1?'Lihat Hasil':'Lanjut'} <i data-lucide="chevron-right"></i></button>
+      </div>
+    </div>`;
+  lucide.createIcons();
+  quizArea.querySelectorAll('.opt').forEach(btn=>{
+    btn.onclick=()=>{
+      const pick=+btn.dataset.i;
+      quizArea.querySelectorAll('.opt').forEach(b=>b.disabled=true);
+      const good=quizArea.querySelector(`.opt[data-i="${d.a}"]`);
+      good.classList.add('good');
+      if(pick===d.a){score++;celebrate(60)}
+      else btn.classList.add('bad');
+      const why=document.getElementById('qWhy');
+      why.innerHTML=`<i data-lucide="${pick===d.a?'circle-check':'info'}"></i><span>${d.why}</span>`;
+      document.getElementById('qFoot').classList.remove('hidden');
+      lucide.createIcons();
+      document.getElementById('qNext').onclick=()=>{qi++;renderQuiz()};
+    };
+  });
+}
+function renderDone(){
+  let msg,big;
+  if(score===5){big="5 / 5";msg="Sempurna! Kamu resmi jadi 'pembaca persona' sejati!"}
+  else if(score===4){big="4 / 5";msg="Hebat! Sedikit lagi menuju sempurna!"}
+  else if(score===3){big="3 / 5";msg="Bagus! Ayo bahas lagi soal yang keliru bareng teman sebangku."}
+  else{big=score+" / 5";msg="Tidak apa-apa — belajar memang proses. Coba ulangi, ya!"}
+  quizArea.innerHTML=`
+    <div class="q-card card q-done">
+      <div class="tro"><i data-lucide="trophy"></i></div>
+      <h3>Kuis Selesai!</h3>
+      <div class="big">${big}</div>
+      <p>${msg}</p>
+      <button class="btn" id="qRetry"><i data-lucide="rotate-ccw"></i> Ulangi Kuis</button>
+    </div>`;
+  lucide.createIcons();
+  celebrate(180);
+  document.getElementById('qRetry').onclick=()=>{qi=0;score=0;renderQuiz()};
+}
+renderQuiz();
+
+/* ================= KONFETI ================= */
+const cvs=document.getElementById('confetti'),ctx=cvs.getContext('2d');
+const COLORS=['#FF7E67','#FFC531','#3FBF8F','#FFA8C5','#B9A7F2','#7FD8A6'];
+let parts=[],raf=null;
+function sizeC(){cvs.width=innerWidth;cvs.height=innerHeight}
+sizeC();addEventListener('resize',sizeC);
+function celebrate(n=140){
+  for(let i=0;i<n;i++){
+    parts.push({
+      x:Math.random()*cvs.width,y:-30-Math.random()*cvs.height*.35,
+      vx:-1.6+Math.random()*3.2,vy:2.2+Math.random()*3.4,
+      w:9+Math.random()*9,h:5+Math.random()*6,
+      rot:Math.random()*Math.PI,vr:-.16+Math.random()*.32,
+      ph:Math.random()*Math.PI*2,
+      c:COLORS[Math.floor(Math.random()*COLORS.length)],
+      shape:Math.floor(Math.random()*3)
+    });
+  }
+  if(!raf)tick();
+}
+function tick(){
+  ctx.clearRect(0,0,cvs.width,cvs.height);
+  parts.forEach(p=>{
+    p.x+=p.vx;p.y+=p.vy;p.rot+=p.vr;p.ph+=.1;p.vy+=.015;
+    ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);
+    ctx.scale(1,Math.abs(Math.sin(p.ph))*.85+.15);
+    ctx.fillStyle=p.c;
+    if(p.shape===0){ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h)}
+    else if(p.shape===1){ctx.beginPath();ctx.arc(0,0,p.h,0,7);ctx.fill()}
+    else{ctx.beginPath();ctx.moveTo(0,-p.h);ctx.lineTo(p.w/2,p.h/2);ctx.lineTo(-p.w/2,p.h/2);ctx.closePath();ctx.fill()}
+    ctx.restore();
+  });
+  parts=parts.filter(p=>p.y<cvs.height+40);
+  if(parts.length)raf=requestAnimationFrame(tick);
+  else{raf=null;ctx.clearRect(0,0,cvs.width,cvs.height)}
+}
+document.getElementById('partyBtn').onclick=()=>{celebrate(260);setTimeout(()=>celebrate(160),700)};
+
+lucide.createIcons();
+</script>
+</body>
+</html>
