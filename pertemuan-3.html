@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cekrek! Foto Jualan Pakai HP — Foto Produk &amp; AI · SMP Kelas 7</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#453A4E; --ink-soft:#6B5F75; --cream:#FDF7EF;
+    --peach:#FFF1E8; --peach2:#FFCBB5;
+    --mint:#EAF7F0;  --mint2:#BFEAD2;
+    --butter:#FFF6DF;--butter2:#FFE39A;
+    --lav:#F3F0FC;   --lav2:#DCD2F7;
+    --pink:#FFF0F5;  --pink2:#FFC9DC;
+    --sky:#E9F1FB;   --sky2:#C5DCF2;
+    --coral:#FF7E67; --teal:#3FBF8F; --sun:#FFC531;
+    --shadow:6px 6px 0 var(--ink);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--ink);background:var(--cream);overflow:hidden}
+  h1,h2,h3,.disp{font-family:'Fredoka',sans-serif}
+
+  /* ===== CHROME ===== */
+  #bar{position:fixed;top:0;left:0;height:6px;background:var(--coral);width:0;z-index:60;transition:width .4s ease;border-radius:0 4px 4px 0}
+  .pagenum{position:fixed;left:26px;bottom:22px;z-index:60;font-family:'Fredoka';font-weight:600;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:7px 16px;box-shadow:4px 4px 0 var(--ink);font-size:14px;letter-spacing:.06em}
+  .dots{position:fixed;left:50%;transform:translateX(-50%);bottom:24px;z-index:60;display:flex;gap:9px}
+  .dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--ink);background:#fff;cursor:pointer;transition:.25s;padding:0}
+  .dot.on{background:var(--sun);transform:scale(1.35)}
+  .navbtns{position:fixed;right:26px;bottom:18px;z-index:60;display:flex;gap:10px}
+  .nav{width:52px;height:52px;border-radius:50%;background:#fff;border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink);cursor:pointer;display:grid;place-items:center;transition:.15s;color:var(--ink)}
+  .nav:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .nav:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+  .nav:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:4px 4px 0 var(--ink)}
+
+  /* ===== SLIDES ===== */
+  .slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transform:translateX(46px);transition:opacity .5s ease,transform .55s cubic-bezier(.22,.9,.32,1),visibility .5s;overflow:auto;padding:56px 40px 100px}
+  .slide.active{opacity:1;visibility:visible;transform:none;z-index:5}
+  .slide::before,.slide::after{content:'';position:absolute;border-radius:50%;z-index:0}
+  .slide::before{width:44vw;height:44vw;top:-20vw;right:-14vw;background:var(--bA);opacity:.75}
+  .slide::after{width:34vw;height:34vw;bottom:-16vw;left:-12vw;background:var(--bB);opacity:.7}
+  [data-theme="peach"] {background:var(--peach);--bA:var(--peach2);--bB:var(--butter2)}
+  [data-theme="cream"] {background:var(--cream);--bA:var(--mint2);--bB:var(--pink2)}
+  [data-theme="butter"]{background:var(--butter);--bA:var(--butter2);--bB:var(--mint2)}
+  [data-theme="mint"]  {background:var(--mint);--bA:var(--mint2);--bB:var(--peach2)}
+  [data-theme="lav"]   {background:var(--lav);--bA:var(--lav2);--bB:var(--peach2)}
+  [data-theme="pink"]  {background:var(--pink);--bA:var(--pink2);--bB:var(--sky2)}
+  [data-theme="sky"]   {background:var(--sky);--bA:var(--sky2);--bB:var(--butter2)}
+
+  .wrap{position:relative;z-index:2;width:min(1180px,100%)}
+  .anim{opacity:0}
+  .slide.active .anim{animation:rise .7s cubic-bezier(.22,.9,.32,1) forwards;animation-delay:calc(var(--d,0)*.09s)}
+  @keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+
+  .kicker{display:inline-flex;align-items:center;gap:8px;font-family:'Fredoka';font-weight:600;font-size:13px;letter-spacing:.14em;text-transform:uppercase;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:8px 18px;box-shadow:4px 4px 0 var(--ink)}
+  .kicker svg{width:16px;height:16px}
+  h2.title{font-size:clamp(30px,3.6vw,48px);font-weight:700;margin:18px 0 8px;line-height:1.12}
+  p.lead{font-size:clamp(15px,1.3vw,19px);color:var(--ink-soft);max-width:680px;font-weight:500}
+  .hl{background:linear-gradient(transparent 62%,var(--butter2) 62%);padding:0 3px;border-radius:3px}
+  .hl.m{background:linear-gradient(transparent 62%,var(--mint2) 62%)}
+  .hl.p{background:linear-gradient(transparent 62%,var(--pink2) 62%)}
+  .hl.l{background:linear-gradient(transparent 62%,var(--lav2) 62%)}
+  .card{background:#fff;border:3px solid var(--ink);border-radius:20px;box-shadow:var(--shadow)}
+  .btn{display:inline-flex;align-items:center;gap:10px;font-family:'Fredoka';font-weight:600;font-size:17px;color:var(--ink);background:var(--coral);border:3px solid var(--ink);border-radius:14px;padding:13px 26px;box-shadow:5px 5px 0 var(--ink);cursor:pointer;transition:.15s}
+  .btn svg{width:20px;height:20px}
+  .btn:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+  .btn.sun{background:var(--sun)} .btn.mint{background:var(--mint2)}
+  .hidden{display:none !important}
+  .deco{position:absolute;z-index:1;pointer-events:none;color:var(--ink);opacity:.55}
+  .deco svg{width:100%;height:100%}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}50%{transform:translateY(-14px) rotate(var(--r,0deg))}}
+  .bob{animation:bob 4.5s ease-in-out infinite}
+
+  /* ===== HERO ===== */
+  .s-hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center}
+  .badge-row{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap}
+  .badge{display:inline-flex;align-items:center;gap:8px;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:8px 16px;font-weight:700;font-size:14px;box-shadow:3px 3px 0 var(--ink)}
+  .badge svg{width:17px;height:17px}
+  .b1{background:var(--mint2)} .b2{background:var(--pink2)} .b3{background:var(--butter2)}
+  .art-stage{position:relative;display:grid;place-items:center;min-height:480px}
+  .art-stage>svg{width:min(380px,90%);filter:drop-shadow(8px 10px 0 rgba(69,58,78,.18))}
+  .fchip{position:absolute;display:grid;place-items:center;border:3px solid var(--ink);border-radius:50%;box-shadow:4px 4px 0 var(--ink)}
+  .fchip svg{width:52%;height:52%}
+  .fc1{width:74px;height:74px;background:var(--coral);color:#fff;top:36px;left:34px;--r:-8deg}
+  .fc2{width:64px;height:64px;background:var(--sun);top:118px;right:26px;--r:10deg}
+  .fc3{width:70px;height:70px;background:var(--teal);color:#fff;bottom:92px;left:14px;--r:6deg}
+  .fc4{width:60px;height:60px;background:var(--lav2);bottom:34px;right:48px;--r:-10deg}
+  .fc5{width:52px;height:52px;background:var(--pink2);top:8px;right:130px;--r:14deg}
+
+  /* ===== GOALS ===== */
+  .goal-list{margin-top:30px;display:flex;flex-direction:column;gap:16px;max-width:880px}
+  .goal{display:flex;align-items:center;gap:22px;background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:16px 24px}
+  .goal:nth-child(odd){margin-right:56px}.goal:nth-child(even){margin-left:56px}
+  .gnum{flex:0 0 56px;height:56px;border-radius:50%;border:3px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:24px}
+  .g1{background:var(--coral);color:#fff}.g2{background:var(--sun)}.g3{background:var(--mint2)}.g4{background:var(--pink2)}
+  .goal h3{font-size:19px;font-weight:600;margin-bottom:3px}
+  .goal p{font-size:14.5px;color:var(--ink-soft);font-weight:500}
+
+  /* ===== PEMANASAN : BANDINGKAN FOTO ===== */
+  .cmp{margin-top:26px;display:grid;grid-template-columns:1fr 1fr;gap:28px;max-width:860px}
+  .shot{background:#fff;border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);overflow:hidden;cursor:pointer;transition:.15s;text-align:left;font-family:'Plus Jakarta Sans';color:var(--ink);padding:0}
+  .shot:hover:not(:disabled){transform:translate(-3px,-3px);box-shadow:9px 9px 0 var(--ink)}
+  .shot:disabled{cursor:default}
+  .shot .frame{display:block;aspect-ratio:4/3;overflow:hidden;border-bottom:3px solid var(--ink);background:#2B2233}
+  .shot .frame img{display:block;width:100%;height:100%;object-fit:cover}
+  .shot .frame img.worse{filter:brightness(.5) saturate(.55) sepia(.45) contrast(.85) blur(.6px);transform:rotate(-9deg) scale(1.35) translate(14%,8%)}
+  .credit{margin-top:12px;font-size:12px;font-weight:600;color:var(--ink-soft)}
+  .shot .cap{display:flex;align-items:center;gap:12px;padding:12px 18px;font-weight:700;font-size:15px}
+  .shot .cap .letter{flex:0 0 34px;height:34px;border-radius:10px;border:2.5px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;background:var(--butter2)}
+  .shot.good{background:var(--mint2)} .shot.good .letter{background:var(--teal);color:#fff}
+  .shot.bad{background:var(--pink2)} .shot.bad .letter{background:var(--coral);color:#fff}
+  .wu-fb{margin-top:20px;display:flex;gap:12px;align-items:flex-start;background:var(--butter);border:2.5px solid var(--ink);border-radius:14px;padding:14px 18px;font-size:14.5px;font-weight:600;line-height:1.55;max-width:860px}
+  .wu-fb svg{width:20px;height:20px;flex:0 0 20px;margin-top:2px}
+
+  /* ===== DEFINISI ===== */
+  .s-def .wrap{display:grid;grid-template-columns:1.08fr .92fr;gap:40px;align-items:center}
+  .define{margin-top:24px;background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:22px 26px;font-size:clamp(16px,1.45vw,20px);font-weight:600;line-height:1.6}
+  .define .q{color:var(--coral);font-family:'Fredoka'}
+  .analog{margin-top:18px;display:flex;gap:16px;align-items:flex-start;background:var(--lav);border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:18px 22px}
+  .analog .ic{flex:0 0 46px;height:46px;border-radius:50%;background:var(--lav2);display:grid;place-items:center;border:2.5px solid var(--ink)}
+  .analog .ic svg{width:24px;height:24px}
+  .analog p{font-size:15.5px;font-weight:500;line-height:1.55}
+  .whylist{margin-top:24px;padding:22px 24px}
+  .whylist h3{display:flex;align-items:center;gap:10px;font-size:18px;margin-bottom:12px}
+  .whylist h3 svg{width:20px;height:20px;color:var(--coral)}
+  .wl{display:flex;gap:11px;font-size:14.5px;font-weight:600;padding:8px 0;line-height:1.5;border-top:2px dashed rgba(69,58,78,.2)}
+  .wl:first-of-type{border-top:none}
+  .wl svg{width:18px;height:18px;flex:0 0 18px;margin-top:2px;color:var(--teal)}
+
+  /* ===== FLIP JURUS ===== */
+  .fgrid{margin-top:26px;display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .fcard{perspective:1100px;min-height:215px;cursor:pointer}
+  .finner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.3,.8,.3,1)}
+  .fcard.flipped .finner{transform:rotateY(180deg)}
+  .fface{position:absolute;inset:0;backface-visibility:hidden;border:3px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 var(--ink);padding:18px 20px;display:flex;flex-direction:column}
+  .ffront{background:#fff}
+  .fback{background:var(--mint2);transform:rotateY(180deg)}
+  .fhead{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+  .fic{width:44px;height:44px;border-radius:13px;border:2.5px solid var(--ink);display:grid;place-items:center;flex:0 0 44px}
+  .fic svg{width:21px;height:21px}
+  .ffront h3{font-size:17.5px;line-height:1.2}
+  .ffront .tease{font-size:13.5px;font-weight:600;color:var(--ink-soft);line-height:1.45}
+  .ffront .hint{margin-top:auto;display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;color:var(--ink-soft)}
+  .ffront .hint svg{width:15px;height:15px}
+  .fback .tag{font-family:'Fredoka';font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;background:var(--ink);color:#fff;border-radius:999px;padding:4px 12px;align-self:flex-start;margin-bottom:10px}
+  .fback p{font-size:13.8px;font-weight:600;line-height:1.55;flex:1}
+  .fback .eg{font-size:12.5px;font-weight:700;opacity:.75;margin-top:8px;border-top:2px dashed rgba(69,58,78,.4);padding-top:8px;flex:0 0 auto}
+
+  /* ===== STUDIO FOTO ===== */
+  .studio{margin-top:24px;display:grid;grid-template-columns:380px 1fr;gap:32px;align-items:start}
+  .viewfinder{position:relative;border:3px solid var(--ink);border-radius:26px;box-shadow:var(--shadow);background:var(--ink);padding:14px}
+  .viewfinder svg{display:block;width:100%;height:auto;border-radius:14px}
+  .vf-tag{position:absolute;top:24px;left:24px;display:inline-flex;gap:7px;align-items:center;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:5px 12px;font-family:'Fredoka';font-weight:700;font-size:12.5px;box-shadow:3px 3px 0 var(--ink)}
+  .vf-tag svg{width:14px;height:14px}
+  .meter{margin-top:16px;background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:var(--shadow);padding:14px 18px}
+  .meter-top{display:flex;justify-content:space-between;align-items:center;font-family:'Fredoka';font-weight:700;font-size:15px}
+  .meter-top b{font-size:22px;color:var(--coral)}
+  .meter-track{margin-top:8px;height:16px;border:2.5px solid var(--ink);border-radius:999px;overflow:hidden;background:var(--cream)}
+  .meter-fill{height:100%;background:var(--teal);width:0;transition:width .45s cubic-bezier(.22,.9,.32,1)}
+  .ctrl{background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:16px 20px}
+  .ctrl+.ctrl{margin-top:16px}
+  .ctrl h4{font-family:'Fredoka';font-size:16.5px;display:flex;align-items:center;gap:9px;margin-bottom:10px}
+  .ctrl h4 svg{width:18px;height:18px;color:var(--coral)}
+  .seg{display:flex;gap:10px;flex-wrap:wrap}
+  .sbtn{display:inline-flex;align-items:center;gap:8px;font-family:'Fredoka';font-weight:600;font-size:14px;border:2.5px solid var(--ink);border-radius:12px;padding:8px 14px;background:var(--cream);cursor:pointer;box-shadow:3px 3px 0 var(--ink);transition:.15s;color:var(--ink)}
+  .sbtn svg{width:16px;height:16px}
+  .sbtn:hover{transform:translateY(-2px)}
+  .sbtn.on{background:var(--ink);color:#fff}
+  .ctrl .note{margin-top:10px;display:flex;gap:9px;font-size:13.4px;font-weight:600;line-height:1.5;background:var(--butter);border:2px solid var(--ink);border-radius:10px;padding:8px 12px}
+  .ctrl .note svg{width:16px;height:16px;flex:0 0 16px;margin-top:2px}
+
+  /* ===== SUDUT ===== */
+  .angles{margin-top:28px;display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .ang{background:#fff;border:3px solid var(--ink);border-radius:20px;box-shadow:var(--shadow);overflow:hidden}
+  .ang-art{aspect-ratio:4/3;border-bottom:3px solid var(--ink);overflow:hidden}
+  .ang-art img{display:block;width:100%;height:100%;object-fit:cover}
+  .ang-body{padding:16px 20px}
+  .ang-body h3{font-size:19px;margin-bottom:4px}
+  .ang-body p{font-size:14px;font-weight:500;color:var(--ink-soft);line-height:1.5}
+  .ang-body .fit{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
+  .ang-body .fit span{font-size:12.5px;font-weight:700;border:2px solid var(--ink);border-radius:999px;padding:3px 10px;background:var(--butter)}
+
+  /* ===== EDIT ===== */
+  .s-edit .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:38px;align-items:start}
+  .steps{margin-top:24px;display:flex;flex-direction:column;gap:14px}
+  .step{display:flex;gap:18px;align-items:flex-start;background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:var(--shadow);padding:15px 20px}
+  .step:nth-child(even){margin-left:44px}
+  .snum{flex:0 0 46px;height:46px;border-radius:50%;border:3px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:19px}
+  .st1{background:var(--coral);color:#fff}.st2{background:var(--sun)}.st3{background:var(--mint2)}.st4{background:var(--pink2)}
+  .step h3{font-size:16.5px;font-weight:600}
+  .step p{font-size:13.5px;color:var(--ink-soft);font-weight:500;margin-top:2px;line-height:1.5}
+  .side-card{margin-top:24px;padding:22px 24px;background:var(--lav)}
+  .side-card h3{display:flex;align-items:center;gap:10px;font-size:18px;margin-bottom:12px}
+  .side-card h3 svg{width:20px;height:20px;color:var(--coral)}
+  .tip{display:flex;gap:10px;font-size:14px;font-weight:600;padding:7px 0;line-height:1.5}
+  .tip svg{width:18px;height:18px;flex:0 0 18px;margin-top:2px;color:var(--teal)}
+  .tip.no svg{color:var(--coral)}
+  .golden{margin-top:18px;background:var(--sun);border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:18px 22px;transform:rotate(-1.5deg)}
+  .golden h3{font-size:22px;line-height:1.25}
+  .golden p{font-size:14px;font-weight:600;margin-top:4px}
+
+  /* ===== DUA JALAN ===== */
+  .ways{margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .way{background:#fff;border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);padding:14px 18px;display:flex;flex-direction:column;gap:8px}
+  .way-head{display:flex;align-items:center;gap:14px}
+  .way-ic{flex:0 0 44px;height:44px;border-radius:16px;border:3px solid var(--ink);display:grid;place-items:center}
+  .way-ic svg{width:24px;height:24px}
+  .way-head small{display:block;font-family:'Fredoka';font-weight:700;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
+  .way-head h3{font-size:21px;line-height:1.15}
+  .way .how{font-size:14px;font-weight:600;background:var(--cream);border:2px dashed var(--ink);border-radius:12px;padding:8px 12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .way .how svg{width:15px;height:15px}
+  .pc{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .pc h4{font-family:'Fredoka';font-size:14px;margin-bottom:4px}
+  .pc li{list-style:none;display:flex;gap:7px;font-size:13px;font-weight:600;line-height:1.4;padding:2px 0}
+  .pc li svg{width:15px;height:15px;flex:0 0 15px;margin-top:2px}
+  .pc .plus svg{color:var(--teal)} .pc .minus svg{color:var(--coral)}
+  .way .use{margin-top:auto;font-size:13px;font-weight:700;border-radius:12px;padding:8px 12px;border:2.5px solid var(--ink)}
+  .wayA .way-ic,.wayA .use{background:var(--lav2)} .wayB .way-ic,.wayB .use{background:var(--mint2)}
+  .wayB{outline:4px solid var(--teal);outline-offset:4px}
+  .pick{margin-top:18px;background:var(--ink);color:#fff;border-radius:18px;box-shadow:var(--shadow);padding:10px 16px}
+  .pick-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;font-family:'Fredoka';font-weight:600;font-size:16px}
+  .pick-top b{color:var(--sun);font-size:19px}
+  .pick-row{margin-top:6px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:rgba(255,255,255,.08);border-radius:12px;padding:4px 10px}
+  .pick-row p{flex:1;min-width:220px;font-size:14px;font-weight:600}
+  .pick-row .m-opt{font-size:13px;padding:4px 12px;box-shadow:2px 2px 0 var(--ink)}
+  .pick-row .why{flex-basis:100%;font-size:13px;font-weight:600;color:var(--butter2)}
+
+  .s-tall{padding-top:40px;padding-bottom:88px}
+  .s-tall h2.title{margin-top:12px}
+
+  /* ===== ALUR HP + AI ===== */
+  .flow{margin-top:24px;display:grid;grid-template-columns:1fr 1.15fr;gap:30px;align-items:start}
+  .ba{position:relative;aspect-ratio:3/4;max-height:52vh;margin:0 auto;border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);overflow:hidden;background:var(--ink);user-select:none}
+  .ba img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
+  .ba .before{filter:brightness(.62) saturate(.6) sepia(.42) contrast(.88)}
+  .ba .after{clip-path:inset(0 0 0 50%)}
+  .ba .line{position:absolute;top:0;bottom:0;left:50%;width:4px;margin-left:-2px;background:#fff;box-shadow:0 0 0 2px var(--ink);pointer-events:none}
+  .ba .knob{position:absolute;top:50%;left:50%;width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;background:var(--sun);border:3px solid var(--ink);display:grid;place-items:center;pointer-events:none}
+  .ba .knob svg{width:20px;height:20px}
+  .ba .tagL,.ba .tagR{position:absolute;top:12px;font-family:'Fredoka';font-weight:700;font-size:12.5px;border:2.5px solid var(--ink);border-radius:999px;padding:4px 11px;pointer-events:none}
+  .ba .tagL{left:12px;background:#fff}.ba .tagR{right:12px;background:var(--mint2)}
+  .ba input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;margin:0}
+  .ba-note{margin-top:10px;text-align:center;font-size:12px;font-weight:600;color:var(--ink-soft)}
+  .chain{display:flex;flex-direction:column;gap:12px}
+  .link{display:flex;gap:14px;align-items:flex-start;background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:5px 5px 0 var(--ink);padding:13px 18px}
+  .link .snum{flex:0 0 42px;height:42px;font-size:17px}
+  .link h3{font-size:16px}
+  .link p{font-size:13.3px;font-weight:500;color:var(--ink-soft);line-height:1.5;margin-top:2px}
+  .link code{display:block;margin-top:6px;font-family:'Plus Jakarta Sans';font-size:12.8px;font-weight:600;color:var(--ink);background:var(--cream);border:2px dashed var(--ink);border-radius:10px;padding:7px 10px;line-height:1.5}
+  .gigo{display:flex;gap:12px;align-items:flex-start;background:var(--sun);border:3px solid var(--ink);border-radius:16px;box-shadow:5px 5px 0 var(--ink);padding:12px 16px;font-size:13.5px;font-weight:600;line-height:1.5}
+  .gigo svg{width:20px;height:20px;flex:0 0 20px;margin-top:1px}
+
+  /* ===== RUMUS PROMPT ===== */
+  .formula{margin-top:26px;display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+  .fpart{border:3px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 var(--ink);padding:14px 16px;position:relative}
+  .fpart .n{position:absolute;top:-14px;left:14px;width:30px;height:30px;border-radius:50%;background:#fff;border:2.5px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:14px}
+  .fpart h3{font-size:17px;margin-top:6px}
+  .fpart p{font-size:13px;font-weight:600;line-height:1.45;margin-top:4px;opacity:.85}
+  .fp1{background:var(--peach2)}.fp2{background:var(--butter2)}.fp3{background:var(--mint2)}.fp4{background:var(--sky2)}.fp5{background:var(--pink2)}
+  .pvs{margin-top:24px;display:grid;grid-template-columns:.8fr 1.2fr;gap:20px}
+  .pbox{border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:16px 20px;background:#fff}
+  .pbox .lab{display:inline-flex;align-items:center;gap:7px;font-family:'Fredoka';font-weight:700;font-size:13px;letter-spacing:.1em;text-transform:uppercase;border:2.5px solid var(--ink);border-radius:999px;padding:4px 12px;margin-bottom:10px}
+  .pbox .lab svg{width:14px;height:14px}
+  .pbox.bad .lab{background:var(--pink2)} .pbox.good .lab{background:var(--mint2)}
+  .pbox .ptxt{font-size:15px;font-weight:600;line-height:1.7}
+  .pbox.bad .ptxt{font-size:22px;font-family:'Fredoka'}
+  .pbox small{display:block;margin-top:8px;font-size:12.8px;font-weight:600;color:var(--ink-soft)}
+  .mk{border-radius:6px;padding:1px 4px;border-bottom:3px solid var(--ink)}
+  .mk1{background:var(--peach2)}.mk2{background:var(--butter2)}.mk3{background:var(--mint2)}.mk4{background:var(--sky2)}.mk5{background:var(--pink2)}
+
+  /* ===== BANK PROMPT ===== */
+  .bank{margin-top:22px;display:grid;grid-template-columns:270px 1fr;gap:26px;align-items:start}
+  .ptabs{display:flex;flex-direction:column;gap:10px}
+  .ptab{display:flex;align-items:center;gap:11px;text-align:left;background:#fff;border:2.5px solid var(--ink);border-radius:14px;padding:10px 14px;font-family:'Fredoka';font-weight:600;font-size:15px;cursor:pointer;box-shadow:3px 3px 0 var(--ink);transition:.15s;color:var(--ink)}
+  .ptab .ti{width:32px;height:32px;border-radius:10px;border:2px solid var(--ink);display:grid;place-items:center;flex:0 0 32px}
+  .ptab .ti svg{width:16px;height:16px}
+  .ptab:hover{transform:translateX(3px)}
+  .ptab.on{background:var(--ink);color:#fff}
+  .ptab.on .ti{border-color:#fff}
+  .pcard{background:#fff;border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);padding:22px 26px}
+  .pcard-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+  .pcard h3{font-size:22px}
+  .pcard .when{font-size:14px;font-weight:600;color:var(--ink-soft);margin-top:2px}
+  .pcode{margin-top:16px;background:var(--cream);border:2.5px dashed var(--ink);border-radius:14px;padding:16px 18px;font-size:15.5px;font-weight:600;line-height:1.7;white-space:pre-wrap;user-select:text}
+  .pcode .ph{background:var(--sun);border-radius:6px;padding:0 5px;font-weight:800}
+  .pfoot{margin-top:14px;display:flex;gap:12px;align-items:flex-start;background:var(--mint);border:2.5px solid var(--ink);border-radius:12px;padding:10px 14px;font-size:13.5px;font-weight:600;line-height:1.5}
+  .pfoot svg{width:17px;height:17px;flex:0 0 17px;margin-top:2px;color:var(--teal)}
+  .copybtn{font-size:15px;padding:10px 18px}
+  .apps{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;font-size:13.5px;font-weight:700}
+  .apps span.app{display:inline-flex;align-items:center;gap:6px;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:5px 12px;box-shadow:3px 3px 0 var(--ink)}
+  .apps span.app svg{width:14px;height:14px}
+
+  /* ===== GAME BOLEH / TIDAK ===== */
+  .match-list{margin-top:26px;display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .m-card{background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:18px 20px}
+  .m-card.solved{background:var(--mint)}
+  .m-card h3{font-size:14.5px;font-weight:600;line-height:1.5;margin-bottom:12px;font-family:'Plus Jakarta Sans'}
+  .m-card h3 b{font-family:'Fredoka'}
+  .m-opts{display:flex;gap:9px;flex-wrap:wrap}
+  .m-opt{display:inline-flex;align-items:center;gap:7px;font-family:'Fredoka';font-weight:600;font-size:14px;border:2.5px solid var(--ink);border-radius:999px;padding:8px 16px;background:#fff;cursor:pointer;box-shadow:3px 3px 0 var(--ink);transition:.15s;color:var(--ink)}
+  .m-opt svg{width:16px;height:16px}
+  .m-opt:hover:not(:disabled){transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--ink)}
+  .m-opt:disabled{cursor:default}
+  .m-opt.good{background:var(--teal);color:#fff}
+  .m-opt.bad{background:var(--pink2)}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+  .m-opt.shake{animation:shake .3s}
+  .m-why{margin-top:12px;background:var(--butter);border:2.5px solid var(--ink);border-radius:12px;padding:10px 14px;font-size:13px;font-weight:600;line-height:1.5;display:flex;gap:9px}
+  .m-why svg{width:17px;height:17px;flex:0 0 17px;margin-top:1px}
+  .m-score{margin-top:22px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;background:var(--ink);color:#fff;border-radius:16px;padding:14px 24px;max-width:640px;box-shadow:var(--shadow)}
+  .m-score b{font-family:'Fredoka';font-size:20px;color:var(--sun)}
+
+  /* ===== QUIZ ===== */
+  .quiz-shell{max-width:780px;margin:0 auto}
+  .q-meta{display:flex;justify-content:space-between;align-items:center;margin:0 0 16px}
+  .q-badge{font-family:'Fredoka';font-weight:700;background:var(--coral);color:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:7px 18px;box-shadow:3px 3px 0 var(--ink);font-size:14px}
+  .q-score{font-family:'Fredoka';font-weight:700;background:var(--sun);border:2.5px solid var(--ink);border-radius:999px;padding:7px 18px;box-shadow:3px 3px 0 var(--ink);font-size:14px;display:flex;align-items:center;gap:7px}
+  .q-score svg{width:16px;height:16px}
+  .q-card{padding:28px 32px;margin-top:20px}
+  .q-q{font-size:clamp(19px,1.8vw,25px);font-weight:600;line-height:1.4;margin-bottom:20px}
+  .q-opts{display:flex;flex-direction:column;gap:12px}
+  .opt{display:flex;align-items:center;gap:16px;text-align:left;background:#fff;border:3px solid var(--ink);border-radius:14px;padding:13px 18px;font-family:'Plus Jakarta Sans';font-weight:600;font-size:16px;cursor:pointer;transition:.15s;color:var(--ink);box-shadow:4px 4px 0 var(--ink)}
+  .opt:hover:not(:disabled){transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .opt:disabled{cursor:default}
+  .opt .letter{flex:0 0 36px;height:36px;border-radius:10px;border:2.5px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;background:var(--lav2)}
+  .opt.good{background:var(--mint2)} .opt.good .letter{background:var(--teal);color:#fff}
+  .opt.bad{background:var(--pink2);opacity:.9} .opt.bad .letter{background:var(--coral);color:#fff}
+  .q-foot{margin-top:18px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+  .q-why{display:flex;gap:12px;align-items:flex-start;background:var(--butter);border:2.5px solid var(--ink);border-radius:14px;padding:14px 18px;font-size:14.5px;font-weight:600;line-height:1.5;flex:1}
+  .q-why svg{width:20px;height:20px;flex:0 0 20px;margin-top:2px}
+  .q-done{text-align:center;padding:38px 30px}
+  .q-done .tro{width:96px;height:96px;border-radius:50%;background:var(--sun);border:3px solid var(--ink);display:grid;place-items:center;margin:0 auto 18px;box-shadow:5px 5px 0 var(--ink)}
+  .q-done .tro svg{width:48px;height:48px}
+  .q-done h3{font-size:30px;margin-bottom:8px}
+  .q-done .big{font-family:'Fredoka';font-size:56px;font-weight:700;color:var(--coral);margin:6px 0 10px}
+  .q-done p{font-weight:600;color:var(--ink-soft);margin-bottom:22px}
+
+  /* ===== MISI ===== */
+  .s-misi .wrap{display:grid;grid-template-columns:1.12fr .88fr;gap:38px;align-items:start}
+  .mini-rubrik{margin-top:18px;padding:18px 22px;background:#fff}
+  .rubrik-row{display:flex;justify-content:space-between;gap:12px;font-size:13.5px;font-weight:700;padding:6px 0;border-top:2px dashed rgba(69,58,78,.25)}
+  .rubrik-row:first-of-type{border-top:none}
+  .rubrik-row span:last-child{color:var(--coral);font-family:'Fredoka';white-space:nowrap}
+  .warn{margin-top:18px;display:flex;gap:12px;align-items:flex-start;background:#fff;border:3px solid var(--ink);border-left:14px solid var(--coral);border-radius:16px;box-shadow:var(--shadow);padding:14px 18px;font-size:13.8px;font-weight:600;line-height:1.55}
+  .warn svg{width:20px;height:20px;flex:0 0 20px;margin-top:1px;color:var(--coral)}
+
+  /* ===== PENUTUP ===== */
+  .s-end .wrap{display:grid;grid-template-columns:1fr .85fr;gap:44px;align-items:center}
+  .refl{margin-top:24px;display:flex;flex-direction:column;gap:14px;max-width:600px}
+  .refl-item{display:flex;gap:16px;align-items:center;background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:var(--shadow);padding:14px 20px}
+  .rnum{flex:0 0 44px;height:44px;border-radius:50%;border:2.5px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:18px}
+  .r1{background:var(--coral);color:#fff}.r2{background:var(--mint2)}.r3{background:var(--pink2)}
+  .refl-item p{font-size:15.5px;font-weight:600}
+  .end-art{position:relative;display:grid;place-items:center;min-height:420px}
+  .quote{position:relative;background:var(--sun);border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);padding:30px 34px;text-align:center;max-width:380px;transform:rotate(-2deg)}
+  .quote h3{font-size:25px;line-height:1.3;margin-bottom:10px}
+  .quote p{font-weight:600;font-size:14.5px}
+  .end-btn{margin-top:26px}
+
+  #confetti{position:fixed;inset:0;z-index:100;pointer-events:none}
+  #toast{position:fixed;left:50%;top:24px;transform:translate(-50%,-200%);z-index:110;background:var(--ink);color:#fff;font-family:'Fredoka';font-weight:600;font-size:15px;border-radius:999px;padding:10px 22px;box-shadow:4px 4px 0 var(--sun);transition:transform .35s cubic-bezier(.22,.9,.32,1)}
+  #toast.show{transform:translate(-50%,0)}
+
+  @media (max-width:960px){
+    .s-hero .wrap,.s-def .wrap,.s-misi .wrap,.s-end .wrap,.s-edit .wrap{grid-template-columns:1fr}
+    .studio,.bank,.pvs,.ways,.flow{grid-template-columns:1fr}
+    .ba{max-height:none;max-width:360px}
+    .fgrid,.angles{grid-template-columns:1fr 1fr}
+    .formula{grid-template-columns:1fr 1fr}
+    .cmp,.match-list{grid-template-columns:1fr}
+    .goal:nth-child(odd),.goal:nth-child(even){margin:0}
+    .step:nth-child(even){margin-left:0}
+    .art-stage,.end-art{min-height:340px}
+    .ptabs{flex-direction:row;flex-wrap:wrap}
+    .slide{padding:40px 20px 110px}
+  }
+  @media (max-width:600px){
+    .fgrid,.angles,.formula{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<!-- Gelas boba yang dipakai berulang (tampak samping) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <g id="cup-side">
+    <rect x="-9" y="-112" width="13" height="50" rx="6.5" transform="rotate(14 -3 -87)" fill="#FF7E67" stroke="#453A4E" stroke-width="3.5"/>
+    <rect x="-36" y="-76" width="72" height="13" rx="6.5" fill="#fff" stroke="#453A4E" stroke-width="4"/>
+    <path d="M-30 -63 L30 -63 L22 66 L-22 66 Z" fill="#fff" stroke="#453A4E" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M-26.5 -14 L26.5 -14 L22.2 59 L-22.2 59 Z" fill="#EBCB9E"/>
+    <circle cx="-9" cy="48" r="5.5" fill="#7A4E2D" stroke="#453A4E" stroke-width="2.4"/>
+    <circle cx="6" cy="52" r="5.5" fill="#7A4E2D" stroke="#453A4E" stroke-width="2.4"/>
+    <circle cx="-1" cy="38" r="5.5" fill="#7A4E2D" stroke="#453A4E" stroke-width="2.4"/>
+    <circle cx="13" cy="40" r="5.5" fill="#7A4E2D" stroke="#453A4E" stroke-width="2.4"/>
+    <circle cx="-8" cy="12" r="2.8" fill="#453A4E"/><circle cx="8" cy="12" r="2.8" fill="#453A4E"/>
+    <path d="M-6 19 q6 5 12 0" fill="none" stroke="#453A4E" stroke-width="2.8" stroke-linecap="round"/>
+    <circle cx="-15" cy="17" r="3.4" fill="#FFB3B3"/><circle cx="15" cy="17" r="3.4" fill="#FFB3B3"/>
+  </g>
+</defs></svg>
+
+<div id="bar"></div>
+<div id="toast" role="status" aria-live="polite">Prompt tersalin!</div>
+
+<!-- ============ SLIDE 1 : JUDUL ============ -->
+<section class="slide active" data-theme="sky">
+  <div class="deco bob" style="top:14%;left:5%;width:26px;height:26px">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 2v20M2 12h20"/></svg>
+  </div>
+  <div class="deco bob" style="bottom:18%;left:12%;width:34px;height:34px;animation-delay:1.2s">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/></svg>
+  </div>
+  <div class="s-hero wrap" style="display:contents"><div class="wrap">
+    <div>
+      <span class="kicker anim" style="--d:0"><i data-lucide="camera"></i> Digital Marketing · Lanjutan · SMP Kelas 7</span>
+      <h1 class="anim" style="--d:1;font-size:clamp(38px,4.6vw,62px);font-weight:700;line-height:1.08;margin:20px 0 14px">
+        Cekrek!<br><span class="hl">Foto Jualan</span> Pakai HP
+      </h1>
+      <p class="lead anim" style="--d:2">Pembeli online tidak bisa memegang atau mencicipi produkmu. Yang mereka lihat hanya <b>foto</b>.
+      Hari ini kita belajar memotret produk dengan HP, lalu memakai <b>AI</b> supaya hasilnya terlihat profesional — tetap jujur!</p>
+      <div class="badge-row anim" style="--d:3">
+        <span class="badge b1"><i data-lucide="sun"></i> 6 Jurus Foto</span>
+        <span class="badge b3"><i data-lucide="aperture"></i> Studio Mini</span>
+        <span class="badge b2"><i data-lucide="sparkles"></i> Prompt AI</span>
+      </div>
+    </div>
+    <div class="art-stage anim" style="--d:2">
+      <svg viewBox="0 0 360 470" aria-hidden="true">
+        <ellipse cx="180" cy="240" rx="166" ry="212" fill="#C5DCF2"/>
+        <g transform="rotate(4 180 235)">
+          <rect x="74" y="34" width="212" height="404" rx="34" fill="#453A4E"/>
+          <clipPath id="screenClip"><rect x="88" y="66" width="184" height="324" rx="14"/></clipPath>
+          <image href="assets/foto/boba.jpg" x="88" y="66" width="184" height="324" preserveAspectRatio="xMidYMid slice" clip-path="url(#screenClip)"/>
+          <rect x="150" y="46" width="60" height="9" rx="4.5" fill="#6B5F75"/>
+          <!-- grid sepertiga -->
+          <g stroke="#fff" stroke-width="1.6" opacity=".6">
+            <line x1="149.3" y1="66" x2="149.3" y2="390"/><line x1="210.6" y1="66" x2="210.6" y2="390"/>
+            <line x1="88" y1="174" x2="272" y2="174"/><line x1="88" y1="282" x2="272" y2="282"/>
+          </g>
+          <!-- kotak fokus -->
+          <g fill="none" stroke="#FFC531" stroke-width="4" stroke-linecap="round">
+            <path d="M124 198 v-16 h16"/><path d="M220 182 h16 v16"/>
+            <path d="M236 290 v16 h-16"/><path d="M140 306 h-16 v-16"/>
+          </g>
+          <circle cx="180" cy="414" r="15" fill="#fff" stroke="#6B5F75" stroke-width="4"/>
+        </g>
+        <path d="M30 98 l5 12 13 1.5-10 9 3 13-11-7-11 7 3-13-10-9 13-1.5z" fill="#FFC531" stroke="#453A4E" stroke-width="3"/>
+        <circle cx="318" cy="380" r="13" fill="#BFEAD2" stroke="#453A4E" stroke-width="3.5"/>
+      </svg>
+      <span class="fchip fc1 bob"><i data-lucide="camera"></i></span>
+      <span class="fchip fc2 bob" style="animation-delay:.8s"><i data-lucide="sun"></i></span>
+      <span class="fchip fc3 bob" style="animation-delay:1.6s"><i data-lucide="sparkles"></i></span>
+      <span class="fchip fc4 bob" style="animation-delay:.4s"><i data-lucide="image"></i></span>
+      <span class="fchip fc5 bob" style="animation-delay:2s"><i data-lucide="heart"></i></span>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============ SLIDE 2 : TUJUAN ============ -->
+<section class="slide" data-theme="cream">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="map"></i> Rencana Belajar Hari Ini</span>
+    <h2 class="title anim" style="--d:1">Hari ini kita akan...</h2>
+    <div class="goal-list">
+      <div class="goal anim" style="--d:2">
+        <div class="gnum g1">1</div>
+        <div><h3>Tahu Kenapa Foto Itu Penting</h3><p>Foto adalah "mata" pembeli online — foto yang jelas membuat orang percaya.</p></div>
+      </div>
+      <div class="goal anim" style="--d:3">
+        <div class="gnum g2">2</div>
+        <div><h3>Kuasai 6 Jurus Foto HP</h3><p>Cahaya, latar, lensa, grid, jarak, dan fokus — dicoba langsung di Studio Mini.</p></div>
+      </div>
+      <div class="goal anim" style="--d:4">
+        <div class="gnum g3">3</div>
+        <div><h3>Pakai AI Biar Makin Profesional</h3><p>Belajar Rumus Prompt 5 Bagian dan memakai Bank Prompt yang siap disalin.</p></div>
+      </div>
+      <div class="goal anim" style="--d:5">
+        <div class="gnum g4">4</div>
+        <div><h3>Tetap Jujur pada Pembeli</h3><p>Tahu batas: mana editan yang boleh, mana yang sudah menipu pembeli.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 3 : PEMANASAN ============ -->
+<section class="slide" data-theme="butter">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="hand"></i> Pemanasan · Pilih Satu</span>
+    <h2 class="title anim" style="--d:1">Produknya sama. Foto mana yang <span class="hl p">bikin kamu pengin beli?</span></h2>
+    <p class="lead anim" style="--d:1.5">Dua foto di bawah memotret es boba yang <b>sama persis</b>. Pilih satu, lalu jelaskan alasanmu!</p>
+    <div class="cmp anim" style="--d:2">
+      <button class="shot" data-ok="0">
+        <span class="frame"><img class="worse" src="assets/foto/boba.jpg" alt="Foto boba yang gelap, kekuningan, miring, dan terpotong"></span>
+        <div class="cap"><span class="letter">A</span>Foto A</div>
+      </button>
+      <button class="shot" data-ok="1">
+        <span class="frame"><img src="assets/foto/boba.jpg" alt="Foto boba yang terang, lurus, dan berlatar rapi"></span>
+        <div class="cap"><span class="letter">B</span>Foto B</div>
+      </button>
+    </div>
+    <div class="wu-fb hidden" id="cmpFb"><i data-lucide="circle-check"></i><span></span></div>
+    <p class="credit anim" style="--d:2.5">Foto asli: Unsplash. Foto A adalah foto yang sama, sengaja dibuat gelap, kekuningan, dan miring.</p>
+  </div>
+</section>
+
+<!-- ============ SLIDE 4 : KENAPA FOTO PENTING ============ -->
+<section class="slide" data-theme="mint">
+  <div class="s-def wrap" style="display:contents"><div class="wrap">
+    <div>
+      <span class="kicker anim" style="--d:0"><i data-lucide="search"></i> Konsep Utama</span>
+      <h2 class="title anim" style="--d:1">Foto = <span class="hl m">etalase tokomu</span></h2>
+      <div class="define anim" style="--d:2">
+        <span class="q">Catat baik-baik, ya!</span><br>
+        Foto produk adalah <span class="hl">wakil produkmu</span> di internet. Pembeli
+        <span class="hl">menilai produk dari fotonya</span> sebelum memutuskan membeli.
+      </div>
+      <div class="analog anim" style="--d:3">
+        <div class="ic"><i data-lucide="store"></i></div>
+        <p><b>Analogi etalase:</b> toko kue dengan etalase kaca yang bersih dan terang membuat orang mampir.
+        Etalase yang gelap dan berdebu membuat orang lewat saja. <b>Di internet, fotomu adalah etalasenya.</b></p>
+      </div>
+    </div>
+    <div class="whylist card anim" style="--d:3">
+      <h3><i data-lucide="lightbulb"></i> Foto yang baik membantu pembeli:</h3>
+      <div class="wl"><i data-lucide="eye"></i><span><b>Melihat jelas</b> bentuk, warna, dan ukuran produk.</span></div>
+      <div class="wl"><i data-lucide="shield-check"></i><span><b>Percaya</b> bahwa penjualnya serius dan rapi.</span></div>
+      <div class="wl"><i data-lucide="pointer"></i><span><b>Berhenti scroll</b> karena fotonya menarik perhatian.</span></div>
+      <div class="wl"><i data-lucide="smile"></i><span><b>Tidak kecewa</b> karena barang yang datang sama dengan fotonya.</span></div>
+      <p style="margin-top:14px;font-size:13.5px;font-weight:700;background:var(--butter);border:2.5px solid var(--ink);border-radius:12px;padding:10px 14px">
+        Kabar baiknya: <span class="hl">HP biasa sudah cukup!</span> Kuncinya ada di cara memotret, bukan harga kamera.</p>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============ SLIDE 5 : 6 JURUS ============ -->
+<section class="slide" data-theme="pink">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="camera"></i> 6 Jurus Foto HP</span>
+    <h2 class="title anim" style="--d:1">Jurus memotret <span class="hl p">tanpa kamera mahal</span></h2>
+    <p class="lead anim" style="--d:1.5">Tebak dulu caranya, baru klik kartunya untuk membuka jawabannya!</p>
+    <div class="fgrid">
+      <div class="fcard anim" style="--d:2" onclick="this.classList.toggle('flipped')">
+        <div class="finner">
+          <div class="fface ffront">
+            <div class="fhead"><span class="fic" style="background:var(--butter2)"><i data-lucide="sun"></i></span><h3>1. Cari Cahaya Jendela</h3></div>
+            <p class="tease">Lampu kamar, flash, atau jendela?</p>
+            <span class="hint"><i data-lucide="mouse-pointer-click"></i> klik untuk membuka</span>
+          </div>
+          <div class="fface fback">
+            <span class="tag">Caranya</span>
+            <p>Foto di <b>dekat jendela pada siang hari</b>. Cahayanya lembut dan warnanya alami. Hindari sinar matahari langsung dan matikan flash.</p>
+            <p class="eg">Taruh produk ±1 meter dari jendela.</p>
+          </div>
+        </div>
+      </div>
+      <div class="fcard anim" style="--d:2.4" onclick="this.classList.toggle('flipped')">
+        <div class="finner">
+          <div class="fface ffront">
+            <div class="fhead"><span class="fic" style="background:var(--pink2)"><i data-lucide="square"></i></span><h3>2. Latar Polos &amp; Rapi</h3></div>
+            <p class="tease">Apa yang ada di belakang produkmu?</p>
+            <span class="hint"><i data-lucide="mouse-pointer-click"></i> klik untuk membuka</span>
+          </div>
+          <div class="fface fback">
+            <span class="tag">Caranya</span>
+            <p>Singkirkan barang lain. Pakai <b>kertas karton putih, kain polos, atau papan kayu</b> sebagai alas dan latar.</p>
+            <p class="eg">Karton ditekuk seperti huruf L = studio mini!</p>
+          </div>
+        </div>
+      </div>
+      <div class="fcard anim" style="--d:2.8" onclick="this.classList.toggle('flipped')">
+        <div class="finner">
+          <div class="fface ffront">
+            <div class="fhead"><span class="fic" style="background:var(--mint2)"><i data-lucide="aperture"></i></span><h3>3. Lap Lensa Dulu</h3></div>
+            <p class="tease">Kenapa foto bisa terlihat berkabut?</p>
+            <span class="hint"><i data-lucide="mouse-pointer-click"></i> klik untuk membuka</span>
+          </div>
+          <div class="fface fback">
+            <span class="tag">Caranya</span>
+            <p>Lensa HP sering kena sidik jari. <b>Lap dengan kain halus</b> sebelum memotret supaya foto tajam, tidak buram.</p>
+            <p class="eg">Butuh 3 detik, hasilnya langsung beda.</p>
+          </div>
+        </div>
+      </div>
+      <div class="fcard anim" style="--d:3.2" onclick="this.classList.toggle('flipped')">
+        <div class="finner">
+          <div class="fface ffront">
+            <div class="fhead"><span class="fic" style="background:var(--lav2)"><i data-lucide="grid-3x3"></i></span><h3>4. Nyalakan Grid</h3></div>
+            <p class="tease">Garis-garis apa di layar kamera?</p>
+            <span class="hint"><i data-lucide="mouse-pointer-click"></i> klik untuk membuka</span>
+          </div>
+          <div class="fface fback">
+            <span class="tag">Caranya</span>
+            <p>Aktifkan <b>garis grid</b> di pengaturan kamera. Garis membantu foto lurus dan produk berada di tengah atau di titik pertemuan garis.</p>
+            <p class="eg">Pengaturan kamera → Grid / Garis bantu.</p>
+          </div>
+        </div>
+      </div>
+      <div class="fcard anim" style="--d:3.6" onclick="this.classList.toggle('flipped')">
+        <div class="finner">
+          <div class="fface ffront">
+            <div class="fhead"><span class="fic" style="background:var(--sky2)"><i data-lucide="zoom-in"></i></span><h3>5. Mendekat, Jangan Zoom</h3></div>
+            <p class="tease">Mau produk terlihat besar, caranya?</p>
+            <span class="hint"><i data-lucide="mouse-pointer-click"></i> klik untuk membuka</span>
+          </div>
+          <div class="fface fback">
+            <span class="tag">Caranya</span>
+            <p>Zoom dengan dua jari membuat foto <b>pecah dan buram</b>. Lebih baik <b>dekatkan HP</b> ke produk.</p>
+            <p class="eg">Kakimu adalah tombol zoom terbaik!</p>
+          </div>
+        </div>
+      </div>
+      <div class="fcard anim" style="--d:4" onclick="this.classList.toggle('flipped')">
+        <div class="finner">
+          <div class="fface ffront">
+            <div class="fhead"><span class="fic" style="background:var(--peach2)"><i data-lucide="focus"></i></span><h3>6. Ketuk untuk Fokus</h3></div>
+            <p class="tease">Fotonya kegelapan atau kurang tajam?</p>
+            <span class="hint"><i data-lucide="mouse-pointer-click"></i> klik untuk membuka</span>
+          </div>
+          <div class="fface fback">
+            <span class="tag">Caranya</span>
+            <p><b>Ketuk produk di layar</b> supaya kamera fokus ke sana. Lalu geser ikon matahari ke atas/bawah untuk mengatur terang-gelap.</p>
+            <p class="eg">Tahan HP dengan dua tangan agar tidak goyang.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 6 : STUDIO MINI ============ -->
+<section class="slide" data-theme="lav">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="aperture"></i> Coba Langsung · Studio Mini</span>
+    <h2 class="title anim" style="--d:1">Atur studionya, <span class="hl l">lihat fotonya berubah!</span></h2>
+    <p class="lead anim" style="--d:1.5">Pilih cahaya, latar, dan sudut. Bisakah kelasmu mencapai <b>Nilai Foto 100</b>?</p>
+    <div class="studio">
+      <div class="anim" style="--d:2">
+        <div class="viewfinder">
+          <svg viewBox="0 0 320 320" id="stSvg" aria-label="Pratinjau foto produk">
+            <rect id="stBg" width="320" height="320" fill="#CDBFA8"/>
+            <g id="stWood" style="display:none" stroke="#B88A57" stroke-width="2.5">
+              <line x1="0" y1="80" x2="320" y2="80"/><line x1="0" y1="160" x2="320" y2="160"/><line x1="0" y1="240" x2="320" y2="240"/>
+            </g>
+            <g id="stClutter">
+              <path d="M18 284 q40-34 76-6 q28 22 60-6" fill="none" stroke="#2E2630" stroke-width="5" stroke-linecap="round"/>
+              <rect x="226" y="236" width="70" height="52" rx="6" fill="#E8E1D6" stroke="#453A4E" stroke-width="3" transform="rotate(-12 261 262)"/>
+              <rect x="24" y="40" width="58" height="28" rx="5" fill="#4F6D8F" stroke="#453A4E" stroke-width="3" transform="rotate(18 53 54)"/>
+              <circle cx="272" cy="56" r="20" fill="#C9A227" stroke="#453A4E" stroke-width="3"/>
+            </g>
+            <g id="stRays" style="display:none"><polygon points="0,0 130,0 250,320 0,320" fill="#fff" opacity=".35"/></g>
+            <ellipse id="stShadow" cx="160" cy="262" rx="58" ry="9" fill="#453A4E" opacity=".16"/>
+            <!-- sejajar mata -->
+            <use id="stEye" href="#cup-side" transform="translate(160 194) scale(.92)"/>
+            <!-- 45 derajat -->
+            <g id="st45" style="display:none">
+              <rect x="157" y="62" width="13" height="56" rx="6.5" transform="rotate(18 163 90)" fill="#FF7E67" stroke="#453A4E" stroke-width="3.5"/>
+              <path d="M126 112 L194 112 L184 258 L136 258 Z" fill="#fff" stroke="#453A4E" stroke-width="4" stroke-linejoin="round"/>
+              <path d="M130 160 L190 160 L185 251 L135 251 Z" fill="#EBCB9E"/>
+              <ellipse cx="160" cy="112" rx="34" ry="13" fill="#fff" stroke="#453A4E" stroke-width="4"/>
+              <ellipse cx="160" cy="112" rx="24" ry="8" fill="#EBCB9E" stroke="#453A4E" stroke-width="2.5"/>
+              <circle cx="150" cy="236" r="6" fill="#7A4E2D" stroke="#453A4E" stroke-width="2.4"/>
+              <circle cx="166" cy="240" r="6" fill="#7A4E2D" stroke="#453A4E" stroke-width="2.4"/>
+              <circle cx="172" cy="226" r="6" fill="#7A4E2D" stroke="#453A4E" stroke-width="2.4"/>
+              <circle cx="152" cy="190" r="2.8" fill="#453A4E"/><circle cx="168" cy="190" r="2.8" fill="#453A4E"/>
+              <path d="M154 197 q6 5 12 0" fill="none" stroke="#453A4E" stroke-width="2.8" stroke-linecap="round"/>
+            </g>
+            <!-- dari atas -->
+            <g id="stTop" style="display:none">
+              <circle cx="160" cy="160" r="66" fill="#fff" stroke="#453A4E" stroke-width="4"/>
+              <circle cx="160" cy="160" r="52" fill="#EBCB9E" stroke="#453A4E" stroke-width="2.5"/>
+              <circle cx="160" cy="160" r="11" fill="#FF7E67" stroke="#453A4E" stroke-width="3.5"/>
+              <circle cx="146" cy="138" r="2.8" fill="#453A4E"/><circle cx="174" cy="138" r="2.8" fill="#453A4E"/>
+              <path d="M150 188 q10 7 20 0" fill="none" stroke="#453A4E" stroke-width="2.8" stroke-linecap="round"/>
+            </g>
+            <rect id="stLight" width="320" height="320" fill="#2B2233" opacity=".45" style="pointer-events:none"/>
+          </svg>
+          <span class="vf-tag"><i data-lucide="camera"></i><span id="stTag">Foto pertama</span></span>
+        </div>
+        <div class="meter">
+          <div class="meter-top"><span>Nilai Foto</span><b><span id="stScore">0</span> / 100</b></div>
+          <div class="meter-track"><div class="meter-fill" id="stFill"></div></div>
+        </div>
+      </div>
+      <div class="anim" style="--d:3">
+        <div class="ctrl">
+          <h4><i data-lucide="sun"></i> Cahaya</h4>
+          <div class="seg" data-k="light">
+            <button class="sbtn on" data-v="dark"><i data-lucide="moon"></i> Kamar gelap</button>
+            <button class="sbtn" data-v="lamp"><i data-lucide="lamp"></i> Lampu kuning</button>
+            <button class="sbtn" data-v="window"><i data-lucide="sun"></i> Jendela siang</button>
+          </div>
+          <div class="note"><i data-lucide="info"></i><span id="nLight"></span></div>
+        </div>
+        <div class="ctrl">
+          <h4><i data-lucide="square"></i> Latar</h4>
+          <div class="seg" data-k="bg">
+            <button class="sbtn on" data-v="messy"><i data-lucide="shapes"></i> Meja berantakan</button>
+            <button class="sbtn" data-v="plain"><i data-lucide="square"></i> Karton polos</button>
+            <button class="sbtn" data-v="wood"><i data-lucide="rows-3"></i> Papan kayu</button>
+          </div>
+          <div class="note"><i data-lucide="info"></i><span id="nBg"></span></div>
+        </div>
+        <div class="ctrl">
+          <h4><i data-lucide="move-3d"></i> Sudut</h4>
+          <div class="seg" data-k="angle">
+            <button class="sbtn" data-v="top"><i data-lucide="arrow-down"></i> Dari atas</button>
+            <button class="sbtn" data-v="45"><i data-lucide="arrow-down-right"></i> Miring 45°</button>
+            <button class="sbtn on" data-v="eye"><i data-lucide="arrow-right"></i> Sejajar</button>
+          </div>
+          <div class="note"><i data-lucide="info"></i><span id="nAngle"></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 7 : SUDUT ============ -->
+<section class="slide" data-theme="peach">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="move-3d"></i> Pilih Sudut yang Tepat</span>
+    <h2 class="title anim" style="--d:1">Setiap produk punya <span class="hl">sudut terbaiknya</span></h2>
+    <p class="lead anim" style="--d:1.5">Tanyakan: bagian mana dari produkku yang paling menarik? Arahkan HP ke bagian itu.</p>
+    <div class="angles">
+      <div class="ang anim" style="--d:2">
+        <div class="ang-art"><img src="assets/foto/sudut-atas.jpg" alt="Semangkuk buah dan granola difoto dari atas"></div>
+        <div class="ang-body">
+          <h3>Dari Atas (Flat Lay)</h3>
+          <p>HP lurus menghadap ke bawah. Cocok untuk produk yang <b>isinya terlihat dari atas</b>.</p>
+          <div class="fit"><span>nasi kotak</span><span>pizza</span><span>alat tulis</span><span>aksesori</span></div>
+        </div>
+      </div>
+      <div class="ang anim" style="--d:2.5">
+        <div class="ang-art"><img src="assets/foto/sudut-45.jpg" style="object-position:50% 12%" alt="Semangkuk sup bakso difoto miring 45 derajat"></div>
+        <div class="ang-body">
+          <h3>Miring 45°</h3>
+          <p>Seperti posisi mata saat makan. Atas dan samping produk <b>sama-sama terlihat</b>.</p>
+          <div class="fit"><span>minuman gelas</span><span>mi / bakso</span><span>kue</span></div>
+        </div>
+      </div>
+      <div class="ang anim" style="--d:3">
+        <div class="ang-art"><img src="assets/foto/sudut-sejajar.jpg" alt="Empat gelas boba difoto sejajar dari samping"></div>
+        <div class="ang-body">
+          <h3>Sejajar Produk</h3>
+          <p>HP setinggi produk. Pas untuk produk yang <b>tinggi atau punya bentuk samping</b> yang khas.</p>
+          <div class="fit"><span>botol</span><span>sepatu</span><span>tas</span><span>boneka</span></div>
+        </div>
+      </div>
+    </div>
+    <p class="credit anim" style="--d:3.5">Foto: Unsplash. Perhatikan: dari atas, isi mangkuk terlihat semua · miring 45°, bakso dan kuahnya terlihat · sejajar, lapisan boba di dasar gelas terlihat jelas.</p>
+  </div>
+</section>
+
+<!-- ============ SLIDE 8 : EDIT DI HP ============ -->
+<section class="slide" data-theme="cream">
+  <div class="s-edit wrap" style="display:contents"><div class="wrap">
+    <div>
+      <span class="kicker anim" style="--d:0"><i data-lucide="sliders-horizontal"></i> Edit Ringan di Galeri HP</span>
+      <h2 class="title anim" style="--d:1">Rapikan dulu, <span class="hl m">tanpa aplikasi tambahan</span></h2>
+      <p class="lead anim" style="--d:2">Buka foto di galeri → tekan <b>Edit</b>. Cukup 4 langkah ini:</p>
+      <div class="steps">
+        <div class="step anim" style="--d:3"><div class="snum st1">1</div>
+          <div><h3>Potong &amp; luruskan</h3><p>Buang bagian yang tidak perlu. Pilih ukuran persegi (1:1) untuk toko online dan Instagram.</p></div></div>
+        <div class="step anim" style="--d:4"><div class="snum st2">2</div>
+          <div><h3>Naikkan terang sedikit</h3><p>Geser Kecerahan / Exposure pelan-pelan sampai produk terlihat jelas.</p></div></div>
+        <div class="step anim" style="--d:5"><div class="snum st3">3</div>
+          <div><h3>Tambah kontras sedikit</h3><p>Supaya produk "keluar" dari latar. Sedikit saja, jangan sampai terlalu gelap.</p></div></div>
+        <div class="step anim" style="--d:6"><div class="snum st4">4</div>
+          <div><h3>Cek warnanya masih asli</h3><p>Bandingkan dengan produk aslinya di depanmu. Warnanya harus sama!</p></div></div>
+      </div>
+    </div>
+    <div>
+      <div class="side-card card anim" style="--d:4">
+        <h3><i data-lucide="lightbulb"></i> Hindari ini, ya!</h3>
+        <div class="tip no"><i data-lucide="x"></i><span>Filter berlebihan sampai warna produk berubah.</span></div>
+        <div class="tip no"><i data-lucide="x"></i><span>Terlalu terang sampai detail produk hilang.</span></div>
+        <div class="tip no"><i data-lucide="x"></i><span>Stiker dan tulisan menumpuk menutupi produk.</span></div>
+        <div class="tip"><i data-lucide="check"></i><span>Simpan sebagai salinan, foto aslinya tetap ada.</span></div>
+      </div>
+      <div class="golden anim" style="--d:5">
+        <h3>Edit boleh, bohong jangan!</h3>
+        <p>Edit membuat foto lebih jelas — bukan membuat produk terlihat berbeda dari aslinya.</p>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============ SLIDE 9 : DUA JALAN ============ -->
+<section class="slide s-tall" data-theme="lav">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="split"></i> Dua Jalan Memakai AI</span>
+    <h2 class="title anim" style="--d:1">Foto dari AI <span class="hl l">atau</span> foto HP + AI?</h2>
+    <p class="lead anim" style="--d:1.5">AI bisa <b>menggambar dari nol</b> atau <b>merapikan foto asli</b>. Bagi pembeli, artinya sangat berbeda.</p>
+    <div class="ways">
+      <div class="way wayA anim" style="--d:2">
+        <div class="way-head">
+          <span class="way-ic"><i data-lucide="wand-2"></i></span>
+          <div><small>Jalan A</small><h3>Foto Langsung dari AI</h3></div>
+        </div>
+        <div class="how"><i data-lucide="keyboard"></i> Ketik prompt <i data-lucide="arrow-right"></i> AI menggambar dari nol</div>
+        <div class="pc">
+          <div class="plus"><h4>Kelebihan</h4><ul>
+            <li><i data-lucide="plus"></i>Cepat, tidak perlu memotret</li>
+            <li><i data-lucide="plus"></i>Bisa membuat suasana apa saja</li>
+          </ul></div>
+          <div class="minus"><h4>Kekurangan</h4><ul>
+            <li><i data-lucide="minus"></i>Produknya <b>bukan</b> produkmu</li>
+            <li><i data-lucide="minus"></i>Bentuk, jumlah, dan tulisan sering salah</li>
+            <li><i data-lucide="minus"></i>Pembeli bisa merasa tertipu</li>
+          </ul></div>
+        </div>
+        <div class="use">Cocok untuk: latar poster, ilustrasi suasana, mencari ide. Wajib diberi label "ilustrasi".</div>
+      </div>
+      <div class="way wayB anim" style="--d:2.5">
+        <div class="way-head">
+          <span class="way-ic"><i data-lucide="smartphone"></i></span>
+          <div><small>Jalan B · Disarankan</small><h3>Foto HP + Disempurnakan AI</h3></div>
+        </div>
+        <div class="how"><i data-lucide="camera"></i> Foto produk asli <i data-lucide="arrow-right"></i> <i data-lucide="sparkles"></i> AI merapikan</div>
+        <div class="pc">
+          <div class="plus"><h4>Kelebihan</h4><ul>
+            <li><i data-lucide="plus"></i>Produknya <b>asli</b> dan jujur</li>
+            <li><i data-lucide="plus"></i>Terlihat rapi seperti foto studio</li>
+            <li><i data-lucide="plus"></i>Barang yang datang sama dengan fotonya</li>
+          </ul></div>
+          <div class="minus"><h4>Kekurangan</h4><ul>
+            <li><i data-lucide="minus"></i>Harus punya produknya dulu</li>
+            <li><i data-lucide="minus"></i>Foto dasarnya harus cukup jelas</li>
+          </ul></div>
+        </div>
+        <div class="use">Cocok untuk: foto utama toko online, foto menu, foto katalog — semua foto yang <b>dijual</b>.</div>
+      </div>
+    </div>
+    <div class="pick anim" style="--d:3">
+      <div class="pick-top"><span>Pilih jalannya!</span><b><span id="wayDone">0</span> / 3</b></div>
+      <div class="pick-row" data-ok="B">
+        <p>Foto utama nasi kotak Bu Ratih di toko online.</p>
+        <button class="m-opt" data-v="A">Jalan A</button><button class="m-opt" data-v="B">Jalan B</button>
+        <span class="why hidden">Jalan B. Pembeli akan menerima nasi kotak itu, jadi fotonya harus foto asli.</span>
+      </div>
+      <div class="pick-row" data-ok="A">
+        <p>Gambar latar suasana pantai untuk poster "Promo Liburan". Foto boba asli ditempel di atasnya.</p>
+        <button class="m-opt" data-v="A">Jalan A</button><button class="m-opt" data-v="B">Jalan B</button>
+        <span class="why hidden">Jalan A boleh. Pantainya hanya hiasan, produknya tetap foto asli. Jangan lupa label "ilustrasi".</span>
+      </div>
+      <div class="pick-row" data-ok="B">
+        <p>Foto menu bakso untuk aplikasi pesan antar makanan.</p>
+        <button class="m-opt" data-v="A">Jalan A</button><button class="m-opt" data-v="B">Jalan B</button>
+        <span class="why hidden">Jalan B. Pembeli memesan berdasarkan foto menu, jadi bakso di foto harus sama dengan yang diantar.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 10 : ALUR HP + AI ============ -->
+<section class="slide" data-theme="mint">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="smartphone"></i> Jalan B · Langkah demi Langkah</span>
+    <h2 class="title anim" style="--d:1">Dari foto HP <span class="hl m">jadi foto profesional</span></h2>
+    <div class="flow">
+      <div class="anim" style="--d:2">
+        <div class="ba" id="ba">
+          <img class="before" src="assets/foto/boba.jpg" alt="Foto boba sebelum disempurnakan: gelap dan kekuningan">
+          <img class="after" src="assets/foto/boba.jpg" alt="Foto boba sesudah disempurnakan: terang dan warnanya alami">
+          <span class="tagL">Sebelum</span><span class="tagR">Sesudah</span>
+          <span class="line"></span>
+          <span class="knob"><i data-lucide="move-horizontal"></i></span>
+          <input type="range" id="baRange" min="0" max="100" value="50" aria-label="Geser untuk membandingkan sebelum dan sesudah">
+        </div>
+        <p class="ba-note">Geser untuk membandingkan. Simulasi penyempurnaan cahaya pada foto yang sama (foto: Unsplash).</p>
+      </div>
+      <div class="chain">
+        <div class="link anim" style="--d:2.5"><div class="snum st1">1</div>
+          <div><h3>Potret produk asli dengan HP</h3><p>Pakai 6 jurus: cahaya jendela, latar polos, lensa bersih, grid, mendekat, ketuk fokus.</p></div></div>
+        <div class="link anim" style="--d:3"><div class="snum st2">2</div>
+          <div><h3>Unggah ke aplikasi AI + tulis prompt</h3><p>Minta AI <b>merapikan</b>, bukan mengganti produknya.</p>
+          <code>Perbaiki cahaya foto ini agar terang dan warnanya alami. Jangan ubah bentuk, warna, dan isi gelas boba.</code></div></div>
+        <div class="link anim" style="--d:3.5"><div class="snum st3">3</div>
+          <div><h3>Bandingkan dengan produk asli</h3><p>Taruh produknya di samping layar. Warna, bentuk, dan isinya harus sama. Kalau berbeda, ulangi atau pakai foto aslinya.</p></div></div>
+        <div class="link anim" style="--d:4"><div class="snum st4">4</div>
+          <div><h3>Tambah teks di Canva, lalu unggah</h3><p>Nama produk, harga, dan ajakan ditulis sendiri supaya ejaannya benar.</p></div></div>
+        <div class="gigo anim" style="--d:4.5"><i data-lucide="lightbulb"></i>
+          <span>AI hanya bisa memoles, bukan menyulap. Foto HP yang buram dan gelap gulita tetap sulit diselamatkan. <b>Foto dasar yang baik = hasil AI yang baik.</b></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 11 : RUMUS PROMPT ============ -->
+<section class="slide" data-theme="sky">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="sparkles"></i> Naik Level dengan AI</span>
+    <h2 class="title anim" style="--d:1">Rumus Prompt <span class="hl">5 Bagian</span></h2>
+    <p class="lead anim" style="--d:1.5"><b>Prompt</b> adalah perintah yang kita ketik untuk AI. Makin jelas perintahnya, makin bagus hasilnya — seperti memberi pesanan ke tukang foto.</p>
+    <div class="formula">
+      <div class="fpart fp1 anim" style="--d:2"><span class="n">1</span><h3>Tugas</h3><p>Mau AI melakukan apa? Ubah latar, perbaiki cahaya...</p></div>
+      <div class="fpart fp2 anim" style="--d:2.4"><span class="n">2</span><h3>Produk</h3><p>Sebut nama produknya dengan jelas.</p></div>
+      <div class="fpart fp3 anim" style="--d:2.8"><span class="n">3</span><h3>Latar</h3><p>Di mana produknya diletakkan? Warna apa?</p></div>
+      <div class="fpart fp4 anim" style="--d:3.2"><span class="n">4</span><h3>Cahaya &amp; Gaya</h3><p>Terang lembut? Gaya katalog? Ukuran 1:1?</p></div>
+      <div class="fpart fp5 anim" style="--d:3.6"><span class="n">5</span><h3>Pagar Jujur</h3><p>Larangan: jangan ubah bentuk, warna, isi produk.</p></div>
+    </div>
+    <div class="pvs">
+      <div class="pbox bad anim" style="--d:4">
+        <span class="lab"><i data-lucide="thumbs-down"></i> Prompt asal</span>
+        <div class="ptxt">"Bikin foto ini bagus."</div>
+        <small>AI harus menebak sendiri. Hasilnya bisa aneh, bahkan produknya ikut berubah.</small>
+      </div>
+      <div class="pbox good anim" style="--d:4.5">
+        <span class="lab"><i data-lucide="thumbs-up"></i> Prompt pakai rumus</span>
+        <div class="ptxt">
+          <span class="mk mk1">Ubah latar belakang foto</span>
+          <span class="mk mk2">es boba cokelat ini</span>
+          menjadi <span class="mk mk3">meja kayu terang dengan daun hijau kecil</span>,
+          <span class="mk mk4">cahaya lembut dari jendela, gaya foto katalog, ukuran persegi 1:1</span>.
+          <span class="mk mk5">Jangan ubah bentuk, warna, dan isi gelasnya.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 12 : BANK PROMPT ============ -->
+<section class="slide" data-theme="butter">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="wand-2"></i> Bank Prompt · Siap Salin</span>
+    <h2 class="title anim" style="--d:1">Pilih kebutuhanmu, <span class="hl p">salin promptnya</span></h2>
+    <p class="lead anim" style="--d:1.5">Unggah foto asli produkmu ke aplikasi AI, tempel prompt, lalu ganti bagian yang <span class="hl">berwarna kuning</span>.</p>
+    <div class="bank anim" style="--d:2">
+      <div class="ptabs" id="ptabs"></div>
+      <div>
+        <div class="pcard">
+          <div class="pcard-top">
+            <div><h3 id="pTitle"></h3><p class="when" id="pWhen"></p></div>
+            <button class="btn sun copybtn" id="pCopy"><i data-lucide="copy"></i> Salin Prompt</button>
+          </div>
+          <div class="pcode" id="pCode"></div>
+          <div class="pfoot"><i data-lucide="lightbulb"></i><span id="pTip"></span></div>
+        </div>
+        <div class="apps">
+          <span>Bisa dicoba di:</span>
+          <span class="app"><i data-lucide="sparkles"></i> Google Gemini</span>
+          <span class="app"><i data-lucide="bot"></i> ChatGPT</span>
+          <span class="app"><i data-lucide="palette"></i> Fitur AI di Canva</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 13 : GAME BOLEH / TIDAK ============ -->
+<section class="slide" data-theme="mint">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="puzzle"></i> Ayo Main · Hakim AI</span>
+    <h2 class="title anim" style="--d:1">Pakai AI seperti ini: <span class="hl m">boleh atau tidak?</span></h2>
+    <p class="lead anim" style="--d:1.5">Ingat pertanyaan kuncinya: <b>apakah pembeli akan menerima barang yang sama dengan fotonya?</b></p>
+    <div class="match-list">
+      <div class="m-card anim" style="--d:2">
+        <h3><b>Kasus 1.</b> Salsa memotret boba di meja belajar yang berantakan, lalu memakai AI mengganti latarnya jadi putih bersih. Bobanya tidak diubah.</h3>
+        <div class="m-opts">
+          <button class="m-opt" data-ok="1"><i data-lucide="check"></i> Boleh</button>
+          <button class="m-opt" data-ok="0"><i data-lucide="x"></i> Tidak boleh</button>
+        </div>
+        <div class="m-why hidden"><i data-lucide="circle-check"></i><span>Boleh! Yang berubah hanya latarnya. Boba yang diterima pembeli tetap sama dengan fotonya.</span></div>
+      </div>
+      <div class="m-card anim" style="--d:2.4">
+        <h3><b>Kasus 2.</b> Bu Ratih memakai AI supaya lauk di nasi kotaknya terlihat dua kali lebih banyak dari aslinya.</h3>
+        <div class="m-opts">
+          <button class="m-opt" data-ok="0"><i data-lucide="check"></i> Boleh</button>
+          <button class="m-opt" data-ok="1"><i data-lucide="x"></i> Tidak boleh</button>
+        </div>
+        <div class="m-why hidden"><i data-lucide="circle-check"></i><span>Tidak boleh! Pembeli akan kecewa saat nasi kotaknya datang. Ini menipu, dan pembeli tidak akan kembali lagi.</span></div>
+      </div>
+      <div class="m-card anim" style="--d:2.8">
+        <h3><b>Kasus 3.</b> Dodi membuat gambar suasana pantai dengan AI untuk poster promo, lalu menulis kecil "gambar ilustrasi".</h3>
+        <div class="m-opts">
+          <button class="m-opt" data-ok="1"><i data-lucide="check"></i> Boleh</button>
+          <button class="m-opt" data-ok="0"><i data-lucide="x"></i> Tidak boleh</button>
+        </div>
+        <div class="m-why hidden"><i data-lucide="circle-check"></i><span>Boleh! Gambar suasana untuk hiasan poster tidak masalah selama diberi keterangan "ilustrasi" dan produknya tetap asli.</span></div>
+      </div>
+      <div class="m-card anim" style="--d:3.2">
+        <h3><b>Kasus 4.</b> Pak Jaya mengambil foto bengkel orang lain yang lebih bagus dari internet, lalu memakainya sebagai foto bengkelnya.</h3>
+        <div class="m-opts">
+          <button class="m-opt" data-ok="0"><i data-lucide="check"></i> Boleh</button>
+          <button class="m-opt" data-ok="1"><i data-lucide="x"></i> Tidak boleh</button>
+        </div>
+        <div class="m-why hidden"><i data-lucide="circle-check"></i><span>Tidak boleh! Itu foto milik orang lain dan bukan tempat usahanya. Selalu pakai foto produkmu sendiri.</span></div>
+      </div>
+    </div>
+    <div class="m-score anim" style="--d:3.6">
+      <span>Kasus yang berhasil dinilai:</span><b><span id="mDone">0</span> / 4</b>
+      <span id="mMsg" style="font-weight:600;font-size:14px;color:var(--butter2)"></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 14 : KUIS ============ -->
+<section class="slide" data-theme="lav">
+  <div class="wrap quiz-shell">
+    <div style="text-align:center">
+      <span class="kicker anim" style="--d:0"><i data-lucide="trophy"></i> Kuis Seru</span>
+      <h2 class="title anim" style="--d:1">Uji Jurus Fotografermu!</h2>
+    </div>
+    <div id="quizArea" class="anim" style="--d:2"></div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 15 : MISI ============ -->
+<section class="slide" data-theme="pink">
+  <div class="s-misi wrap" style="display:contents"><div class="wrap">
+    <div>
+      <span class="kicker anim" style="--d:0"><i data-lucide="flag"></i> Giliranmu!</span>
+      <h2 class="title anim" style="--d:1">Misi: <span class="hl p">Sebelum &amp; Sesudah</span></h2>
+      <p class="lead anim" style="--d:2">Kerjakan berkelompok atau di rumah. Pakai produk usaha kelompokmu, atau barang/makanan yang ada di rumah.</p>
+      <div class="steps">
+        <div class="step anim" style="--d:3"><div class="snum st1">1</div>
+          <div><h3>Siapkan studio mini</h3><p>Dekat jendela, siang hari, karton polos sebagai alas dan latar. Lap lensa HP.</p></div></div>
+        <div class="step anim" style="--d:4"><div class="snum st2">2</div>
+          <div><h3>Ambil 3 foto, 3 sudut</h3><p>Dari atas, miring 45°, dan sejajar. Pilih satu yang paling menarik.</p></div></div>
+        <div class="step anim" style="--d:5"><div class="snum st3">3</div>
+          <div><h3>Edit ringan di galeri</h3><p>Potong 1:1, terang dan kontras sedikit. Pastikan warnanya masih asli.</p></div></div>
+        <div class="step anim" style="--d:6"><div class="snum st4">4</div>
+          <div><h3>Coba satu prompt AI</h3><p>Pilih prompt dari Bank Prompt. Tempel foto <b>sebelum</b> dan <b>sesudah</b> bersebelahan, lalu tulis 1 alasan kenapa hasilnya lebih baik.</p></div></div>
+      </div>
+    </div>
+    <div>
+      <div class="side-card card anim" style="--d:4">
+        <h3><i data-lucide="lightbulb"></i> Cek Sebelum Dikumpulkan</h3>
+        <div class="tip"><i data-lucide="check"></i><span>Fotonya terang dan tajam, tidak buram?</span></div>
+        <div class="tip"><i data-lucide="check"></i><span>Latarnya rapi, produk jadi pusat perhatian?</span></div>
+        <div class="tip"><i data-lucide="check"></i><span>Promptnya memakai 5 bagian rumus?</span></div>
+        <div class="tip"><i data-lucide="check"></i><span>Produk di foto AI masih sama dengan aslinya?</span></div>
+      </div>
+      <div class="mini-rubrik card anim" style="--d:4.5">
+        <h3 style="font-family:'Fredoka';font-size:17px;margin-bottom:8px;display:flex;align-items:center;gap:9px"><i data-lucide="clipboard-check" style="width:19px;height:19px"></i> Cara Penilaian</h3>
+        <div class="rubrik-row"><span>Foto asli (cahaya, latar, fokus, sudut)</span><span>40 poin</span></div>
+        <div class="rubrik-row"><span>Prompt AI lengkap 5 bagian</span><span>30 poin</span></div>
+        <div class="rubrik-row"><span>Hasil jujur &amp; alasan yang jelas</span><span>30 poin</span></div>
+      </div>
+      <div class="warn anim" style="--d:5">
+        <i data-lucide="triangle-alert"></i>
+        <span>Banyak aplikasi AI hanya boleh dipakai mulai usia 13 tahun. Kerjakan langkah 4 <b>bersama guru atau orang tua</b>, dan jangan unggah foto wajah atau data pribadi.</span>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============ SLIDE 16 : PENUTUP ============ -->
+<section class="slide" data-theme="peach">
+  <div class="deco bob" style="top:16%;right:8%;width:30px;height:30px">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 2v20M2 12h20"/></svg>
+  </div>
+  <div class="s-end wrap" style="display:contents"><div class="wrap">
+    <div>
+      <span class="kicker anim" style="--d:0"><i data-lucide="message-circle-heart"></i> Refleksi &amp; Penutup</span>
+      <h2 class="title anim" style="--d:1">Sebelum pulang, <span class="hl p">ayo curhat dikit!</span></h2>
+      <div class="refl">
+        <div class="refl-item anim" style="--d:2"><div class="rnum r1">1</div>
+          <p>Jurus foto mana yang paling mengubah hasil fotomu? Kenapa?</p></div>
+        <div class="refl-item anim" style="--d:3"><div class="rnum r2">2</div>
+          <p>Sebutkan 5 bagian Rumus Prompt tanpa melihat catatan!</p></div>
+        <div class="refl-item anim" style="--d:4"><div class="rnum r3">3</div>
+          <p>Menurutmu, kapan memakai AI pada foto jualan menjadi tidak jujur?</p></div>
+      </div>
+      <div class="end-btn anim" style="--d:5">
+        <button class="btn sun" id="partyBtn"><i data-lucide="party-popper"></i> Rayakan Hari Ini!</button>
+      </div>
+    </div>
+    <div class="end-art anim" style="--d:3">
+      <div class="quote">
+        <h3>HP-mu sudah jadi studio foto. Cahaya yang tepat + kejujuran = foto yang menjual.</h3>
+        <p>AI membantu fotomu tampil rapi — tapi produk aslimu tetap bintangnya. Sampai jumpa, fotografer muda!</p>
+      </div>
+      <span class="fchip fc1 bob"><i data-lucide="camera"></i></span>
+      <span class="fchip fc2 bob" style="animation-delay:.7s"><i data-lucide="sun"></i></span>
+      <span class="fchip fc4 bob" style="animation-delay:1.4s"><i data-lucide="image"></i></span>
+      <span class="fchip fc5 bob" style="animation-delay:2s"><i data-lucide="sparkles"></i></span>
+    </div>
+  </div></div>
+</section>
+
+<!-- NAV -->
+<div class="pagenum"><span id="cur">01</span> / <span id="tot">16</span></div>
+<div class="dots" id="dots"></div>
+<div class="navbtns">
+  <button class="nav" id="prev" aria-label="Sebelumnya"><i data-lucide="chevron-left"></i></button>
+  <button class="nav" id="next" aria-label="Berikutnya"><i data-lucide="chevron-right"></i></button>
+</div>
+<canvas id="confetti"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.454.0/dist/umd/lucide.min.js"></script>
+<script>
+/* ================= NAVIGASI ================= */
+const slides=[...document.querySelectorAll('.slide')];
+const dotsBox=document.getElementById('dots');
+let cur=0;
+slides.forEach((_,i)=>{
+  const d=document.createElement('button');
+  d.className='dot'+(i===0?' on':'');d.title='Slide '+(i+1);
+  d.onclick=()=>go(i);dotsBox.appendChild(d);
+});
+const dots=[...dotsBox.children];
+document.getElementById('tot').textContent=String(slides.length).padStart(2,'0');
+function go(i){
+  cur=Math.max(0,Math.min(slides.length-1,i));
+  slides.forEach((s,k)=>s.classList.toggle('active',k===cur));
+  dots.forEach((d,k)=>d.classList.toggle('on',k===cur));
+  document.getElementById('cur').textContent=String(cur+1).padStart(2,'0');
+  document.getElementById('bar').style.width=((cur+1)/slides.length*100)+'%';
+  document.getElementById('prev').disabled=cur===0;
+  document.getElementById('next').disabled=cur===slides.length-1;
+}
+document.getElementById('prev').onclick=()=>go(cur-1);
+document.getElementById('next').onclick=()=>go(cur+1);
+addEventListener('keydown',e=>{
+  if(e.target.matches&&e.target.matches('input[type=range]'))return;
+  if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();go(cur+1)}
+  if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(cur-1)}
+});
+let tx=0,txSkip=false;
+addEventListener('touchstart',e=>{tx=e.touches[0].clientX;txSkip=!!e.target.closest('.ba')},{passive:true});
+addEventListener('touchend',e=>{
+  if(txSkip)return;
+  const dx=e.changedTouches[0].clientX-tx;
+  if(Math.abs(dx)>60) dx<0?go(cur+1):go(cur-1);
+},{passive:true});
+go(0);
+
+/* ================= PEMANASAN : BANDINGKAN FOTO ================= */
+document.querySelectorAll('.shot').forEach(btn=>{
+  btn.onclick=()=>{
+    const ok=btn.dataset.ok==="1";
+    document.querySelectorAll('.shot').forEach(b=>{
+      b.disabled=true;
+      if(b.dataset.ok==="1")b.classList.add('good');
+    });
+    if(!ok)btn.classList.add('bad');
+    const fb=document.getElementById('cmpFb');
+    fb.querySelector('span').textContent=ok
+      ?'Setuju! Foto B terang, warnanya alami, gelasnya lurus dan utuh, jadi boba langsung jadi pusat perhatian. Padahal produknya sama persis — yang beda hanya cara memotretnya.'
+      :'Coba lihat lagi: Foto A gelap, kekuningan, miring, dan gelasnya terpotong. Mata kita jadi susah melihat produknya. Padahal produknya sama persis — yang beda hanya cara memotretnya.';
+    fb.classList.remove('hidden');
+    if(ok)celebrate(120);
+  };
+});
+
+/* ================= STUDIO MINI ================= */
+const ST={light:'dark',bg:'messy',angle:'eye'};
+const ST_INFO={
+  light:{
+    dark:{s:0,n:'Kamar gelap membuat foto kusam dan berbintik. Kamera HP butuh banyak cahaya.'},
+    lamp:{s:20,n:'Lebih terang, tapi lampu kuning membuat warna produk jadi kekuningan dan tidak asli.'},
+    window:{s:40,n:'Cahaya jendela siang hari lembut dan alami. Inilah lampu studio gratis!'}
+  },
+  bg:{
+    messy:{s:0,n:'Kabel, tisu, dan barang lain mencuri perhatian dari produkmu.'},
+    plain:{s:30,n:'Karton polos membuat produk jadi bintang utama. Bersih dan rapi!'},
+    wood:{s:30,n:'Papan kayu memberi kesan hangat dan alami. Cocok untuk makanan dan minuman.'}
+  },
+  angle:{
+    top:{s:15,n:'Dari atas, isi gelas dan butiran bobanya tidak terlihat. Kurang cocok untuk minuman.'},
+    '45':{s:30,n:'Miring 45° memperlihatkan tutup dan isi gelas sekaligus. Pas untuk minuman!'},
+    eye:{s:30,n:'Sejajar memperlihatkan lapisan teh dan boba dari samping dengan jelas.'}
+  }
+};
+let stMaxed=false;
+function renderStudio(){
+  const L=ST.light,B=ST.bg,A=ST.angle;
+  const bgFill={messy:'#CDBFA8',plain:'#FAF7F2',wood:'#E2B887'}[B];
+  document.getElementById('stBg').setAttribute('fill',bgFill);
+  document.getElementById('stClutter').style.display=B==='messy'?'':'none';
+  document.getElementById('stWood').style.display=B==='wood'?'':'none';
+  const li=document.getElementById('stLight');
+  if(L==='dark'){li.setAttribute('fill','#2B2233');li.setAttribute('opacity','.45')}
+  else if(L==='lamp'){li.setAttribute('fill','#FF9F1C');li.setAttribute('opacity','.22')}
+  else{li.setAttribute('opacity','0')}
+  document.getElementById('stRays').style.display=L==='window'?'':'none';
+  document.getElementById('stEye').style.display=A==='eye'?'':'none';
+  document.getElementById('st45').style.display=A==='45'?'':'none';
+  document.getElementById('stTop').style.display=A==='top'?'':'none';
+  const sh=document.getElementById('stShadow');
+  if(A==='top'){sh.setAttribute('cx','168');sh.setAttribute('cy','172');sh.setAttribute('rx','68');sh.setAttribute('ry','66')}
+  else{sh.setAttribute('cx','160');sh.setAttribute('cy',A==='45'?'260':'262');sh.setAttribute('rx','58');sh.setAttribute('ry','9')}
+  document.getElementById('nLight').textContent=ST_INFO.light[L].n;
+  document.getElementById('nBg').textContent=ST_INFO.bg[B].n;
+  document.getElementById('nAngle').textContent=ST_INFO.angle[A].n;
+  const score=ST_INFO.light[L].s+ST_INFO.bg[B].s+ST_INFO.angle[A].s;
+  document.getElementById('stScore').textContent=score;
+  document.getElementById('stFill').style.width=score+'%';
+  document.getElementById('stTag').textContent=score===100?'Foto siap jual!':score>=60?'Hampir sempurna':'Coba atur lagi';
+  if(score===100&&!stMaxed){stMaxed=true;celebrate(200)}
+  if(score<100)stMaxed=false;
+}
+document.querySelectorAll('.seg').forEach(seg=>{
+  seg.querySelectorAll('.sbtn').forEach(b=>{
+    b.onclick=()=>{
+      ST[seg.dataset.k]=b.dataset.v;
+      seg.querySelectorAll('.sbtn').forEach(x=>x.classList.toggle('on',x===b));
+      renderStudio();
+    };
+  });
+});
+renderStudio();
+
+/* ================= DUA JALAN : PILIH JALANNYA ================= */
+let wayDone=0;
+document.querySelectorAll('.pick-row').forEach(row=>{
+  row.querySelectorAll('.m-opt').forEach(btn=>{
+    btn.onclick=()=>{
+      if(row.classList.contains('solved'))return;
+      if(btn.dataset.v===row.dataset.ok){
+        btn.classList.add('good');
+        row.querySelectorAll('.m-opt').forEach(b=>b.disabled=true);
+        row.classList.add('solved');
+        row.querySelector('.why').classList.remove('hidden');
+        wayDone++;
+        document.getElementById('wayDone').textContent=wayDone;
+        celebrate(wayDone===3?200:60);
+      }else{
+        btn.classList.add('bad','shake');
+        btn.disabled=true;
+        setTimeout(()=>btn.classList.remove('shake'),350);
+      }
+    };
+  });
+});
+
+/* ================= ALUR HP + AI : SEBELUM / SESUDAH ================= */
+const ba=document.getElementById('ba');
+document.getElementById('baRange').addEventListener('input',e=>{
+  const v=e.target.value;
+  ba.querySelector('.after').style.clipPath=`inset(0 0 0 ${v}%)`;
+  ba.querySelector('.line').style.left=v+'%';
+  ba.querySelector('.knob').style.left=v+'%';
+});
+
+/* ================= BANK PROMPT ================= */
+const PROMPTS=[
+  {k:'putih',icon:'square',bg:'var(--sky2)',title:'Latar Studio Putih',
+   when:'Untuk foto yang latarnya berantakan.',
+   text:'Ubah latar belakang foto ini menjadi putih bersih seperti studio foto produk. Pertahankan [nama produk] persis seperti aslinya — bentuk, warna, ukuran, dan tulisan pada kemasan jangan diubah. Tambahkan bayangan lembut di bawah produk agar terlihat nyata. Ukuran persegi 1:1.',
+   tip:'Prompt paling aman untuk pemula. Cocok untuk foto katalog di toko online.'},
+  {k:'estetik',icon:'leaf',bg:'var(--mint2)',title:'Latar Estetik',
+   when:'Untuk makanan, minuman, dan produk rumahan.',
+   text:'Letakkan [nama produk] di atas [alas, misal: meja kayu terang] dengan beberapa [hiasan, misal: daun hijau kecil] di sudut foto. Cahaya lembut dari jendela sebelah kiri, suasana pagi yang hangat. Produk tetap menjadi fokus utama di tengah. Jangan ubah bentuk, warna, dan isi produk.',
+   tip:'Pilih hiasan yang berhubungan dengan produk: biji kopi untuk kopi, buah untuk jus.'},
+  {k:'cahaya',icon:'sun',bg:'var(--butter2)',title:'Perbaiki Cahaya',
+   when:'Untuk foto yang terlalu gelap atau kekuningan.',
+   text:'Perbaiki pencahayaan foto ini: buat lebih terang dan merata, kurangi bayangan gelap yang keras, dan buat warnanya alami (tidak terlalu kuning atau biru). Jangan menambah, menghapus, atau mengubah apa pun pada [nama produk].',
+   tip:'Setelah jadi, bandingkan warnanya dengan produk asli di depanmu. Harus sama!'},
+  {k:'katalog',icon:'shopping-bag',bg:'var(--peach2)',title:'Gaya Katalog Toko Online',
+   when:'Untuk foto utama di marketplace.',
+   text:'Jadikan foto ini seperti foto katalog toko online: [nama produk] berada tepat di tengah, latar [warna, misal: abu-abu muda] polos, cahaya studio terang dari depan atas, tajam dan bersih. Sisakan ruang kosong di sekeliling produk. Ukuran persegi 1:1. Jangan ubah produknya.',
+   tip:'Pakai latar yang sama untuk semua produk supaya tokomu terlihat rapi dan seragam.'},
+  {k:'suasana',icon:'coffee',bg:'var(--lav2)',title:'Foto Suasana',
+   when:'Untuk konten Instagram atau TikTok.',
+   text:'Buat suasana [nama produk] sedang dinikmati di [tempat, misal: meja belajar dekat jendela]. Ada tangan yang memegang produk dengan santai. Warna cerah dan hangat, gaya foto media sosial. Produk harus tetap sama persis dengan foto asli. Jangan tampilkan wajah orang.',
+   tip:'Kalau seluruh suasana dibuat AI, tulis keterangan "ilustrasi" di postinganmu.'},
+  {k:'poster',icon:'layout-template',bg:'var(--pink2)',title:'Siap Jadi Poster',
+   when:'Untuk diberi tulisan promo di Canva.',
+   text:'Ubah foto ini menjadi foto promosi untuk [nama usaha]. Letakkan [nama produk] di sisi kanan, dan sisakan ruang kosong polos di sisi kiri untuk teks promo. Latar warna [warna, misal: kuning pastel], cahaya terang, ukuran persegi 1:1. Jangan tambahkan tulisan apa pun.',
+   tip:'AI sering salah mengeja tulisan di dalam gambar. Tambahkan teks promonya sendiri di Canva.'},
+  {k:'nol',icon:'image-plus',bg:'var(--sun)',title:'Gambar dari Nol (Jalan A)',
+   when:'Untuk latar poster atau ilustrasi suasana — bukan foto produk.',
+   text:'Buat gambar ilustrasi [suasana, misal: meja piknik di taman saat sore hari] dengan gaya foto yang cerah dan hangat. Sisakan ruang kosong di tengah untuk menempelkan foto produk asli nanti. Jangan tampilkan makanan, minuman, merek, tulisan, atau wajah orang. Ukuran persegi 1:1.',
+   tip:'Tempel foto produk aslimu di atas gambar ini lewat Canva, lalu beri label "ilustrasi".'}
+];
+const ptabs=document.getElementById('ptabs');
+let curPrompt=PROMPTS[0];
+PROMPTS.forEach((p,i)=>{
+  const b=document.createElement('button');
+  b.className='ptab'+(i===0?' on':'');
+  b.innerHTML=`<span class="ti" style="background:${p.bg}"><i data-lucide="${p.icon}"></i></span><span>${p.title}</span>`;
+  b.onclick=()=>{
+    document.querySelectorAll('.ptab').forEach(x=>x.classList.toggle('on',x===b));
+    showPrompt(p);
+  };
+  ptabs.appendChild(b);
+});
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;')}
+function showPrompt(p){
+  curPrompt=p;
+  document.getElementById('pTitle').textContent=p.title;
+  document.getElementById('pWhen').textContent=p.when;
+  document.getElementById('pCode').innerHTML=esc(p.text).replace(/\[([^\]]+)\]/g,'<span class="ph">[$1]</span>');
+  document.getElementById('pTip').textContent=p.tip;
+}
+showPrompt(PROMPTS[0]);
+const toast=document.getElementById('toast');
+function showToast(msg){
+  toast.textContent=msg;toast.classList.add('show');
+  clearTimeout(showToast.t);showToast.t=setTimeout(()=>toast.classList.remove('show'),1800);
+}
+document.getElementById('pCopy').onclick=()=>{
+  const fallback=()=>{
+    const r=document.createRange();r.selectNodeContents(document.getElementById('pCode'));
+    const s=getSelection();s.removeAllRanges();s.addRange(r);
+    showToast('Teks sudah diblok — tekan Ctrl+C untuk menyalin');
+  };
+  try{
+    navigator.clipboard.writeText(curPrompt.text).then(()=>showToast('Prompt tersalin!'),fallback);
+  }catch(e){fallback()}
+};
+
+/* ================= GAME ================= */
+let mDone=0;
+document.querySelectorAll('.m-card').forEach(card=>{
+  card.querySelectorAll('.m-opt').forEach(btn=>{
+    btn.onclick=()=>{
+      if(card.classList.contains('solved'))return;
+      if(btn.dataset.ok==="1"){
+        btn.classList.add('good');
+        card.querySelectorAll('.m-opt').forEach(b=>b.disabled=true);
+        card.classList.add('solved');
+        card.querySelector('.m-why').classList.remove('hidden');
+        mDone++;
+        document.getElementById('mDone').textContent=mDone;
+        celebrate(70);
+        if(mDone===4){
+          document.getElementById('mMsg').textContent="Mantap! Kamu Hakim AI yang jujur!";
+          celebrate(220);
+        }
+      }else{
+        btn.classList.add('bad','shake');
+        btn.disabled=true;
+        setTimeout(()=>btn.classList.remove('shake'),350);
+      }
+    };
+  });
+});
+
+/* ================= KUIS ================= */
+const quizData=[
+  {q:"Di rumah, cahaya terbaik untuk memotret produk adalah...", opts:[
+    "Lampu kamar pada malam hari",
+    "Cahaya jendela pada siang hari",
+    "Flash HP yang dinyalakan"],a:1,
+    why:"Betul! Cahaya jendela siang hari lembut dan membuat warna produk terlihat alami."},
+  {q:"Supaya produk terlihat lebih besar dan tetap tajam, sebaiknya...", opts:[
+    "Zoom HP sampai maksimal",
+    "Dekatkan HP ke produk",
+    "Potong fotonya kecil-kecil"],a:1,
+    why:"Tepat! Zoom dengan jari membuat foto pecah. Mendekat membuat foto tetap tajam."},
+  {q:"Prompt AI mana yang paling baik?", opts:[
+    "\"Bikin foto ini bagus.\"",
+    "\"Ubah latar jadi putih bersih, tambah bayangan lembut, jangan ubah bentuk dan warna produk.\"",
+    "\"Foto keren dong.\""],a:1,
+    why:"Iya! Prompt yang jelas berisi tugas, latar, gaya, dan pagar jujur. AI tidak perlu menebak-nebak."},
+  {q:"Kenapa tulisan promo sebaiknya ditambahkan sendiri di Canva, bukan diminta ke AI gambar?", opts:[
+    "AI sering salah mengeja tulisan di dalam gambar",
+    "Canva lebih mahal dari AI",
+    "AI tidak bisa membuat gambar"],a:0,
+    why:"Betul! AI gambar sering membuat huruf yang aneh atau salah eja. Teks lebih rapi kalau ditulis sendiri."},
+  {q:"Bu Ratih memakai AI supaya lauk nasi kotaknya terlihat dua kali lebih banyak. Ini...", opts:[
+    "Bagus, namanya kreatif",
+    "Tidak jujur, pembeli akan kecewa",
+    "Wajib dilakukan semua penjual"],a:1,
+    why:"Tepat sekali! Edit dan AI boleh membuat foto rapi, tapi produknya harus tetap sama dengan aslinya."},
+];
+const quizArea=document.getElementById('quizArea');
+let qi=0,score=0;
+const LETTERS=['A','B','C'];
+function renderQuiz(){
+  if(qi>=quizData.length){renderDone();return}
+  const d=quizData[qi];
+  quizArea.innerHTML=`
+    <div class="q-card card">
+      <div class="q-meta">
+        <span class="q-badge">Soal ${qi+1} dari ${quizData.length}</span>
+        <span class="q-score"><i data-lucide="star"></i> Skor: ${score}</span>
+      </div>
+      <h3 class="q-q">${d.q}</h3>
+      <div class="q-opts">
+        ${d.opts.map((o,i)=>`<button class="opt" data-i="${i}"><span class="letter">${LETTERS[i]}</span>${o}</button>`).join('')}
+      </div>
+      <div class="q-foot hidden" id="qFoot">
+        <div class="q-why" id="qWhy"></div>
+        <button class="btn mint" id="qNext">${qi===quizData.length-1?'Lihat Hasil':'Lanjut'} <i data-lucide="chevron-right"></i></button>
+      </div>
+    </div>`;
+  lucide.createIcons();
+  quizArea.querySelectorAll('.opt').forEach(btn=>{
+    btn.onclick=()=>{
+      const pick=+btn.dataset.i;
+      quizArea.querySelectorAll('.opt').forEach(b=>b.disabled=true);
+      const good=quizArea.querySelector(`.opt[data-i="${d.a}"]`);
+      good.classList.add('good');
+      if(pick===d.a){score++;celebrate(60)}
+      else btn.classList.add('bad');
+      const why=document.getElementById('qWhy');
+      why.innerHTML=`<i data-lucide="${pick===d.a?'circle-check':'info'}"></i><span>${d.why}</span>`;
+      document.getElementById('qFoot').classList.remove('hidden');
+      lucide.createIcons();
+      document.getElementById('qNext').onclick=()=>{qi++;renderQuiz()};
+    };
+  });
+}
+function renderDone(){
+  let msg,big;
+  if(score===5){big="5 / 5";msg="Sempurna! Kamu resmi jadi fotografer produk andalan!"}
+  else if(score===4){big="4 / 5";msg="Hebat! Sedikit lagi menuju sempurna!"}
+  else if(score===3){big="3 / 5";msg="Bagus! Ayo bahas lagi soal yang keliru bareng teman sebangku."}
+  else{big=score+" / 5";msg="Tidak apa-apa — belajar memang proses. Coba ulangi, ya!"}
+  quizArea.innerHTML=`
+    <div class="q-card card q-done">
+      <div class="tro"><i data-lucide="trophy"></i></div>
+      <h3>Kuis Selesai!</h3>
+      <div class="big">${big}</div>
+      <p>${msg}</p>
+      <button class="btn" id="qRetry"><i data-lucide="rotate-ccw"></i> Ulangi Kuis</button>
+    </div>`;
+  lucide.createIcons();
+  celebrate(180);
+  document.getElementById('qRetry').onclick=()=>{qi=0;score=0;renderQuiz()};
+}
+renderQuiz();
+
+/* ================= KONFETI ================= */
+const cvs=document.getElementById('confetti'),ctx=cvs.getContext('2d');
+const COLORS=['#FF7E67','#FFC531','#3FBF8F','#FFA8C5','#B9A7F2','#7FD8A6'];
+let parts=[],raf=null;
+function sizeC(){cvs.width=innerWidth;cvs.height=innerHeight}
+sizeC();addEventListener('resize',sizeC);
+function celebrate(n=140){
+  for(let i=0;i<n;i++){
+    parts.push({
+      x:Math.random()*cvs.width,y:-30-Math.random()*cvs.height*.35,
+      vx:-1.6+Math.random()*3.2,vy:2.2+Math.random()*3.4,
+      w:9+Math.random()*9,h:5+Math.random()*6,
+      rot:Math.random()*Math.PI,vr:-.16+Math.random()*.32,
+      ph:Math.random()*Math.PI*2,
+      c:COLORS[Math.floor(Math.random()*COLORS.length)],
+      shape:Math.floor(Math.random()*3)
+    });
+  }
+  if(!raf)tick();
+}
+function tick(){
+  ctx.clearRect(0,0,cvs.width,cvs.height);
+  parts.forEach(p=>{
+    p.x+=p.vx;p.y+=p.vy;p.rot+=p.vr;p.ph+=.1;p.vy+=.015;
+    ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);
+    ctx.scale(1,Math.abs(Math.sin(p.ph))*.85+.15);
+    ctx.fillStyle=p.c;
+    if(p.shape===0){ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h)}
+    else if(p.shape===1){ctx.beginPath();ctx.arc(0,0,p.h,0,7);ctx.fill()}
+    else{ctx.beginPath();ctx.moveTo(0,-p.h);ctx.lineTo(p.w/2,p.h/2);ctx.lineTo(-p.w/2,p.h/2);ctx.closePath();ctx.fill()}
+    ctx.restore();
+  });
+  parts=parts.filter(p=>p.y<cvs.height+40);
+  if(parts.length)raf=requestAnimationFrame(tick);
+  else{raf=null;ctx.clearRect(0,0,cvs.width,cvs.height)}
+}
+document.getElementById('partyBtn').onclick=()=>{celebrate(260);setTimeout(()=>celebrate(160),700)};
+
+lucide.createIcons();
+</script>
+</body>
+</html>
