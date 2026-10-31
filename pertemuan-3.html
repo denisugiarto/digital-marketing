@@ -273,9 +273,9 @@
 
   /* ===== BANK PROMPT ===== */
   .bank{margin-top:22px;display:grid;grid-template-columns:270px 1fr;gap:26px;align-items:start}
-  .ptabs{display:flex;flex-direction:column;gap:10px}
-  .ptab{display:flex;align-items:center;gap:11px;text-align:left;background:#fff;border:2.5px solid var(--ink);border-radius:14px;padding:10px 14px;font-family:'Fredoka';font-weight:600;font-size:15px;cursor:pointer;box-shadow:3px 3px 0 var(--ink);transition:.15s;color:var(--ink)}
-  .ptab .ti{width:32px;height:32px;border-radius:10px;border:2px solid var(--ink);display:grid;place-items:center;flex:0 0 32px}
+  .ptabs{display:flex;flex-direction:column;gap:8px}
+  .ptab{display:flex;align-items:center;gap:10px;text-align:left;background:#fff;border:2.5px solid var(--ink);border-radius:14px;padding:6px 12px;font-family:'Fredoka';font-weight:600;font-size:14.5px;cursor:pointer;box-shadow:3px 3px 0 var(--ink);transition:.15s;color:var(--ink)}
+  .ptab .ti{width:28px;height:28px;border-radius:9px;border:2px solid var(--ink);display:grid;place-items:center;flex:0 0 28px}
   .ptab .ti svg{width:16px;height:16px}
   .ptab:hover{transform:translateX(3px)}
   .ptab.on{background:var(--ink);color:#fff}
@@ -284,7 +284,8 @@
   .pcard-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
   .pcard h3{font-size:22px}
   .pcard .when{font-size:14px;font-weight:600;color:var(--ink-soft);margin-top:2px}
-  .pcode{margin-top:16px;background:var(--cream);border:2.5px dashed var(--ink);border-radius:14px;padding:16px 18px;font-size:15.5px;font-weight:600;line-height:1.7;white-space:pre-wrap;user-select:text}
+  .pcode{margin-top:16px;background:var(--cream);border:2.5px dashed var(--ink);border-radius:14px;padding:16px 18px;font-size:15.5px;font-weight:600;line-height:1.7;white-space:pre-wrap;user-select:text;max-height:42vh;overflow:auto}
+  .pcode.long{font-size:13.5px;line-height:1.6;max-height:32vh}
   .pcode .ph{background:var(--sun);border-radius:6px;padding:0 5px;font-weight:800}
   .pfoot{margin-top:14px;display:flex;gap:12px;align-items:flex-start;background:var(--mint);border:2.5px solid var(--ink);border-radius:12px;padding:10px 14px;font-size:13.5px;font-weight:600;line-height:1.5}
   .pfoot svg{width:17px;height:17px;flex:0 0 17px;margin-top:2px;color:var(--teal)}
@@ -921,7 +922,7 @@
 </section>
 
 <!-- ============ SLIDE 12 : BANK PROMPT ============ -->
-<section class="slide" data-theme="butter">
+<section class="slide s-tall" data-theme="butter">
   <div class="wrap">
     <span class="kicker anim" style="--d:0"><i data-lucide="wand-2"></i> Bank Prompt · Siap Salin</span>
     <h2 class="title anim" style="--d:1">Pilih kebutuhanmu, <span class="hl p">salin promptnya</span></h2>
@@ -1264,7 +1265,39 @@ const PROMPTS=[
   {k:'nol',icon:'image-plus',bg:'var(--sun)',title:'Gambar dari Nol (Jalan A)',
    when:'Untuk latar poster atau ilustrasi suasana — bukan foto produk.',
    text:'Buat gambar ilustrasi [suasana, misal: meja piknik di taman saat sore hari] dengan gaya foto yang cerah dan hangat. Sisakan ruang kosong di tengah untuk menempelkan foto produk asli nanti. Jangan tampilkan makanan, minuman, merek, tulisan, atau wajah orang. Ukuran persegi 1:1.',
-   tip:'Tempel foto produk aslimu di atas gambar ini lewat Canva, lalu beri label "ilustrasi".'}
+   tip:'Tempel foto produk aslimu di atas gambar ini lewat Canva, lalu beri label "ilustrasi".'},
+  {k:'posterLengkap',icon:'megaphone',bg:'var(--coral)',title:'Poster Promo Lengkap',
+   when:'Prompt panjang berstruktur: foto makanan asli → poster promo 9:16.',
+   text:`### Role & Persona
+Anda adalah seorang desainer grafis profesional terkemuka yang mengkhususkan diri dalam pemasaran kuliner dan desain poster ritel berdampak tinggi. Keahlian Anda terletak pada menciptakan tata letak yang menggugah selera, berani, dan berorientasi pada konversi.
+
+### Context
+Klien memerlukan poster promosi ritel (ukuran vertikal/poster, mis. 9:16) untuk hidangan andalan mereka: **Ayam Goreng Bawang**. Fokus utama poster haruslah hidangan tersebut, yang disajikan secara visual sebagai pusat perhatian, menggunakan gambar utama yang disediakan oleh pengguna sebagai referensi visual utama. Tujuan poster ini adalah untuk menarik perhatian pelanggan, menonjolkan kelezatan hidangan, dan mengomunikasikan penawaran harga yang sangat kompetitif secara instan.
+
+### Objective
+Hasilkan gambar poster promosi vertikal yang memukau secara visual, bersih, dan berani untuk "Ayam Goreng Bawang". Poster ini harus menempatkan hidangan utama (dari gambar referensi) sebagai elemen visual yang paling dominan, didukung oleh teks promosi yang jelas dan menarik.
+
+### Style & Tone
+- **Gaya Visual**: Fotografi makanan ritel komersial kelas atas, berani, modern, dan energik. Gunakan warna-warni hangat dan mengundang (seperti oranye, kuning, merah tua) yang kontras untuk menonjolkan makanan.
+- **Tata Letak**: Komposisi poster vertikal yang bersih, menggunakan prinsip hierarki visual yang kuat untuk mengarahkan mata dari hidangan utama ke harga, lalu ke detail penawaran.
+- **Tone**: Menggugah selera, mendesak (urgen), profesional, dan sangat menarik.
+
+### Audience
+Pelanggan potensial yang mencari makan siang atau makan malam yang lezat, terjangkau, dan memuaskan.
+
+### Constraints & Rules
+1.  **Fokus Visual Utama**: Gambar pusat poster haruslah piring "Ayam Goreng Bawang" yang lezat dan renyah, **tepat seperti yang terlihat pada gambar referensi user (image_0.png)**. Jangan menggantinya dengan gaya ayam goreng generik lainnya. Tonjolkan taburan bawang gorengnya.
+2.  **Teks Wajib (Tipografi Besar & Berani)**:
+    -   **Judul Utama**: "AYAM GORENG BAWANG" (Gunakan font sans-serif yang kuat dan mudah dibaca, mungkin berwarna kuning atau putih dengan *outline* kontras).
+    -   **Promosi Harga (Elemen Terbesar Kedua)**: "CUMA Rp 15.000!" (Harus sangat besar, berwarna cerah, mis. oranye atau kuning, di dalam gelembung harga atau diletakkan secara artistik di dekat makanan).
+    -   **Detail Paket**: "PAKET LENGKAP: Nasi + Ayam + Sambal + Lalapan" (Teks lebih kecil, diletakkan di bagian bawah poster).
+3.  **Latar Belakang**: Latar belakang harus bersih namun bertekstur (mis. meja kayu gelap yang sedikit buram atau latar belakang dapur restoran yang hangat dan bersih), memastikan piring makanan menjadi *pop-out*.
+4.  **Elemen Tambahan (Opsional namun Disarankan)**: Tambahkan sedikit uap artistik yang keluar dari makanan untuk menunjukkan kesegaran, dan mungkin beberapa elemen visual kecil seperti cabai utuh atau bawang putih di sudut latar belakang untuk memperkuat tema rasa.
+
+### Input / Request Details
+- **User Task**: Buatkan poster dengan inputan gambar dari user sebagai gambar utama.
+- **Input Image**: Gunakan piring Ayam Goreng Bawang dari \`image_0.png\` sebagai gambar utama dan satu-satunya fokus visual makanan.`,
+   tip:'Unggah foto ayam goreng aslimu bersama prompt ini. Ganti nama menu, harga, dan isi paket sesuai daganganmu. Cek ejaan teks di poster — kalau ada yang salah, perbaiki di Canva.'}
 ];
 const ptabs=document.getElementById('ptabs');
 let curPrompt=PROMPTS[0];
@@ -1283,6 +1316,8 @@ function showPrompt(p){
   curPrompt=p;
   document.getElementById('pTitle').textContent=p.title;
   document.getElementById('pWhen').textContent=p.when;
+  document.getElementById('pCode').classList.toggle('long',p.text.length>600);
+  document.getElementById('pCode').scrollTop=0;
   document.getElementById('pCode').innerHTML=esc(p.text).replace(/\[([^\]]+)\]/g,'<span class="ph">[$1]</span>');
   document.getElementById('pTip').textContent=p.tip;
 }
