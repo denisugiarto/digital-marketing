@@ -1297,7 +1297,55 @@ Pelanggan potensial yang mencari makan siang atau makan malam yang lezat, terjan
 ### Input / Request Details
 - **User Task**: Buatkan poster dengan inputan gambar dari user sebagai gambar utama.
 - **Input Image**: Gunakan piring Ayam Goreng Bawang dari \`image_0.png\` sebagai gambar utama dan satu-satunya fokus visual makanan.`,
-   tip:'Unggah foto ayam goreng aslimu bersama prompt ini. Ganti nama menu, harga, dan isi paket sesuai daganganmu. Cek ejaan teks di poster — kalau ada yang salah, perbaiki di Canva.'}
+   tip:'Unggah foto ayam goreng aslimu bersama prompt ini. Ganti nama menu, harga, dan isi paket sesuai daganganmu. Cek ejaan teks di poster — kalau ada yang salah, perbaiki di Canva.'},
+  {k:'dslr',icon:'aperture',bg:'var(--lav2)',title:'Foto Studio DSLR',
+   when:'Prompt bahasa Inggris: foto HP → foto studio, tangan dihapus, latar hitam.',
+   text:`### Role & Persona
+
+You are an elite, world-class professional commercial photographer, master director of photography, and digital retoucher, renowned for your mastery of studio lighting setups, optical physics, camera optics, and hyper-realistic visual composition.
+
+
+
+### Context
+
+High-end commercial and editorial imagery requires meticulous control over light shaping, focal length compression, sensor characteristics, and depth of field. This prompt is designed to produce an immaculate, magazine-cover quality photograph with authentic physical realism, avoiding the plastic or overly saturated look typical of standard AI generation.
+
+
+
+### Objective
+
+Generate a breathtaking, ultra-detailed professional studio photograph based on the user's subject, incorporating precise DSLR camera specifications, professional studio lighting modifiers, and realistic optical imperfections.
+
+
+
+### Style & Tone
+
+Hyper-realistic, tack-sharp focal precision combined with cinematic, creamy background bokeh.
+Pristine color grading, natural skin textures (with realistic pores and fine details), and precise material rendering (fabric weaves, metallic sheens, glass refractions).
+Professional editorial or high-end commercial aesthetic.
+
+
+### Audience
+
+Art directors, brand managers, and discerning creators looking for studio-grade visual assets that rival physical medium-format or high-end full-frame DSLR photography.
+
+
+
+### Constraints & Rules
+
+**Camera & Lens Parameters**: Explicitly define professional gear (e.g., Sony A7R V or Hasselblad X2D, 85mm f/1.4 GM or 50mm f/1.2 lens) to control distortion, compression, and depth of field.
+2. **Lighting Setup**: Specify professional studio lighting modifiers (e.g., large octa softbox as key light, strip boxes for rim/edge separation, V-flats for negative fill).
+
+3. **Composition & Settings**: Define crisp shutter speed, low ISO for grainless clarity, and precise aperture setting for subject separation.
+
+4. **Negative Constraints**: Strictly avoid oversaturated colors, plastic skin, CGI-rendered look, digital artifacts, distorted anatomy, or low-res textures.
+
+
+
+### Input / Request Details
+
+**User Task**: Generate a professional studio-quality photograph with DSLR camera characteristics for uploaded image remove hands and put in black background`,
+   tip:'Cocok untuk foto produk yang dipegang tangan. Unggah fotonya bersama prompt ini. Setelah jadi, cek lagi: bentuk, warna, dan tulisan pada produk harus tetap sama dengan aslinya.'}
 ];
 const ptabs=document.getElementById('ptabs');
 let curPrompt=PROMPTS[0];
