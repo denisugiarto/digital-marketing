@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Produksi Konten Kampanye — Projek · SMP Kelas 7</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#453A4E; --ink-soft:#6B5F75; --cream:#FDF7EF;
+    --peach:#FFF1E8; --peach2:#FFCBB5;
+    --mint:#EAF7F0;  --mint2:#BFEAD2;
+    --butter:#FFF6DF;--butter2:#FFE39A;
+    --lav:#F3F0FC;   --lav2:#DCD2F7;
+    --pink:#FFF0F5;  --pink2:#FFC9DC;
+    --sky:#E9F1FB;   --sky2:#C5DCF2;
+    --coral:#FF7E67; --teal:#3FBF8F; --sun:#FFC531;
+    --shadow:6px 6px 0 var(--ink);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--ink);background:var(--cream);overflow:hidden}
+  h1,h2,h3,.disp{font-family:'Fredoka',sans-serif}
+
+  /* ===== CHROME ===== */
+  #bar{position:fixed;top:0;left:0;height:6px;background:var(--coral);width:0;z-index:60;transition:width .4s ease;border-radius:0 4px 4px 0}
+  .pagenum{position:fixed;left:26px;bottom:22px;z-index:60;font-family:'Fredoka';font-weight:600;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:7px 16px;box-shadow:4px 4px 0 var(--ink);font-size:14px;letter-spacing:.06em}
+  .dots{position:fixed;left:50%;transform:translateX(-50%);bottom:24px;z-index:60;display:flex;gap:9px}
+  .dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--ink);background:#fff;cursor:pointer;transition:.25s;padding:0}
+  .dot.on{background:var(--sun);transform:scale(1.35)}
+  .navbtns{position:fixed;right:26px;bottom:18px;z-index:60;display:flex;gap:10px}
+  .nav{width:52px;height:52px;border-radius:50%;background:#fff;border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink);cursor:pointer;display:grid;place-items:center;transition:.15s;color:var(--ink)}
+  .nav:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .nav:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+  .nav:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:4px 4px 0 var(--ink)}
+  .navbar-bg{display:none;position:fixed;left:0;right:0;bottom:0;height:calc(76px + env(safe-area-inset-bottom,0px));z-index:55;background:rgba(253,247,239,.94);border-top:3px solid var(--ink);backdrop-filter:blur(6px)}
+
+  /* ===== SLIDES ===== */
+  .slide{position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;opacity:0;visibility:hidden;transform:translateX(46px);transition:opacity .5s ease,transform .55s cubic-bezier(.22,.9,.32,1),visibility .5s;overflow:auto;padding:56px 40px 100px}
+  .slide.active{opacity:1;visibility:visible;transform:none;z-index:5}
+  .slide::before,.slide::after{content:'';position:absolute;border-radius:50%;z-index:0}
+  .slide::before{width:44vw;height:44vw;top:-20vw;right:-14vw;background:var(--bA);opacity:.75}
+  .slide::after{width:34vw;height:34vw;bottom:-16vw;left:-12vw;background:var(--bB);opacity:.7}
+  [data-theme="peach"] {background:var(--peach);--bA:var(--peach2);--bB:var(--butter2)}
+  [data-theme="cream"] {background:var(--cream);--bA:var(--mint2);--bB:var(--pink2)}
+  [data-theme="butter"]{background:var(--butter);--bA:var(--butter2);--bB:var(--mint2)}
+  [data-theme="mint"]  {background:var(--mint);--bA:var(--mint2);--bB:var(--peach2)}
+  [data-theme="lav"]   {background:var(--lav);--bA:var(--lav2);--bB:var(--peach2)}
+  [data-theme="pink"]  {background:var(--pink);--bA:var(--pink2);--bB:var(--sky2)}
+  [data-theme="sky"]   {background:var(--sky);--bA:var(--sky2);--bB:var(--butter2)}
+
+  .wrap{position:relative;z-index:2;width:100%}
+  .slide .wrap{margin-top:auto;margin-bottom:auto}
+  .anim{opacity:0}
+  .slide.active .anim{animation:rise .7s cubic-bezier(.22,.9,.32,1) forwards;animation-delay:calc(var(--d,0)*.09s)}
+  @keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+
+  .kicker{display:inline-flex;align-items:center;gap:8px;font-family:'Fredoka';font-weight:600;font-size:13px;letter-spacing:.14em;text-transform:uppercase;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:8px 18px;box-shadow:4px 4px 0 var(--ink)}
+  .kicker svg{width:16px;height:16px}
+  h2.title{font-size:clamp(30px,3.6vw,48px);font-weight:700;margin:18px 0 8px;line-height:1.12}
+  p.lead{font-size:clamp(15px,1.3vw,19px);color:var(--ink-soft);max-width:680px;font-weight:500}
+  .hl{background:linear-gradient(transparent 62%,var(--butter2) 62%);padding:0 3px;border-radius:3px}
+  .hl.m{background:linear-gradient(transparent 62%,var(--mint2) 62%)}
+  .hl.p{background:linear-gradient(transparent 62%,var(--pink2) 62%)}
+  .hl.l{background:linear-gradient(transparent 62%,var(--lav2) 62%)}
+  .card{background:#fff;border:3px solid var(--ink);border-radius:20px;box-shadow:var(--shadow)}
+  .btn{display:inline-flex;align-items:center;gap:10px;font-family:'Fredoka';font-weight:600;font-size:17px;color:var(--ink);background:var(--coral);border:3px solid var(--ink);border-radius:14px;padding:13px 26px;box-shadow:5px 5px 0 var(--ink);cursor:pointer;transition:.15s;text-decoration:none}
+  .btn svg{width:20px;height:20px}
+  .btn:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+  .btn.sun{background:var(--sun)} .btn.mint{background:var(--mint2)} .btn.ghost{background:#fff}
+  .hidden{display:none !important}
+  .deco{position:absolute;z-index:1;pointer-events:none;color:var(--ink);opacity:.55}
+  .deco svg{width:100%;height:100%}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}50%{transform:translateY(-14px) rotate(var(--r,0deg))}}
+  .bob{animation:bob 4.5s ease-in-out infinite}
+
+  /* ===== HERO ===== */
+  .s-hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center}
+  .badge-row{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap}
+  .badge{display:inline-flex;align-items:center;gap:8px;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:8px 16px;font-weight:700;font-size:14px;box-shadow:3px 3px 0 var(--ink)}
+  .badge svg{width:17px;height:17px}
+  .b1{background:var(--mint2)} .b2{background:var(--pink2)} .b3{background:var(--butter2)}
+  .art-stage{position:relative;display:grid;place-items:center;min-height:460px}
+  .art-stage>svg{width:min(400px,90%);filter:drop-shadow(8px 10px 0 rgba(69,58,78,.18))}
+  .fchip{position:absolute;display:grid;place-items:center;border:3px solid var(--ink);border-radius:50%;box-shadow:4px 4px 0 var(--ink)}
+  .fchip svg{width:52%;height:52%}
+  .fc1{width:74px;height:74px;background:var(--coral);color:#fff;top:36px;left:34px;--r:-8deg}
+  .fc2{width:64px;height:64px;background:var(--sun);top:118px;right:26px;--r:10deg}
+  .fc3{width:70px;height:70px;background:var(--teal);color:#fff;bottom:92px;left:14px;--r:6deg}
+  .fc4{width:60px;height:60px;background:var(--lav2);bottom:34px;right:48px;--r:-10deg}
+  .fc5{width:52px;height:52px;background:var(--pink2);top:8px;right:130px;--r:14deg}
+
+  /* ===== GOALS ===== */
+  .goal-list{margin-top:30px;display:flex;flex-direction:column;gap:16px;max-width:880px}
+  .goal{display:flex;align-items:center;gap:22px;background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:16px 24px}
+  .goal:nth-child(odd){margin-right:56px}.goal:nth-child(even){margin-left:56px}
+  .gnum{flex:0 0 56px;height:56px;border-radius:50%;border:3px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:24px}
+  .g1{background:var(--coral);color:#fff}.g2{background:var(--sun)}.g3{background:var(--mint2)}.g4{background:var(--pink2)}
+  .goal h3{font-size:19px;font-weight:600;margin-bottom:3px}
+  .goal p{font-size:14.5px;color:var(--ink-soft);font-weight:500}
+
+  /* ===== PEMANASAN : TEBAK PEMBELI ===== */
+  .wu-shell{margin-top:26px;display:grid;grid-template-columns:330px 1fr;gap:32px;align-items:start}
+  .prod{border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);overflow:hidden;background:#fff}
+  .prod-media{height:200px;display:grid;place-items:center;border-bottom:2.5px solid var(--ink)}
+  .prod-media .ic{width:110px;height:110px;border-radius:50%;background:#fff;border:3px solid var(--ink);display:grid;place-items:center;box-shadow:5px 5px 0 var(--ink)}
+  .prod-media .ic svg{width:54px;height:54px}
+  .prod-cap{padding:14px 18px}
+  .prod-cap h4{font-family:'Fredoka';font-size:21px;line-height:1.15}
+  .prod-cap .sub{font-size:13.5px;font-weight:600;margin-top:4px;color:var(--ink-soft)}
+  .prod-cap .price{display:inline-block;margin-top:8px;font-family:'Fredoka';font-weight:700;font-size:14px;border:2.5px solid var(--ink);border-radius:10px;padding:4px 10px;background:var(--butter2)}
+  .wu-round{font-family:'Fredoka';font-weight:600;font-size:14px;color:var(--ink-soft)}
+  .wu-q{font-family:'Fredoka';font-weight:600;font-size:clamp(19px,1.8vw,23px);margin:6px 0 14px}
+  .wu-opts{display:flex;flex-direction:column;gap:12px;max-width:430px}
+  .wu-opt{display:flex;align-items:center;gap:13px;text-align:left;background:#fff;border:3px solid var(--ink);border-radius:14px;padding:12px 18px;font-family:'Plus Jakarta Sans';font-weight:600;font-size:15.5px;cursor:pointer;transition:.15s;color:var(--ink);box-shadow:4px 4px 0 var(--ink)}
+  .wu-opt:hover:not(:disabled){transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .wu-opt:disabled{cursor:default}
+  .wu-opt .letter{flex:0 0 34px;height:34px;border-radius:10px;border:2.5px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;background:var(--butter2)}
+  .wu-opt.good{background:var(--mint2)} .wu-opt.good .letter{background:var(--teal);color:#fff}
+  .wu-opt.bad{background:var(--pink2)} .wu-opt.bad .letter{background:var(--coral);color:#fff}
+  .wu-fb{margin-top:16px;display:flex;gap:12px;align-items:flex-start;background:var(--butter);border:2.5px solid var(--ink);border-radius:14px;padding:14px 18px;font-size:14.5px;font-weight:600;line-height:1.55;max-width:430px}
+  .wu-fb svg{width:20px;height:20px;flex:0 0 20px;margin-top:2px}
+  .wu-next{margin-top:14px}
+  .wu-done{background:#fff;border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);padding:30px 34px;max-width:640px;text-align:center}
+  .wu-done .tro{width:84px;height:84px;border-radius:50%;background:var(--sun);border:3px solid var(--ink);display:grid;place-items:center;margin:0 auto 14px;box-shadow:4px 4px 0 var(--ink)}
+  .wu-done .tro svg{width:40px;height:40px}
+  .wu-done h3{font-size:26px;margin-bottom:8px}
+  .wu-done p{font-weight:600;color:var(--ink-soft);line-height:1.6}
+  .wu-done .sc{font-family:'Fredoka';font-weight:700;font-size:19px;color:var(--teal);margin-top:10px}
+
+  /* ===== DEFINISI ===== */
+  .s-def .wrap{display:grid;grid-template-columns:1.08fr .92fr;gap:40px;align-items:center}
+  .define{margin-top:24px;background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:22px 26px;font-size:clamp(16px,1.45vw,20px);font-weight:600;line-height:1.6}
+  .define .q{color:var(--coral);font-family:'Fredoka'}
+  .analog{margin-top:18px;display:flex;gap:16px;align-items:flex-start;background:var(--lav);border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:18px 22px}
+  .analog .ic{flex:0 0 46px;height:46px;border-radius:50%;background:var(--lav2);display:grid;place-items:center;border:2.5px solid var(--ink)}
+  .analog .ic svg{width:24px;height:24px}
+  .analog p{font-size:15.5px;font-weight:500;line-height:1.55}
+  .target-art{display:grid;place-items:center}
+  .target-art svg{width:min(380px,100%);height:auto;filter:drop-shadow(8px 10px 0 rgba(69,58,78,.18))}
+  /* ===== FLIP 4 PERTANYAAN ===== */
+  .fgrid{margin-top:26px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+  .fcard{perspective:1100px;min-height:250px;cursor:pointer}
+  .finner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.3,.8,.3,1)}
+  .fcard.flipped .finner{transform:rotateY(180deg)}
+  .fface{position:absolute;inset:0;backface-visibility:hidden;border:3px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 var(--ink);padding:18px 20px;display:flex;flex-direction:column}
+  .ffront{background:#fff}
+  .fback{background:var(--mint2);transform:rotateY(180deg)}
+  .fic{width:52px;height:52px;border-radius:15px;border:2.5px solid var(--ink);display:grid;place-items:center;margin-bottom:12px}
+  .fic svg{width:24px;height:24px}
+  .ffront h3{font-size:22px;line-height:1.15}
+  .ffront .tease{font-size:13.5px;font-weight:600;color:var(--ink-soft);line-height:1.45;margin-top:6px}
+  .ffront .hint{margin-top:auto;display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;color:var(--ink-soft)}
+  .ffront .hint svg{width:15px;height:15px}
+  .fback .tag{font-family:'Fredoka';font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;background:var(--ink);color:#fff;border-radius:999px;padding:4px 12px;align-self:flex-start;margin-bottom:10px}
+  .fback p{font-size:13.8px;font-weight:600;line-height:1.55;flex:1}
+  .fback .eg{font-size:12.5px;font-weight:700;opacity:.8;margin-top:8px;border-top:2px dashed rgba(69,58,78,.4);padding-top:8px;flex:0 0 auto}
+  /* ===== GAME ===== */
+  .match-list{margin-top:26px;display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .m-card{background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:18px 20px}
+  .m-card.solved{background:var(--mint)}
+  .m-card h3{font-size:14.5px;font-weight:600;line-height:1.5;margin-bottom:12px;font-family:'Plus Jakarta Sans'}
+  .m-card h3 b{font-family:'Fredoka'}
+  .m-opts{display:flex;gap:9px;flex-wrap:wrap}
+  .m-opt{display:inline-flex;align-items:center;gap:7px;font-family:'Fredoka';font-weight:600;font-size:13.5px;border:2.5px solid var(--ink);border-radius:999px;padding:8px 15px;background:#fff;cursor:pointer;box-shadow:3px 3px 0 var(--ink);transition:.15s;color:var(--ink)}
+  .m-opt:hover:not(:disabled){transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--ink)}
+  .m-opt:disabled{cursor:default}
+  .m-opt.good{background:var(--teal);color:#fff}
+  .m-opt.bad{background:var(--pink2)}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+  .m-opt.shake{animation:shake .3s}
+  .m-why{margin-top:12px;background:var(--butter);border:2.5px solid var(--ink);border-radius:12px;padding:10px 14px;font-size:13px;font-weight:600;line-height:1.5;display:flex;gap:9px}
+  .m-why svg{width:17px;height:17px;flex:0 0 17px;margin-top:1px}
+  .m-score{margin-top:22px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;background:var(--ink);color:#fff;border-radius:16px;padding:14px 24px;max-width:640px;box-shadow:var(--shadow)}
+  .m-score b{font-family:'Fredoka';font-size:20px;color:var(--sun)}
+
+  /* ===== QUIZ ===== */
+  .quiz-shell{max-width:780px;margin:0 auto}
+  .q-meta{display:flex;justify-content:space-between;align-items:center;margin:0 0 16px}
+  .q-badge{font-family:'Fredoka';font-weight:700;background:var(--coral);color:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:7px 18px;box-shadow:3px 3px 0 var(--ink);font-size:14px}
+  .q-score{font-family:'Fredoka';font-weight:700;background:var(--sun);border:2.5px solid var(--ink);border-radius:999px;padding:7px 18px;box-shadow:3px 3px 0 var(--ink);font-size:14px;display:flex;align-items:center;gap:7px}
+  .q-score svg{width:16px;height:16px}
+  .q-card{padding:28px 32px;margin-top:20px}
+  .q-q{font-size:clamp(19px,1.8vw,25px);font-weight:600;line-height:1.4;margin-bottom:20px}
+  .q-opts{display:flex;flex-direction:column;gap:12px}
+  .opt{display:flex;align-items:center;gap:16px;text-align:left;background:#fff;border:3px solid var(--ink);border-radius:14px;padding:13px 18px;font-family:'Plus Jakarta Sans';font-weight:600;font-size:16px;cursor:pointer;transition:.15s;color:var(--ink);box-shadow:4px 4px 0 var(--ink)}
+  .opt:hover:not(:disabled){transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .opt:disabled{cursor:default}
+  .opt .letter{flex:0 0 36px;height:36px;border-radius:10px;border:2.5px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;background:var(--lav2)}
+  .opt.good{background:var(--mint2)} .opt.good .letter{background:var(--teal);color:#fff}
+  .opt.bad{background:var(--pink2);opacity:.9} .opt.bad .letter{background:var(--coral);color:#fff}
+  .q-foot{margin-top:18px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+  .q-why{display:flex;gap:12px;align-items:flex-start;background:var(--butter);border:2.5px solid var(--ink);border-radius:14px;padding:14px 18px;font-size:14.5px;font-weight:600;line-height:1.5;flex:1}
+  .q-why svg{width:20px;height:20px;flex:0 0 20px;margin-top:2px}
+  .q-done{text-align:center;padding:38px 30px}
+  .q-done .tro{width:96px;height:96px;border-radius:50%;background:var(--sun);border:3px solid var(--ink);display:grid;place-items:center;margin:0 auto 18px;box-shadow:5px 5px 0 var(--ink)}
+  .q-done .tro svg{width:48px;height:48px}
+  .q-done h3{font-size:30px;margin-bottom:8px}
+  .q-done .big{font-family:'Fredoka';font-size:56px;font-weight:700;color:var(--coral);margin:6px 0 10px}
+  .q-done p{font-weight:600;color:var(--ink-soft);margin-bottom:22px}
+
+  /* ===== MISI ===== */
+  .s-misi .wrap{display:grid;grid-template-columns:1.12fr .88fr;gap:38px;align-items:start}
+  .steps{margin-top:24px;display:flex;flex-direction:column;gap:14px}
+  .step{display:flex;gap:18px;align-items:flex-start;background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:var(--shadow);padding:15px 20px}
+  .step:nth-child(even){margin-left:44px}
+  .snum{flex:0 0 46px;height:46px;border-radius:50%;border:3px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:19px}
+  .st1{background:var(--coral);color:#fff}.st2{background:var(--sun)}.st3{background:var(--mint2)}.st4{background:var(--pink2)}
+  .step h3{font-size:16.5px;font-weight:600}
+  .step p{font-size:13.5px;color:var(--ink-soft);font-weight:500;margin-top:2px;line-height:1.5}
+  .blank-card{padding:18px 22px;background:#fff;border:3px dashed var(--ink);border-radius:16px}
+  .blank-card h4{font-family:'Fredoka';font-size:15.5px;margin-bottom:10px;display:flex;gap:8px;align-items:center}
+  .blank-card h4 svg{width:17px;height:17px}
+  .bl{display:flex;gap:8px;font-size:13px;font-weight:600;padding:5px 0}
+  .bl b{flex:0 0 96px}
+  .bl span{flex:1;border-bottom:2px dotted var(--ink-soft);min-height:18px}
+  .sentence{margin-top:12px;background:var(--butter);border:2.5px solid var(--ink);border-radius:12px;padding:10px 14px;font-size:13.5px;font-weight:600;line-height:1.7}
+  .mini-rubrik{margin-top:18px;padding:18px 22px;background:#fff}
+  .rubrik-row{display:flex;justify-content:space-between;gap:12px;font-size:13.5px;font-weight:700;padding:6px 0;border-top:2px dashed rgba(69,58,78,.25)}
+  .rubrik-row:first-of-type{border-top:none}
+  .rubrik-row span:last-child{color:var(--coral);font-family:'Fredoka';white-space:nowrap}
+
+  /* ===== PENUTUP ===== */
+  .s-end .wrap{display:grid;grid-template-columns:1fr .85fr;gap:44px;align-items:center}
+  .refl{margin-top:24px;display:flex;flex-direction:column;gap:14px;max-width:600px}
+  .refl-item{display:flex;gap:16px;align-items:center;background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:var(--shadow);padding:14px 20px}
+  .rnum{flex:0 0 44px;height:44px;border-radius:50%;border:2.5px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:18px}
+  .r1{background:var(--coral);color:#fff}.r2{background:var(--mint2)}.r3{background:var(--pink2)}
+  .refl-item p{font-size:15.5px;font-weight:600}
+  .end-art{position:relative;display:grid;place-items:center;min-height:420px}
+  .quote{position:relative;background:var(--sun);border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);padding:30px 34px;text-align:center;max-width:380px;transform:rotate(-2deg)}
+  .quote h3{font-size:25px;line-height:1.3;margin-bottom:10px}
+  .quote p{font-weight:600;font-size:14.5px}
+  .end-btn{margin-top:26px;display:flex;gap:14px;flex-wrap:wrap}
+  .s-tall{padding-top:40px;padding-bottom:88px}
+  .s-tall h2.title{margin-top:12px}
+
+  .mk-lab{font-family:'Fredoka';font-weight:700;font-size:15px}
+  .mk-row,.tm-pre{display:flex;flex-wrap:wrap;gap:8px}
+  .tg{display:inline-flex;align-items:center;gap:7px;font-family:'Fredoka';font-weight:600;font-size:14.5px;border:2.5px solid var(--ink);border-radius:12px;padding:8px 13px;background:#fff;cursor:pointer;box-shadow:3px 3px 0 var(--ink);color:var(--ink)}
+  .tg svg{width:16px;height:16px}
+  .tg.on{background:var(--ink);color:#fff}
+  .ck-track{flex:1;height:16px;background:#fff;border:2.5px solid var(--ink);border-radius:999px;overflow:hidden}
+  .ck-fill{height:100%;width:0;background:var(--teal);transition:width .35s}
+  @keyframes pop{0%{transform:scale(.96)}60%{transform:scale(1.03)}100%{transform:none}}
+
+  /* ===== PAKET KONTEN ===== */
+  .pack{width:min(380px,100%);background:#fff;border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);padding:16px;display:flex;flex-direction:column;gap:10px}
+  .pack-h{font-family:'Fredoka';font-weight:700;font-size:18px;display:flex;align-items:center;gap:9px;border-bottom:3px solid var(--ink);padding-bottom:8px}
+  .target-art .pack svg{filter:none}
+  .pack-h svg{width:22px;height:22px}
+  .pack-i{display:grid;grid-template-columns:46px 1fr auto;align-items:center;gap:12px;background:var(--cream);border:2.5px solid var(--ink);border-radius:14px;padding:8px 12px}
+  .pack-i svg{width:44px;height:44px;padding:10px;border-radius:12px;background:var(--c);border:2.5px solid var(--ink)}
+  .pack-i b{font-family:'Fredoka';font-size:16px}
+  .pack-i small{font-size:12px;font-weight:700;background:#fff;border:2px solid var(--ink);border-radius:999px;padding:2px 9px}
+
+  /* ===== KARTU PERAN ===== */
+  .tasks{list-style:none;display:flex;flex-direction:column;gap:5px;flex:1}
+  .tasks li{font-size:13.3px;font-weight:600;line-height:1.4;padding-left:18px;position:relative}
+  .tasks li::before{content:'';position:absolute;left:2px;top:6px;width:8px;height:8px;border-radius:50%;background:var(--ink)}
+
+  /* ===== PAPAN PRODUKSI ===== */
+  .board-top{margin-top:14px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+  .bt-add{display:flex;gap:8px;flex:1 1 560px;flex-wrap:wrap}
+  .bt-add input,.bt-add select{font:600 14px 'Plus Jakarta Sans',sans-serif;color:var(--ink);background:#fff;border:2.5px solid var(--ink);border-radius:12px;padding:9px 12px}
+  .bt-add input{flex:1 1 220px;min-width:0}
+  .bt-add input:focus,.bt-add select:focus{outline:none;box-shadow:3px 3px 0 var(--sun)}
+  .bt-add .btn{font-size:15px;padding:8px 16px;box-shadow:3px 3px 0 var(--ink)}
+  .bt-prog{display:flex;align-items:center;gap:10px;flex:0 1 300px;font-family:'Fredoka';font-weight:700;font-size:14.5px;white-space:nowrap}
+  .board{margin-top:14px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start}
+  .bcol{background:rgba(255,255,255,.55);border:3px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 var(--ink);overflow:hidden}
+  .bcol-h{display:flex;align-items:center;gap:8px;font-family:'Fredoka';font-weight:700;font-size:16px;padding:9px 14px;border-bottom:3px solid var(--ink)}
+  .bcol-h svg{width:18px;height:18px}
+  .bcol-h .cnt{margin-left:auto;background:#fff;border:2px solid var(--ink);border-radius:999px;font-size:12.5px;padding:1px 9px}
+  .bcol-b{padding:10px;display:flex;flex-direction:column;gap:8px;min-height:120px;max-height:300px;overflow:auto}
+  .bcard{position:relative;display:flex;gap:10px;align-items:center;text-align:left;width:100%;background:#fff;border:2.5px solid var(--ink);border-radius:12px;padding:8px 32px 8px 10px;box-shadow:3px 3px 0 var(--ink);cursor:pointer;font:600 13.5px/1.35 'Plus Jakarta Sans',sans-serif;color:var(--ink);transition:.15s;animation:pop .35s}
+  .bcard:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--ink)}
+  .bcard .role{flex:0 0 30px;height:30px;border-radius:9px;border:2px solid var(--ink);display:grid;place-items:center}
+  .bcard .role svg{width:16px;height:16px}
+  .bcard .x{position:absolute;top:50%;right:6px;transform:translateY(-50%);width:22px;height:22px;border-radius:50%;border:2px solid var(--ink);background:#fff;display:grid;place-items:center;font-weight:800;font-size:13px;line-height:1}
+  .bcard .x:hover{background:var(--pink2)}
+  .bcol[data-c="2"] .bcard{background:var(--mint)}
+  .bcol[data-c="2"] .bcard .txt{text-decoration:line-through;text-decoration-thickness:2px;opacity:.75}
+  .bempty{font-size:12.5px;font-weight:700;color:var(--ink-soft);text-align:center;padding:16px 6px;border:2px dashed rgba(69,58,78,.3);border-radius:12px}
+  .board-foot{margin-top:14px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;font-size:13.5px;font-weight:600;color:var(--ink-soft)}
+  .board-foot>span{display:inline-flex;align-items:center;gap:7px}
+  .board-foot svg{width:16px;height:16px}
+  .board-foot .btn{font-size:14.5px;padding:8px 16px;box-shadow:3px 3px 0 var(--ink)}
+
+  /* ===== TIMER ===== */
+  .tm{margin-top:24px;display:grid;grid-template-columns:340px 1fr;gap:40px;align-items:center}
+  .tm-dial{position:relative;width:min(320px,100%);aspect-ratio:1;margin:0 auto}
+  .tm-dial svg{width:100%;height:100%;filter:drop-shadow(7px 8px 0 rgba(69,58,78,.9))}
+  #tmRing{transition:stroke-dashoffset .9s linear,stroke .3s}
+  .tm-num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .tm-num b{font-family:'Fredoka';font-weight:700;font-size:clamp(46px,5vw,64px);line-height:1;font-variant-numeric:tabular-nums}
+  .tm-num small{margin-top:6px;font-weight:700;font-size:13px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.1em}
+  .tm.ring .tm-dial{animation:shake .35s 4}
+  .tm-side{display:flex;flex-direction:column;gap:14px}
+  .tm-btns{display:flex;gap:12px;flex-wrap:wrap}
+  .tm-tip{display:flex;gap:12px;align-items:flex-start;background:var(--butter);border:2.5px solid var(--ink);border-radius:14px;padding:12px 16px;font-size:14.5px;font-weight:600;line-height:1.5;max-width:520px}
+  .tm-tip svg{width:20px;height:20px;flex:0 0 20px;margin-top:1px}
+  .tm-rules{display:flex;gap:8px;flex-wrap:wrap}
+  .tm-rules span{display:inline-flex;align-items:center;gap:7px;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:6px 13px;font-size:13px;font-weight:700;box-shadow:3px 3px 0 var(--ink)}
+  .tm-rules svg{width:15px;height:15px}
+
+  /* ===== CEK ATURAN JUJUR ===== */
+  .hj{margin-top:18px;display:grid;grid-template-columns:340px 1fr;gap:28px;align-items:start}
+  .draft{margin-top:12px;border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);min-height:300px;padding:44px 20px 22px;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;transition:background .4s}
+  .pp-plat{position:absolute;top:12px;left:12px;display:inline-flex;gap:7px;align-items:center;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:5px 12px;font-family:'Fredoka';font-weight:700;font-size:12.5px;box-shadow:3px 3px 0 var(--ink)}
+  .pp-plat svg{width:15px;height:15px}
+  .pp-ic{width:78px;height:78px;border-radius:50%;background:#fff;border:3px solid var(--ink);display:grid;place-items:center;box-shadow:4px 4px 0 var(--ink)}
+  .pp-ic svg{width:38px;height:38px}
+  .d-title{font-family:'Fredoka';font-weight:700;font-size:23px;line-height:1.15}
+  .d-sub{font-weight:600;font-size:13.5px;line-height:1.5;max-width:280px}
+  .d-price{font-family:'Fredoka';font-weight:700;font-size:14px;border:2.5px solid var(--ink);border-radius:10px;padding:4px 12px;background:#fff;box-shadow:3px 3px 0 var(--ink)}
+  .hj-rules{display:flex;flex-direction:column;gap:9px}
+  .hr{display:flex;gap:12px;align-items:center;text-align:left;background:#fff;border:2.5px solid var(--ink);border-radius:14px;padding:9px 14px;cursor:pointer;box-shadow:3px 3px 0 var(--ink);font:600 14px/1.4 'Plus Jakarta Sans',sans-serif;color:var(--ink);transition:.15s}
+  .hr:disabled{cursor:default}
+  .hr .box{flex:0 0 28px;height:28px;border-radius:8px;border:2.5px solid var(--ink);display:grid;place-items:center;background:#fff;font-weight:800}
+  .hr .box svg{width:16px;height:16px}
+  .hr small{display:block;font-size:12px;color:var(--ink-soft);font-weight:600}
+  .hr.on{background:var(--pink)}
+  .hr.on .box{background:var(--coral);color:#fff}
+  .hr.ok{background:var(--mint2)} .hr.miss{background:var(--butter2)} .hr.wrong{background:var(--pink2)}
+  .hr .res{margin-left:auto;font-family:'Fredoka';font-size:12.5px;font-weight:700;white-space:nowrap}
+  .hj-foot{margin-top:14px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+  .hj-verdict{flex:1;min-width:220px;display:flex;gap:10px;align-items:center;border:3px solid var(--ink);border-radius:14px;padding:10px 14px;font-weight:700;font-size:14px;line-height:1.45;box-shadow:4px 4px 0 var(--ink);animation:pop .4s}
+  .hj-verdict svg{width:24px;height:24px;flex:0 0 24px}
+  .hj-verdict.go{background:var(--teal);color:#fff}
+  .hj-verdict.stop{background:var(--coral);color:#fff}
+
+  #confetti{position:fixed;inset:0;z-index:100;pointer-events:none}
+
+  @media (max-width:960px){
+    .s-hero .wrap,.s-def .wrap,.s-misi .wrap,.s-end .wrap{grid-template-columns:1fr}
+    .wu-shell{grid-template-columns:1fr}
+    .fgrid{grid-template-columns:1fr 1fr}
+    .match-list{grid-template-columns:1fr}
+    .goal:nth-child(odd),.goal:nth-child(even){margin:0}
+    .step:nth-child(even){margin-left:0}
+    .art-stage,.end-art{min-height:340px}
+    .slide{padding:40px 20px 110px}
+    .board{grid-template-columns:1fr}
+    .bcol-b{max-height:none}
+    .tm,.hj{grid-template-columns:minmax(0,1fr)}
+  }
+
+  /* ===== MOBILE ===== */
+  @media (max-width:640px){
+    .slide{padding:22px 16px 104px}
+    .slide::before{width:70vw;height:70vw;top:-30vw;right:-30vw}
+    .slide::after{width:60vw;height:60vw;bottom:-28vw;left:-26vw}
+    .kicker{font-size:11px;letter-spacing:.1em;padding:6px 12px;box-shadow:3px 3px 0 var(--ink)}
+    h2.title{font-size:27px;margin:14px 0 6px}
+    p.lead{font-size:15px}
+    .card,.goal,.step,.m-card,.refl-item,.tq,.vs2-col,.prod,.poster,.diff{box-shadow:4px 4px 0 var(--ink)}
+    .deco{display:none}
+    .dots{display:none}
+    .navbar-bg{display:block}
+    .pagenum{left:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));font-size:13px;padding:6px 14px;box-shadow:3px 3px 0 var(--ink)}
+    .navbtns{right:16px;bottom:calc(12px + env(safe-area-inset-bottom,0px))}
+    .nav{width:48px;height:48px;box-shadow:3px 3px 0 var(--ink)}
+    .s-hero .wrap{gap:12px}
+    .art-stage{min-height:300px}
+    .art-stage>svg{width:min(260px,76%)}
+    .fchip{transform:scale(.7)}
+    .badge{font-size:13px;padding:6px 12px}
+    .goal{gap:14px;padding:12px 16px}
+    .gnum{flex:0 0 44px;height:44px;font-size:20px}
+    .goal h3{font-size:16.5px}
+    .goal p{font-size:13.5px}
+    .fgrid{grid-template-columns:1fr}
+    .fcard{min-height:200px}
+    .q-card{padding:18px 16px}
+    .q-q{font-size:18px}
+    .opt{font-size:14.5px;padding:10px 14px;gap:12px}
+    .q-foot{flex-direction:column;align-items:stretch}
+    .q-done .big{font-size:44px}
+    .quote{padding:22px}
+    .quote h3{font-size:21px}
+    .end-art{min-height:300px}
+    .pack-i{grid-template-columns:40px 1fr;padding:7px 10px}
+    .pack-i svg{width:38px;height:38px;padding:8px}
+    .pack-i small{grid-column:2;justify-self:start}
+    .bcol{box-shadow:4px 4px 0 var(--ink)}
+    .bt-add select{flex:1 1 auto}
+    .bt-prog{flex:1 1 100%}
+    .tm{gap:22px}
+    .tm-dial{width:240px}
+    .draft{min-height:250px;box-shadow:4px 4px 0 var(--ink)}
+    .hr{font-size:13.5px}
+  }
+
+</style>
+</head>
+<body>
+
+<div id="bar"></div>
+
+<!-- ============ SLIDE 1 : JUDUL ============ -->
+<section class="slide active" data-theme="peach">
+  <div class="deco bob" style="top:14%;left:5%;width:26px;height:26px">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 2v20M2 12h20"/></svg>
+  </div>
+  <div class="deco bob" style="bottom:18%;left:12%;width:34px;height:34px;animation-delay:1.2s">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/></svg>
+  </div>
+  <div class="s-hero wrap" style="display:contents"><div class="wrap">
+    <div>
+      <span class="kicker anim" style="--d:0"><i data-lucide="clapperboard"></i> Digital Marketing · Pertemuan 15 · SMP Kelas 7</span>
+      <h1 class="anim" style="--d:1;font-size:clamp(38px,4.6vw,62px);font-weight:700;line-height:1.08;margin:20px 0 14px">
+        Projek: <span class="hl">Produksi</span><br>Konten Kampanye
+      </h1>
+      <p class="lead anim" style="--d:2">Rencana sudah jadi. Sekarang waktunya bekerja seperti <b>tim kreatif sungguhan</b>:
+      bagi peran, buat foto, poster, caption, dan video, lalu cek kejujurannya bersama.</p>
+      <div class="badge-row anim" style="--d:3">
+        <span class="badge b1"><i data-lucide="users"></i> Bagi Peran</span>
+        <span class="badge b3"><i data-lucide="kanban"></i> Papan Produksi</span>
+        <span class="badge b2"><i data-lucide="shield-check"></i> Cek Aturan Jujur</span>
+      </div>
+    </div>
+    <div class="art-stage anim" style="--d:2">
+      <svg viewBox="0 0 380 420" aria-hidden="true">
+        <ellipse cx="190" cy="215" rx="170" ry="190" fill="#FFCBB5"/>
+        <rect x="62" y="96" width="256" height="230" rx="24" fill="#fff" stroke="#453A4E" stroke-width="5"/>
+        <rect x="62" y="96" width="256" height="44" rx="22" fill="#FFE39A" stroke="#453A4E" stroke-width="5"/>
+        <circle cx="90" cy="118" r="7" fill="#FF7E67" stroke="#453A4E" stroke-width="3"/><circle cx="112" cy="118" r="7" fill="#3FBF8F" stroke="#453A4E" stroke-width="3"/>
+        <g stroke="#453A4E" stroke-width="4">
+          <rect x="82" y="156" width="66" height="150" rx="12" fill="#FFF0F5"/>
+          <rect x="157" y="156" width="66" height="150" rx="12" fill="#FFF6DF"/>
+          <rect x="232" y="156" width="66" height="150" rx="12" fill="#EAF7F0"/>
+          <rect x="90" y="170" width="50" height="30" rx="7" fill="#FFC9DC"/><rect x="90" y="208" width="50" height="30" rx="7" fill="#FFC9DC"/>
+          <rect x="165" y="170" width="50" height="30" rx="7" fill="#FFE39A"/>
+          <rect x="240" y="170" width="50" height="30" rx="7" fill="#BFEAD2"/><rect x="240" y="208" width="50" height="30" rx="7" fill="#BFEAD2"/><rect x="240" y="246" width="50" height="30" rx="7" fill="#BFEAD2"/>
+        </g>
+        <path d="M252 186 l7 7 13-14 M252 224 l7 7 13-14 M252 262 l7 7 13-14" fill="none" stroke="#453A4E" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="fchip fc1 bob"><i data-lucide="camera"></i></span>
+      <span class="fchip fc2 bob" style="animation-delay:.8s"><i data-lucide="pen-line"></i></span>
+      <span class="fchip fc3 bob" style="animation-delay:1.6s"><i data-lucide="palette"></i></span>
+      <span class="fchip fc4 bob" style="animation-delay:.4s"><i data-lucide="video"></i></span>
+      <span class="fchip fc5 bob" style="animation-delay:2s"><i data-lucide="shield-check"></i></span>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============ SLIDE 2 : TUJUAN ============ -->
+<section class="slide" data-theme="cream">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="map"></i> Rencana Belajar Hari Ini</span>
+    <h2 class="title anim" style="--d:1">Hari ini kita akan...</h2>
+    <div class="goal-list">
+      <div class="goal anim" style="--d:2">
+        <div class="gnum g1">1</div>
+        <div><h3>Bagi Peran dalam Tim</h3><p>Fotografer, penulis, desainer, dan editor video. Semua punya tugas jelas.</p></div>
+      </div>
+      <div class="goal anim" style="--d:3">
+        <div class="gnum g2">2</div>
+        <div><h3>Pantau Kerja di Papan Produksi</h3><p>Tugas berpindah dari To Do, ke Proses, sampai Selesai.</p></div>
+      </div>
+      <div class="goal anim" style="--d:4">
+        <div class="gnum g3">3</div>
+        <div><h3>Produksi Sesuai Waktu</h3><p>Pakai timer supaya foto, poster, caption, dan video selesai hari ini.</p></div>
+      </div>
+      <div class="goal anim" style="--d:5">
+        <div class="gnum g4">4</div>
+        <div><h3>Cek Aturan Jujur Sebelum Tayang</h3><p>Tidak ada konten yang tayang sebelum lolos cek kejujuran bersama.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 3 : PEMANASAN ============ -->
+<section class="slide" data-theme="butter">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="hand"></i> Pemanasan · Tebak Perannya</span>
+    <h2 class="title anim" style="--d:1">Tugas ini dikerjakan <span class="hl p">oleh siapa?</span></h2>
+    <p class="lead anim" style="--d:1.5">Di tim kreatif, tiap orang punya peran. Tebak siapa yang mengerjakan tugas ini!</p>
+    <div class="wu-shell anim" style="--d:2" id="wuShell">
+      <div class="prod">
+        <div class="prod-media" id="wuMedia"><span class="ic" id="wuIc"></span></div>
+        <div class="prod-cap"><h4 id="wuName"></h4><div class="sub" id="wuSub"></div></div>
+      </div>
+      <div>
+        <div class="wu-round" id="wuRound"></div>
+        <div class="wu-q">Siapa yang mengerjakannya?</div>
+        <div class="wu-opts" id="wuOpts"></div>
+        <div class="wu-fb hidden" id="wuFb"><i data-lucide="circle-check"></i><span></span></div>
+        <button class="btn mint wu-next hidden" id="wuNext"><i data-lucide="arrow-right"></i> <span>Tugas Berikutnya</span></button>
+      </div>
+    </div>
+    <div class="wu-done hidden anim" id="wuDone" style="--d:0">
+      <div class="tro"><i data-lucide="trophy"></i></div>
+      <h3>Kamu sudah kenal semua perannya!</h3>
+      <p>Satu kampanye butuh <b>banyak keahlian</b>. Kalau tugasnya dibagi, pekerjaan jadi lebih cepat dan hasilnya lebih rapi.</p>
+      <div class="sc">Tebakan tepat: <span id="wuScore">0</span> dari 4</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 4 : KONSEP ============ -->
+<section class="slide" data-theme="mint">
+  <div class="s-def wrap" style="display:contents"><div class="wrap">
+    <div>
+      <span class="kicker anim" style="--d:0"><i data-lucide="search"></i> Konsep Utama</span>
+      <h2 class="title anim" style="--d:1">Apa itu <span class="hl m">produksi konten?</span></h2>
+      <div class="define anim" style="--d:2">
+        <span class="q">Catat baik-baik, ya!</span><br>
+        Produksi konten adalah <span class="hl">membuat semua bahan promosi</span> sesuai <span class="hl">rencana kampanye</span>,
+        dikerjakan bersama dengan <span class="hl">peran yang jelas</span>.
+      </div>
+      <div class="analog anim" style="--d:3">
+        <div class="ic"><i data-lucide="chef-hat"></i></div>
+        <p><b>Seperti dapur warung bakso:</b> ada yang membuat bakso, ada yang merebus mi, ada yang meracik kuah, ada yang mengantar.
+        Kalau semua orang mengerjakan hal yang sama, pesanan malah lama selesai!</p>
+      </div>
+    </div>
+    <div class="target-art anim" style="--d:3">
+      <div class="pack">
+        <div class="pack-h"><i data-lucide="package-open"></i> Paket Konten Kampanye</div>
+        <div class="pack-i" style="--c:var(--pink2)"><i data-lucide="camera"></i><b>Foto produk</b><small>dari P5</small></div>
+        <div class="pack-i" style="--c:var(--butter2)"><i data-lucide="image"></i><b>Poster feed &amp; story</b><small>dari P7</small></div>
+        <div class="pack-i" style="--c:var(--lav2)"><i data-lucide="type"></i><b>Caption 3K</b><small>dari P6</small></div>
+        <div class="pack-i" style="--c:var(--sky2)"><i data-lucide="video"></i><b>Video 15–30 detik</b><small>dari P8–P9</small></div>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============ SLIDE 5 : KARTU PERAN ============ -->
+<section class="slide" data-theme="pink">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="users"></i> Kartu Peran</span>
+    <h2 class="title anim" style="--d:1">Pilih peranmu, <span class="hl p">ambil kartunya!</span></h2>
+    <p class="lead anim" style="--d:1.5">Klik kartu untuk melihat tugasnya. Kelompok kecil? Satu orang boleh memegang 2 peran.</p>
+    <div class="fgrid">
+      <div class="fcard anim" style="--d:2" onclick="this.classList.toggle('flipped')">
+        <div class="finner">
+          <div class="fface ffront">
+            <span class="fic" style="background:var(--pink2)"><i data-lucide="camera"></i></span>
+            <h3>Fotografer</h3><p class="tease">Penjaga cahaya dan sudut foto.</p>
+            <span class="hint"><i data-lucide="mouse-pointer-click"></i> klik untuk tugas</span>
+          </div>
+          <div class="fface fback">
+            <span class="tag">Tugas</span>
+            <ul class="tasks"><li>Siapkan studio mini dekat jendela</li><li>Potret produk min. 10 foto</li><li>Pilih 3 foto terbaik</li><li>Edit secukupnya, tetap jujur</li></ul>
+            <p class="eg">Bawa: HP, produk asli, kertas putih.</p>
+          </div>
+        </div>
+      </div>
+      <div class="fcard anim" style="--d:2.4" onclick="this.classList.toggle('flipped')">
+        <div class="finner">
+          <div class="fface ffront">
+            <span class="fic" style="background:var(--lav2)"><i data-lucide="pen-line"></i></span>
+            <h3>Penulis</h3><p class="tease">Perangkai kata yang bikin berhenti scroll.</p>
+            <span class="hint"><i data-lucide="mouse-pointer-click"></i> klik untuk tugas</span>
+          </div>
+          <div class="fface fback">
+            <span class="tag">Tugas</span>
+            <ul class="tasks"><li>Tulis 3 caption pakai Rumus 3K</li><li>Buat judul poster (maks. 5 kata)</li><li>Tulis teks untuk video</li><li>Cek ejaan &amp; harga</li></ul>
+            <p class="eg">Bawa: pesan utama dari lembar rencana.</p>
+          </div>
+        </div>
+      </div>
+      <div class="fcard anim" style="--d:2.8" onclick="this.classList.toggle('flipped')">
+        <div class="finner">
+          <div class="fface ffront">
+            <span class="fic" style="background:var(--butter2)"><i data-lucide="palette"></i></span>
+            <h3>Desainer</h3><p class="tease">Penata warna, huruf, dan tata letak.</p>
+            <span class="hint"><i data-lucide="mouse-pointer-click"></i> klik untuk tugas</span>
+          </div>
+          <div class="fface fback">
+            <span class="tag">Tugas</span>
+            <ul class="tasks"><li>Poster feed 1:1 di Canva</li><li>Poster story 9:16</li><li>Pakai 2 warna &amp; 2 huruf</li><li>Pasang logo kelompok</li></ul>
+            <p class="eg">Bawa: foto dari fotografer, judul dari penulis.</p>
+          </div>
+        </div>
+      </div>
+      <div class="fcard anim" style="--d:3.2" onclick="this.classList.toggle('flipped')">
+        <div class="finner">
+          <div class="fface ffront">
+            <span class="fic" style="background:var(--sky2)"><i data-lucide="video"></i></span>
+            <h3>Editor Video</h3><p class="tease">Perekam dan pemotong video pendek.</p>
+            <span class="hint"><i data-lucide="mouse-pointer-click"></i> klik untuk tugas</span>
+          </div>
+          <div class="fface fback">
+            <span class="tag">Tugas</span>
+            <ul class="tasks"><li>Rekam sesuai storyboard</li><li>Potong jadi 15–30 detik</li><li>Tambah teks &amp; musik bebas hak cipta</li><li>Ajakan di akhir video</li></ul>
+            <p class="eg">Bawa: storyboard 4 kotak dari P8.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 6 : PAPAN PRODUKSI ============ -->
+<section class="slide s-tall" data-theme="sky">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="kanban"></i> Papan Produksi</span>
+    <h2 class="title anim" style="--d:1">Klik tugas untuk <span class="hl">memindahkannya!</span></h2>
+    <div class="board-top anim" style="--d:1.5">
+      <div class="bt-add noswipe">
+        <input id="bdText" maxlength="60" placeholder="Tulis tugas baru, misal: rekam video unboxing">
+        <select id="bdRole"><option value="foto">Fotografer</option><option value="tulis">Penulis</option><option value="desain">Desainer</option><option value="video">Editor Video</option></select>
+        <button class="btn mint" id="bdAdd"><i data-lucide="plus"></i> Tambah</button>
+      </div>
+      <div class="bt-prog"><span id="bdProg">0 / 0 selesai</span><div class="ck-track"><div class="ck-fill" id="bdFill"></div></div></div>
+    </div>
+    <div class="board anim" style="--d:2">
+      <div class="bcol" data-c="0"><div class="bcol-h" style="background:var(--pink2)"><i data-lucide="list-todo"></i> To Do <span class="cnt"></span></div><div class="bcol-b"></div></div>
+      <div class="bcol" data-c="1"><div class="bcol-h" style="background:var(--butter2)"><i data-lucide="loader"></i> Proses <span class="cnt"></span></div><div class="bcol-b"></div></div>
+      <div class="bcol" data-c="2"><div class="bcol-h" style="background:var(--mint2)"><i data-lucide="circle-check-big"></i> Selesai <span class="cnt"></span></div><div class="bcol-b"></div></div>
+    </div>
+    <div class="board-foot anim" style="--d:2.5">
+      <span><i data-lucide="mouse-pointer-click"></i> Klik kartu = pindah ke kolom berikutnya · klik <b>×</b> = hapus · papan tersimpan otomatis</span>
+      <button class="btn ghost" id="bdReset"><i data-lucide="rotate-ccw"></i> Papan Awal</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 7 : TIMER ============ -->
+<section class="slide" data-theme="lav">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="timer"></i> Timer Produksi</span>
+    <h2 class="title anim" style="--d:1">Kerja fokus, <span class="hl l">waktu terkendali</span></h2>
+    <div class="tm anim" style="--d:2">
+      <div class="tm-dial">
+        <svg viewBox="0 0 220 220" aria-hidden="true">
+          <circle cx="110" cy="110" r="92" fill="#fff" stroke="#453A4E" stroke-width="6"/>
+          <circle id="tmRing" cx="110" cy="110" r="78" fill="none" stroke="#FF7E67" stroke-width="18" stroke-linecap="round" transform="rotate(-90 110 110)" stroke-dasharray="490" stroke-dashoffset="0"/>
+        </svg>
+        <div class="tm-num"><b id="tmNum">15:00</b><small id="tmState">siap mulai</small></div>
+      </div>
+      <div class="tm-side">
+        <div class="mk-lab">Pilih lama sesi</div>
+        <div class="tm-pre" id="tmPre">
+          <button class="tg" data-m="5">5 menit</button><button class="tg" data-m="10">10 menit</button>
+          <button class="tg on" data-m="15">15 menit</button><button class="tg" data-m="20">20 menit</button><button class="tg" data-m="30">30 menit</button>
+        </div>
+        <div class="tm-btns">
+          <button class="btn sun" id="tmStart"><i data-lucide="play"></i> <span>Mulai</span></button>
+          <button class="btn ghost" id="tmReset"><i data-lucide="rotate-ccw"></i> Ulang</button>
+        </div>
+        <div class="tm-tip" id="tmTip"><i data-lucide="lightbulb"></i><span>Sesi 15 menit: cukup untuk memotret 10 foto atau menulis 3 caption.</span></div>
+        <div class="tm-rules">
+          <span><i data-lucide="smartphone"></i> HP hanya untuk tugas</span>
+          <span><i data-lucide="message-circle"></i> Tanya teman, bukan main</span>
+          <span><i data-lucide="coffee"></i> Istirahat 2 menit tiap sesi</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 8 : GAME ============ -->
+<section class="slide s-tall" data-theme="mint">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="puzzle"></i> Ayo Main · Masalah Produksi</span>
+    <h2 class="title anim" style="--d:1">Ada masalah! <span class="hl m">Apa solusinya?</span></h2>
+    <p class="lead anim" style="--d:1.5">Saat produksi, masalah kecil pasti muncul. Pilih solusi yang paling tepat.</p>
+    <div class="match-list">
+      <div class="m-card anim" style="--d:2">
+        <h3><b>Foto keripik terlihat gelap</b> dan kusam karena dipotret di dalam kelas.</h3>
+        <div class="m-opts">
+          <button class="m-opt" data-ok="0">Pakai filter paling terang</button>
+          <button class="m-opt" data-ok="1">Pindah ke dekat jendela</button>
+          <button class="m-opt" data-ok="0">Ambil foto dari internet</button>
+        </div>
+        <div class="m-why hidden"><i data-lucide="circle-check"></i><span>Betul! Cahaya alami dari jendela membuat warna asli produk terlihat jelas, tanpa mengubah aslinya.</span></div>
+      </div>
+      <div class="m-card anim" style="--d:2.4">
+        <h3><b>Video kelompok 2 menit</b>, padahal rencananya untuk story.</h3>
+        <div class="m-opts">
+          <button class="m-opt" data-ok="1">Potong jadi 15–30 detik</button>
+          <button class="m-opt" data-ok="0">Biarkan saja</button>
+          <button class="m-opt" data-ok="0">Percepat jadi 4 kali</button>
+        </div>
+        <div class="m-why hidden"><i data-lucide="circle-check"></i><span>Tepat! Ambil bagian terbaik saja. Video pendek lebih banyak ditonton sampai habis.</span></div>
+      </div>
+      <div class="m-card anim" style="--d:2.8">
+        <h3><b>Desainer dan penulis berebut</b> mengerjakan poster, video belum disentuh.</h3>
+        <div class="m-opts">
+          <button class="m-opt" data-ok="0">Suit untuk menentukan</button>
+          <button class="m-opt" data-ok="0">Kerjakan berdua semuanya</button>
+          <button class="m-opt" data-ok="1">Lihat lagi pembagian peran di papan</button>
+        </div>
+        <div class="m-why hidden"><i data-lucide="circle-check"></i><span>Betul! Papan produksi menunjukkan siapa mengerjakan apa. Yang kosong, segera diambil.</span></div>
+      </div>
+      <div class="m-card anim" style="--d:3.2">
+        <h3><b>Poster butuh foto boba</b>, tapi bobanya habis diminum teman.</h3>
+        <div class="m-opts">
+          <button class="m-opt" data-ok="0">Pakai foto boba orang lain</button>
+          <button class="m-opt" data-ok="1">Buat lagi 1 gelas, lalu foto sendiri</button>
+          <button class="m-opt" data-ok="0">Buat boba palsu pakai AI</button>
+        </div>
+        <div class="m-why hidden"><i data-lucide="circle-check"></i><span>Tepat! Foto harus produk kita sendiri. Foto orang lain melanggar hak cipta dan menipu pembeli.</span></div>
+      </div>
+    </div>
+    <div class="m-score anim" style="--d:3.6">
+      <span>Masalah yang berhasil diatasi:</span><b><span id="mDone">0</span> / 4</b>
+      <span id="mMsg" style="font-weight:600;font-size:14px;color:var(--butter2)"></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 9 : CEK ATURAN JUJUR ============ -->
+<section class="slide s-tall" data-theme="peach">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="shield-check"></i> Cek Aturan Jujur</span>
+    <h2 class="title anim" style="--d:1">Siap tayang <span class="hl">atau belum?</span></h2>
+    <p class="lead anim" style="--d:1.5">Ini 3 draf konten kelompok lain. Klik aturan yang <b>dilanggar</b>, lalu tekan <b>Periksa</b>.</p>
+    <div class="hj anim" style="--d:2">
+      <div>
+        <div class="mk-row" id="hjTabs"></div>
+        <div class="draft" id="hjDraft">
+          <span class="pp-plat" id="hjPlat"></span>
+          <span class="pp-ic" id="hjIc"></span>
+          <div class="d-title" id="hjTitle"></div>
+          <div class="d-sub" id="hjSub"></div>
+          <div class="d-price" id="hjPrice"></div>
+        </div>
+      </div>
+      <div>
+        <div class="hj-rules" id="hjRules"></div>
+        <div class="hj-foot">
+          <button class="btn sun" id="hjCheck"><i data-lucide="search-check"></i> Periksa</button>
+          <div class="hj-verdict hidden" id="hjVerdict"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 10 : KUIS ============ -->
+<section class="slide" data-theme="lav">
+  <div class="wrap quiz-shell">
+    <div style="text-align:center">
+      <span class="kicker anim" style="--d:0"><i data-lucide="trophy"></i> Kuis Seru</span>
+      <h2 class="title anim" style="--d:1">Uji Pemahaman Produksimu!</h2>
+    </div>
+    <div id="quizArea" class="anim" style="--d:2"></div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 11 : MISI ============ -->
+<section class="slide" data-theme="pink">
+  <div class="s-misi wrap" style="display:contents"><div class="wrap">
+    <div>
+      <span class="kicker anim" style="--d:0"><i data-lucide="flag"></i> Giliranmu!</span>
+      <h2 class="title anim" style="--d:1">Misi: <span class="hl p">Paket Konten Lengkap</span></h2>
+      <p class="lead anim" style="--d:2">Ikuti lembar rencana dari Pertemuan 14. Semua konten dikumpulkan dalam satu folder kelompok.</p>
+      <div class="steps">
+        <div class="step anim" style="--d:3"><div class="snum st1">1</div>
+          <div><h3>Bagi peran &amp; isi papan</h3><p>Tulis semua tugas di papan produksi. Tiap tugas punya satu penanggung jawab.</p></div></div>
+        <div class="step anim" style="--d:4"><div class="snum st2">2</div>
+          <div><h3>Produksi dalam sesi waktu</h3><p>Kerjakan 2–3 sesi timer. Laporkan kemajuan di akhir tiap sesi.</p></div></div>
+        <div class="step anim" style="--d:5"><div class="snum st3">3</div>
+          <div><h3>Cek Aturan Jujur bersama</h3><p>Semua anggota memeriksa setiap konten. Yang belum lolos, diperbaiki dulu.</p></div></div>
+        <div class="step anim" style="--d:6"><div class="snum st4">4</div>
+          <div><h3>Serahkan ke pembina</h3><p>Pembina yang memutuskan konten tayang di akun sekolah. Bukan akun pribadimu.</p></div></div>
+      </div>
+    </div>
+    <div>
+      <div class="blank-card anim" style="--d:4">
+        <h4><i data-lucide="folder-check"></i> Isi folder kelompok</h4>
+        <div class="bl"><b>Foto:</b><span></span></div>
+        <div class="bl"><b>Poster:</b><span></span></div>
+        <div class="bl"><b>Caption:</b><span></span></div>
+        <div class="bl"><b>Video:</b><span></span></div>
+        <div class="sentence">Nama file: <b>kelompok_jenis_nomor</b>, misal <b>kriuk_poster_01</b>. Rapi = mudah dipamerkan minggu depan!</div>
+      </div>
+      <div class="mini-rubrik card anim" style="--d:5">
+        <h3 style="font-family:'Fredoka';font-size:17px;margin-bottom:8px;display:flex;align-items:center;gap:9px"><i data-lucide="clipboard-check" style="width:19px;height:19px"></i> Cara Penilaian</h3>
+        <div class="rubrik-row"><span>Paket lengkap: foto, poster, caption, video</span><span>40 poin</span></div>
+        <div class="rubrik-row"><span>Sesuai lembar rencana kampanye</span><span>20 poin</span></div>
+        <div class="rubrik-row"><span>Lolos semua Aturan Jujur</span><span>25 poin</span></div>
+        <div class="rubrik-row"><span>Semua anggota punya peran</span><span>15 poin</span></div>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============ SLIDE 12 : PENUTUP ============ -->
+<section class="slide" data-theme="peach">
+  <div class="deco bob" style="top:16%;right:8%;width:30px;height:30px">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 2v20M2 12h20"/></svg>
+  </div>
+  <div class="s-end wrap" style="display:contents"><div class="wrap">
+    <div>
+      <span class="kicker anim" style="--d:0"><i data-lucide="message-circle-heart"></i> Refleksi &amp; Penutup</span>
+      <h2 class="title anim" style="--d:1">Sebelum pulang, <span class="hl p">ayo curhat dikit!</span></h2>
+      <div class="refl">
+        <div class="refl-item anim" style="--d:2"><div class="rnum r1">1</div>
+          <p>Peran apa yang kamu pegang, dan apa bagian tersulitnya?</p></div>
+        <div class="refl-item anim" style="--d:3"><div class="rnum r2">2</div>
+          <p>Konten mana yang paling kamu banggakan hari ini?</p></div>
+        <div class="refl-item anim" style="--d:4"><div class="rnum r3">3</div>
+          <p>Aturan Jujur mana yang hampir terlewat oleh kelompokmu?</p></div>
+      </div>
+      <div class="end-btn anim" style="--d:5">
+        <button class="btn sun" id="partyBtn"><i data-lucide="party-popper"></i> Rayakan Hari Ini!</button>
+        <a class="btn ghost" href="silabus.html"><i data-lucide="book-open"></i> Lihat Silabus</a>
+        <a class="btn ghost" href="pameran.html"><i data-lucide="arrow-right"></i> Pertemuan berikutnya</a>
+      </div>
+    </div>
+    <div class="end-art anim" style="--d:3">
+      <div class="quote">
+        <h3>Kerja tim yang rapi menghasilkan konten yang jujur dan keren.</h3>
+        <p>Pertemuan berikutnya: <b>Pameran &amp; Presentasi Kampanye</b>. Siapkan paket kontenmu untuk dipamerkan, ya!</p>
+      </div>
+      <span class="fchip fc1 bob"><i data-lucide="camera"></i></span>
+      <span class="fchip fc2 bob" style="animation-delay:.7s"><i data-lucide="pen-line"></i></span>
+      <span class="fchip fc4 bob" style="animation-delay:1.4s"><i data-lucide="palette"></i></span>
+      <span class="fchip fc5 bob" style="animation-delay:2s"><i data-lucide="video"></i></span>
+    </div>
+  </div></div>
+</section>
+
+<!-- NAV -->
+<div class="navbar-bg"></div>
+<div class="pagenum"><span id="cur">01</span> / <span id="tot">12</span></div>
+<div class="dots" id="dots"></div>
+<div class="navbtns">
+  <button class="nav" id="prev" aria-label="Sebelumnya"><i data-lucide="chevron-left"></i></button>
+  <button class="nav" id="next" aria-label="Berikutnya"><i data-lucide="chevron-right"></i></button>
+</div>
+<canvas id="confetti"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.454.0/dist/umd/lucide.min.js"></script>
+<script>
+/* ================= NAVIGASI ================= */
+const slides=[...document.querySelectorAll('.slide')];
+const dotsBox=document.getElementById('dots');
+let cur=0;
+slides.forEach((_,i)=>{
+  const d=document.createElement('button');
+  d.className='dot'+(i===0?' on':'');d.title='Slide '+(i+1);
+  d.onclick=()=>go(i);dotsBox.appendChild(d);
+});
+const dots=[...dotsBox.children];
+document.getElementById('tot').textContent=String(slides.length).padStart(2,'0');
+function go(i){
+  cur=Math.max(0,Math.min(slides.length-1,i));
+  slides.forEach((s,k)=>s.classList.toggle('active',k===cur));
+  slides[cur].scrollTop=0;
+  dots.forEach((d,k)=>d.classList.toggle('on',k===cur));
+  document.getElementById('cur').textContent=String(cur+1).padStart(2,'0');
+  document.getElementById('bar').style.width=((cur+1)/slides.length*100)+'%';
+  document.getElementById('prev').disabled=cur===0;
+  document.getElementById('next').disabled=cur===slides.length-1;
+}
+document.getElementById('prev').onclick=()=>go(cur-1);
+document.getElementById('next').onclick=()=>go(cur+1);
+addEventListener('keydown',e=>{
+  if(e.target.closest&&e.target.closest('input,textarea,select'))return;
+  if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();go(cur+1)}
+  if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(cur-1)}
+});
+let tx=0,ty=0,txSkip=false;
+addEventListener('touchstart',e=>{
+  tx=e.touches[0].clientX;ty=e.touches[0].clientY;
+  txSkip=!!e.target.closest('.picks,.noswipe,input,textarea,select');
+},{passive:true});
+addEventListener('touchend',e=>{
+  if(txSkip)return;
+  const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;
+  // hanya geser mendatar yang jelas, supaya scroll ke bawah tidak ikut pindah slide
+  if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5) dx<0?go(cur+1):go(cur-1);
+},{passive:true});
+go(+location.hash.slice(1)||0);
+const LET=['A','B','C'];
+
+/* ================= SIMPAN (localStorage, aman) ================= */
+const store={
+  get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+};
+
+/* ================= PEMANASAN : TEBAK PERAN ================= */
+const ROLES=['Fotografer','Penulis','Desainer','Editor Video'];
+const WU=[
+  {icon:'sun',bg:'var(--butter2)',name:'Mencari cahaya jendela',sub:'Memindahkan keripik ke dekat jendela supaya warnanya terlihat asli.',a:0,
+   why:'Mengatur cahaya dan sudut foto adalah tugas fotografer.'},
+  {icon:'type',bg:'var(--lav2)',name:'Menulis kalimat kait',sub:'Membuat kalimat "Berani coba level 5?" untuk caption.',a:1,
+   why:'Merangkai kata dan caption adalah tugas penulis.'},
+  {icon:'scissors',bg:'var(--sky2)',name:'Memotong video jadi 20 detik',sub:'Membuang bagian yang membosankan dan menambah teks.',a:3,
+   why:'Memotong dan merapikan video adalah tugas editor video.'},
+  {icon:'layout-template',bg:'var(--pink2)',name:'Menata poster story 9:16',sub:'Mengatur posisi foto, judul, harga, dan logo.',a:2,
+   why:'Menata warna, huruf, dan tata letak adalah tugas desainer.'}
+];
+const LET4=['A','B','C','D'];
+let wuI=0,wuScore=0;
+function renderWu(){
+  const w=WU[wuI];
+  document.getElementById('wuMedia').style.background=w.bg;
+  document.getElementById('wuIc').innerHTML=`<i data-lucide="${w.icon}"></i>`;
+  document.getElementById('wuName').textContent=w.name;
+  document.getElementById('wuSub').textContent=w.sub;
+  document.getElementById('wuRound').textContent=`Tugas ${wuI+1} dari ${WU.length}`;
+  document.getElementById('wuFb').classList.add('hidden');
+  document.getElementById('wuNext').classList.add('hidden');
+  const box=document.getElementById('wuOpts');
+  box.innerHTML=ROLES.map((o,i)=>`<button class="wu-opt" data-i="${i}"><span class="letter">${LET4[i]}</span>${o}</button>`).join('');
+  box.querySelectorAll('.wu-opt').forEach(b=>b.onclick=()=>{
+    const pick=+b.dataset.i;
+    box.querySelectorAll('.wu-opt').forEach(x=>{x.disabled=true;if(+x.dataset.i===w.a)x.classList.add('good')});
+    if(pick===w.a){wuScore++;celebrate(60)}else b.classList.add('bad');
+    const fb=document.getElementById('wuFb');
+    fb.querySelector('span').textContent=(pick===w.a?'Tepat! ':'Belum tepat. ')+w.why;
+    fb.classList.remove('hidden');
+    const nx=document.getElementById('wuNext');
+    nx.querySelector('span').textContent=wuI===WU.length-1?'Lihat Hasil':'Tugas Berikutnya';
+    nx.classList.remove('hidden');
+  });
+  window.lucide&&lucide.createIcons();
+}
+document.getElementById('wuNext').onclick=()=>{
+  wuI++;
+  if(wuI<WU.length){renderWu();return}
+  document.getElementById('wuShell').classList.add('hidden');
+  document.getElementById('wuScore').textContent=wuScore;
+  document.getElementById('wuDone').classList.remove('hidden');
+  celebrate(200);
+};
+renderWu();
+
+/* ================= PAPAN PRODUKSI ================= */
+const BD_KEY='dm-p15-papan';
+const RINFO={foto:{icon:'camera',bg:'var(--pink2)'},tulis:{icon:'pen-line',bg:'var(--lav2)'},desain:{icon:'palette',bg:'var(--butter2)'},video:{icon:'video',bg:'var(--sky2)'}};
+const BD_START=[
+  {t:'Potret 10 foto produk',r:'foto',c:0},{t:'Pilih 3 foto terbaik',r:'foto',c:0},
+  {t:'Tulis 3 caption 3K',r:'tulis',c:0},{t:'Judul poster maks. 5 kata',r:'tulis',c:0},
+  {t:'Poster feed 1:1',r:'desain',c:0},{t:'Poster story 9:16',r:'desain',c:0},
+  {t:'Rekam video sesuai storyboard',r:'video',c:0},{t:'Edit video 15–30 detik',r:'video',c:0}
+];
+let board=store.get(BD_KEY,null);
+if(!Array.isArray(board))board=BD_START.map(x=>({...x}));
+const esc=s=>String(s).replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
+function bdPaint(){
+  document.querySelectorAll('.bcol').forEach(col=>{
+    const c=+col.dataset.c,items=board.map((x,i)=>({...x,i})).filter(x=>x.c===c);
+    col.querySelector('.cnt').textContent=items.length;
+    col.querySelector('.bcol-b').innerHTML=items.length?items.map(x=>{const ri=RINFO[x.r]||RINFO.foto;
+      return `<button class="bcard" data-i="${x.i}"><span class="role" style="background:${ri.bg}"><i data-lucide="${ri.icon}"></i></span><span class="txt">${esc(x.t)}</span><span class="x" data-del="${x.i}" title="Hapus">×</span></button>`}).join('')
+      :`<div class="bempty">${['Semua tugas sudah jalan!','Belum ada yang dikerjakan','Belum ada yang selesai'][c]}</div>`;
+  });
+  const done=board.filter(x=>x.c===2).length;
+  document.getElementById('bdProg').textContent=`${done} / ${board.length} selesai`;
+  document.getElementById('bdFill').style.width=(board.length?done/board.length*100:0)+'%';
+  document.querySelectorAll('.bcard').forEach(b=>b.onclick=e=>{
+    const del=e.target.closest('[data-del]');
+    if(del){board.splice(+del.dataset.del,1);bdSave();return}
+    const x=board[+b.dataset.i];x.c=(x.c+1)%3;bdSave();
+    if(x.c===2){celebrate(40);if(board.every(y=>y.c===2))celebrate(240)}
+  });
+  window.lucide&&lucide.createIcons();
+}
+function bdSave(){store.set(BD_KEY,board);bdPaint()}
+function bdAdd(){
+  const inp=document.getElementById('bdText'),t=inp.value.trim();
+  if(!t){inp.focus();return}
+  board.push({t,r:document.getElementById('bdRole').value,c:0});inp.value='';bdSave();
+}
+document.getElementById('bdAdd').onclick=bdAdd;
+document.getElementById('bdText').addEventListener('keydown',e=>{if(e.key==='Enter')bdAdd()});
+document.getElementById('bdReset').onclick=()=>{
+  if(!confirm('Kembalikan papan ke tugas awal?'))return;
+  board=BD_START.map(x=>({...x}));bdSave();
+};
+bdPaint();
+
+/* ================= TIMER PRODUKSI ================= */
+const TM_TIPS={5:'Sesi 5 menit: pas untuk cek bersama atau memilih foto terbaik.',
+  10:'Sesi 10 menit: cukup untuk menulis 2 caption atau merekam 3 adegan.',
+  15:'Sesi 15 menit: cukup untuk memotret 10 foto atau menulis 3 caption.',
+  20:'Sesi 20 menit: cukup untuk mendesain 1 poster feed di Canva.',
+  30:'Sesi 30 menit: cukup untuk mengedit video 15–30 detik sampai rapi.'};
+const RING=2*Math.PI*78;
+let tmTotal=15*60,tmLeft=tmTotal,tmEnd=0,tmInt=null;
+const tmRing=document.getElementById('tmRing');
+tmRing.setAttribute('stroke-dasharray',RING.toFixed(1));
+function tmPaint(state){
+  const m=Math.floor(tmLeft/60),s=tmLeft%60;
+  document.getElementById('tmNum').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  tmRing.setAttribute('stroke-dashoffset',(RING*(1-tmLeft/tmTotal)).toFixed(1));
+  tmRing.setAttribute('stroke',tmLeft<=60?'#FF7E67':tmLeft<=tmTotal/2?'#FFC531':'#3FBF8F');
+  if(state)document.getElementById('tmState').textContent=state;
+}
+function tmBtn(play){
+  document.getElementById('tmStart').innerHTML=`<i data-lucide="${play?'play':'pause'}"></i> <span>${play?(tmLeft<tmTotal&&tmLeft>0?'Lanjut':'Mulai'):'Jeda'}</span>`;
+  window.lucide&&lucide.createIcons();
+}
+function tmBeep(){
+  try{const A=new (window.AudioContext||window.webkitAudioContext)();
+    [0,.35,.7].forEach(t=>{const o=A.createOscillator(),g=A.createGain();o.frequency.value=880;o.connect(g);g.connect(A.destination);
+      g.gain.setValueAtTime(.25,A.currentTime+t);g.gain.exponentialRampToValueAtTime(.001,A.currentTime+t+.3);o.start(A.currentTime+t);o.stop(A.currentTime+t+.3)});
+  }catch(e){}
+}
+function tmTick(){
+  tmLeft=Math.max(0,Math.round((tmEnd-Date.now())/1000));
+  tmPaint(tmLeft<=60?'menit terakhir!':'fokus bekerja');
+  if(tmLeft===0){
+    clearInterval(tmInt);tmInt=null;tmPaint('waktu habis!');tmBtn(true);
+    const box=document.querySelector('.tm');box.classList.remove('ring');void box.offsetWidth;box.classList.add('ring');
+    tmBeep();celebrate(220);
+  }
+}
+document.getElementById('tmStart').onclick=()=>{
+  if(tmInt){clearInterval(tmInt);tmInt=null;tmPaint('dijeda');tmBtn(true);return}
+  if(tmLeft===0)tmLeft=tmTotal;
+  tmEnd=Date.now()+tmLeft*1000;tmInt=setInterval(tmTick,250);tmTick();tmBtn(false);
+};
+function tmSet(min){
+  clearInterval(tmInt);tmInt=null;tmTotal=min*60;tmLeft=tmTotal;
+  document.querySelector('.tm').classList.remove('ring');
+  tmPaint('siap mulai');tmBtn(true);
+  document.querySelector('#tmTip span').textContent=TM_TIPS[min];
+  document.querySelectorAll('#tmPre .tg').forEach(b=>b.classList.toggle('on',+b.dataset.m===min));
+}
+document.querySelectorAll('#tmPre .tg').forEach(b=>b.onclick=()=>tmSet(+b.dataset.m));
+document.getElementById('tmReset').onclick=()=>tmSet(tmTotal/60);
+tmPaint('siap mulai');
+
+/* ================= GAME ================= */
+let mDone=0;
+document.querySelectorAll('.m-card').forEach(card=>{
+  card.querySelectorAll('.m-opt').forEach(btn=>{
+    btn.onclick=()=>{
+      if(card.classList.contains('solved'))return;
+      if(btn.dataset.ok==="1"){
+        btn.classList.add('good');
+        card.querySelectorAll('.m-opt').forEach(b=>b.disabled=true);
+        card.classList.add('solved');
+        card.querySelector('.m-why').classList.remove('hidden');
+        mDone++;
+        document.getElementById('mDone').textContent=mDone;
+        celebrate(70);
+        if(mDone===4){
+          document.getElementById('mMsg').textContent="Hebat! Kamu tenang menghadapi masalah!";
+          celebrate(220);
+        }
+      }else{
+        btn.classList.add('bad','shake');
+        btn.disabled=true;
+        setTimeout(()=>btn.classList.remove('shake'),350);
+      }
+    };
+  });
+});
+
+/* ================= CEK ATURAN JUJUR ================= */
+const HJ_RULES=[
+  ['Foto asli produk kita','bukan dari internet, bukan diubah AI'],
+  ['Harga & diskon benar','tidak ada diskon palsu'],
+  ['Testimoni asli','ucapan pembeli sungguhan, bukan karangan'],
+  ['Data pribadi aman','tanpa alamat rumah / no. HP pribadi'],
+  ['Musik & gambar boleh dipakai','bebas hak cipta atau milik sendiri'],
+  ['Judul tidak berlebihan','tidak clickbait, tidak "dijamin" asal-asalan']
+];
+const HJ_DRAFTS=[
+  {tab:'Boba Kelas 7',icon:'cup-soda',bg:'#FFC9DC',plat:['image','Poster feed'],title:'BOBA TERENAK SE-INDONESIA!',
+   sub:'Kata 1.000 pembeli: "Ini boba terbaik yang pernah aku minum!" (padahal baru jualan kemarin)',price:'Diskon 90%! Rp5.000 (dari Rp50.000)',bad:[1,2,5]},
+  {tab:'Keripik Kriuk',icon:'cookie',bg:'#FFCBB5',plat:['video','Video story'],title:'Keripik Kriuk Level 5',
+   sub:'Foto keripik diambil dari Google. Musik: lagu artis terkenal. Pesan ke rumah Dimas, Jl. Melati 7, HP 0812-xxxx.',price:'Rp2.000 / bungkus',bad:[0,3,4]},
+  {tab:'Bolu Bu Ani',icon:'cake-slice',bg:'#BFEAD2',plat:['message-circle','Status WA pembina'],title:'Bolu Pandan Lembut',
+   sub:'Foto sendiri tadi pagi. Kata Rani kelas 7B: "Lembut dan wangi!" Pesan lewat WA pembina ekskul.',price:'Rp25.000 / loyang',bad:[]}
+];
+let hjI=0,hjPick=new Set(),hjDone=new Set();
+document.getElementById('hjTabs').innerHTML=HJ_DRAFTS.map((d,i)=>`<button class="tg${i?'':' on'}" data-i="${i}"><i data-lucide="${d.icon}"></i> ${d.tab}</button>`).join('');
+document.querySelectorAll('#hjTabs .tg').forEach(b=>b.onclick=()=>hjShow(+b.dataset.i));
+function hjShow(i){
+  hjI=i;hjPick=new Set();
+  const d=HJ_DRAFTS[i];
+  document.querySelectorAll('#hjTabs .tg').forEach(b=>b.classList.toggle('on',+b.dataset.i===i));
+  document.getElementById('hjDraft').style.background=d.bg;
+  document.getElementById('hjPlat').innerHTML=`<i data-lucide="${d.plat[0]}"></i><span>${d.plat[1]}</span>`;
+  document.getElementById('hjIc').innerHTML=`<i data-lucide="${d.icon}"></i>`;
+  document.getElementById('hjTitle').textContent=d.title;
+  document.getElementById('hjSub').textContent=d.sub;
+  document.getElementById('hjPrice').textContent=d.price;
+  document.getElementById('hjVerdict').classList.add('hidden');
+  document.getElementById('hjCheck').disabled=false;
+  document.getElementById('hjRules').innerHTML=HJ_RULES.map((r,k)=>`<button class="hr" data-k="${k}"><span class="box"></span><span>${r[0]}<small>${r[1]}</small></span><span class="res"></span></button>`).join('');
+  document.querySelectorAll('#hjRules .hr').forEach(b=>b.onclick=()=>{
+    const k=+b.dataset.k;hjPick.has(k)?hjPick.delete(k):hjPick.add(k);
+    b.classList.toggle('on',hjPick.has(k));b.querySelector('.box').textContent=hjPick.has(k)?'×':'';
+  });
+  window.lucide&&lucide.createIcons();
+}
+document.getElementById('hjCheck').onclick=()=>{
+  const d=HJ_DRAFTS[hjI];let right=0;
+  document.querySelectorAll('#hjRules .hr').forEach(b=>{
+    const k=+b.dataset.k,isBad=d.bad.includes(k),picked=hjPick.has(k);b.disabled=true;
+    const res=b.querySelector('.res');
+    if(isBad&&picked){b.className='hr ok';res.textContent='Tepat, dilanggar';right++}
+    else if(isBad){b.className='hr miss';res.textContent='Terlewat!'}
+    else if(picked){b.className='hr wrong';res.textContent='Sebenarnya aman'}
+    else right++;
+  });
+  const perfect=right===HJ_RULES.length;
+  const v=document.getElementById('hjVerdict');
+  v.className='hj-verdict '+(d.bad.length?'stop':'go');
+  v.innerHTML=d.bad.length
+    ?`<i data-lucide="octagon-x"></i><span>Belum boleh tayang! Ada ${d.bad.length} aturan yang dilanggar. ${perfect?'Kamu menemukan semuanya!':'Lihat yang terlewat.'}</span>`
+    :`<i data-lucide="badge-check"></i><span>Lolos semua aturan! ${perfect?'Penilaianmu tepat.':''} Siap diserahkan ke pembina untuk ditayangkan.</span>`;
+  document.getElementById('hjCheck').disabled=true;
+  window.lucide&&lucide.createIcons();
+  if(perfect){hjDone.add(hjI);celebrate(hjDone.size===3?240:80)}
+};
+hjShow(0);
+
+/* ================= DATA KUIS ================= */
+const quizData=[
+  {q:"Kenapa tugas produksi perlu dibagi ke beberapa peran?", opts:[
+    "Supaya ada yang bisa santai",
+    "Supaya pekerjaan lebih cepat dan setiap konten dikerjakan oleh yang fokus",
+    "Karena guru menyuruh saja"],a:1,
+    why:"Betul! Dengan peran yang jelas, tiap orang fokus pada tugasnya dan semua konten selesai tepat waktu."},
+  {q:"Siapa yang bertugas menulis caption dengan Rumus 3K?", opts:[
+    "Penulis","Fotografer","Editor video"],a:0,
+    why:"Tepat! Penulis merangkai kata: kait, kasih nilai, dan kasih ajakan."},
+  {q:"Di papan produksi, tugas yang sedang dikerjakan ditaruh di kolom...", opts:[
+    "To Do","Selesai","Proses"],a:2,
+    why:"Iya! To Do = belum mulai, Proses = sedang dikerjakan, Selesai = sudah beres."},
+  {q:"Poster memakai foto boba milik toko lain dari internet. Apa yang harus dilakukan?", opts:[
+    "Biarkan, yang penting bagus",
+    "Ganti dengan foto produk kita sendiri",
+    "Tambahkan filter supaya tidak ketahuan"],a:1,
+    why:"Betul! Foto harus asli produk kita. Memakai foto orang lain melanggar hak cipta dan menipu pembeli."},
+  {q:"Konten sudah lolos cek Aturan Jujur. Langkah selanjutnya adalah...", opts:[
+    "Langsung posting di akun pribadi kita",
+    "Kirim ke grup kelas tanpa izin",
+    "Serahkan ke pembina untuk ditayangkan lewat akun sekolah"],a:2,
+    why:"Tepat sekali! Kita masih 13 tahun, jadi pembina yang menayangkan konten lewat akun sekolah atau ekskul."}
+];
+
+/* ================= KUIS ================= */
+const quizArea=document.getElementById('quizArea');
+let qi=0,score=0;
+function renderQuiz(){
+  if(qi>=quizData.length){renderDone();return}
+  const d=quizData[qi];
+  quizArea.innerHTML=`
+    <div class="q-card card">
+      <div class="q-meta">
+        <span class="q-badge">Soal ${qi+1} dari ${quizData.length}</span>
+        <span class="q-score"><i data-lucide="star"></i> Skor: ${score}</span>
+      </div>
+      <h3 class="q-q">${d.q}</h3>
+      <div class="q-opts">
+        ${d.opts.map((o,i)=>`<button class="opt" data-i="${i}"><span class="letter">${LET[i]}</span>${o}</button>`).join('')}
+      </div>
+      <div class="q-foot hidden" id="qFoot">
+        <div class="q-why" id="qWhy"></div>
+        <button class="btn mint" id="qNext">${qi===quizData.length-1?'Lihat Hasil':'Lanjut'} <i data-lucide="chevron-right"></i></button>
+      </div>
+    </div>`;
+  window.lucide&&lucide.createIcons();
+  quizArea.querySelectorAll('.opt').forEach(btn=>{
+    btn.onclick=()=>{
+      const pick=+btn.dataset.i;
+      quizArea.querySelectorAll('.opt').forEach(b=>b.disabled=true);
+      quizArea.querySelector(`.opt[data-i="${d.a}"]`).classList.add('good');
+      if(pick===d.a){score++;celebrate(60)}
+      else btn.classList.add('bad');
+      document.getElementById('qWhy').innerHTML=`<i data-lucide="${pick===d.a?'circle-check':'info'}"></i><span>${d.why}</span>`;
+      document.getElementById('qFoot').classList.remove('hidden');
+      window.lucide&&lucide.createIcons();
+      document.getElementById('qNext').onclick=()=>{qi++;renderQuiz()};
+    };
+  });
+}
+function renderDone(){
+  let msg;
+  if(score===5)msg="Sempurna! Tim produksimu siap beraksi!";
+  else if(score===4)msg="Hebat! Sedikit lagi menuju sempurna!";
+  else if(score===3)msg="Bagus! Ayo bahas lagi soal yang keliru bareng teman sebangku.";
+  else msg="Tidak apa-apa — belajar memang proses. Coba ulangi, ya!";
+  quizArea.innerHTML=`
+    <div class="q-card card q-done">
+      <div class="tro"><i data-lucide="trophy"></i></div>
+      <h3>Kuis Selesai!</h3>
+      <div class="big">${score} / 5</div>
+      <p>${msg}</p>
+      <button class="btn" id="qRetry"><i data-lucide="rotate-ccw"></i> Ulangi Kuis</button>
+    </div>`;
+  window.lucide&&lucide.createIcons();
+  celebrate(180);
+  document.getElementById('qRetry').onclick=()=>{qi=0;score=0;renderQuiz()};
+}
+renderQuiz();
+
+/* ================= KONFETI ================= */
+const cvs=document.getElementById('confetti'),ctx=cvs.getContext('2d');
+const COLORS=['#FF7E67','#FFC531','#3FBF8F','#FFA8C5','#B9A7F2','#7FD8A6'];
+let parts=[],raf=null;
+function sizeC(){cvs.width=innerWidth;cvs.height=innerHeight}
+sizeC();addEventListener('resize',sizeC);
+function celebrate(n=140){
+  for(let i=0;i<n;i++){
+    parts.push({
+      x:Math.random()*cvs.width,y:-30-Math.random()*cvs.height*.35,
+      vx:-1.6+Math.random()*3.2,vy:2.2+Math.random()*3.4,
+      w:9+Math.random()*9,h:5+Math.random()*6,
+      rot:Math.random()*Math.PI,vr:-.16+Math.random()*.32,
+      ph:Math.random()*Math.PI*2,
+      c:COLORS[Math.floor(Math.random()*COLORS.length)],
+      shape:Math.floor(Math.random()*3)
+    });
+  }
+  if(!raf)tick();
+}
+function tick(){
+  ctx.clearRect(0,0,cvs.width,cvs.height);
+  parts.forEach(p=>{
+    p.x+=p.vx;p.y+=p.vy;p.rot+=p.vr;p.ph+=.1;p.vy+=.015;
+    ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);
+    ctx.scale(1,Math.abs(Math.sin(p.ph))*.85+.15);
+    ctx.fillStyle=p.c;
+    if(p.shape===0){ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h)}
+    else if(p.shape===1){ctx.beginPath();ctx.arc(0,0,p.h,0,7);ctx.fill()}
+    else{ctx.beginPath();ctx.moveTo(0,-p.h);ctx.lineTo(p.w/2,p.h/2);ctx.lineTo(-p.w/2,p.h/2);ctx.closePath();ctx.fill()}
+    ctx.restore();
+  });
+  parts=parts.filter(p=>p.y<cvs.height+40);
+  if(parts.length)raf=requestAnimationFrame(tick);
+  else{raf=null;ctx.clearRect(0,0,cvs.width,cvs.height)}
+}
+document.getElementById('partyBtn').onclick=()=>{celebrate(260);setTimeout(()=>celebrate(160),700)};
+
+window.lucide&&lucide.createIcons();
+</script>
+</body>
+</html>

@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Caption Bikin Berhenti Scroll — Rumus 3K · SMP Kelas 7</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#453A4E; --ink-soft:#6B5F75; --cream:#FDF7EF;
+    --peach:#FFF1E8; --peach2:#FFCBB5;
+    --mint:#EAF7F0;  --mint2:#BFEAD2;
+    --butter:#FFF6DF;--butter2:#FFE39A;
+    --lav:#F3F0FC;   --lav2:#DCD2F7;
+    --pink:#FFF0F5;  --pink2:#FFC9DC;
+    --sky:#E9F1FB;   --sky2:#C5DCF2;
+    --coral:#FF7E67; --teal:#3FBF8F; --sun:#FFC531;
+    --shadow:6px 6px 0 var(--ink);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--ink);background:var(--cream);overflow:hidden}
+  h1,h2,h3,.disp{font-family:'Fredoka',sans-serif}
+
+  /* ===== CHROME ===== */
+  #bar{position:fixed;top:0;left:0;height:6px;background:var(--coral);width:0;z-index:60;transition:width .4s ease;border-radius:0 4px 4px 0}
+  .pagenum{position:fixed;left:26px;bottom:22px;z-index:60;font-family:'Fredoka';font-weight:600;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:7px 16px;box-shadow:4px 4px 0 var(--ink);font-size:14px;letter-spacing:.06em}
+  .dots{position:fixed;left:50%;transform:translateX(-50%);bottom:24px;z-index:60;display:flex;gap:9px}
+  .dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--ink);background:#fff;cursor:pointer;transition:.25s;padding:0}
+  .dot.on{background:var(--sun);transform:scale(1.35)}
+  .navbtns{position:fixed;right:26px;bottom:18px;z-index:60;display:flex;gap:10px}
+  .nav{width:52px;height:52px;border-radius:50%;background:#fff;border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink);cursor:pointer;display:grid;place-items:center;transition:.15s;color:var(--ink)}
+  .nav:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .nav:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+  .nav:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:4px 4px 0 var(--ink)}
+  .navbar-bg{display:none;position:fixed;left:0;right:0;bottom:0;height:calc(76px + env(safe-area-inset-bottom,0px));z-index:55;background:rgba(253,247,239,.94);border-top:3px solid var(--ink);backdrop-filter:blur(6px)}
+
+  /* ===== SLIDES ===== */
+  .slide{position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;opacity:0;visibility:hidden;transform:translateX(46px);transition:opacity .5s ease,transform .55s cubic-bezier(.22,.9,.32,1),visibility .5s;overflow:auto;padding:56px 40px 100px}
+  .slide.active{opacity:1;visibility:visible;transform:none;z-index:5}
+  .slide::before,.slide::after{content:'';position:absolute;border-radius:50%;z-index:0}
+  .slide::before{width:44vw;height:44vw;top:-20vw;right:-14vw;background:var(--bA);opacity:.75}
+  .slide::after{width:34vw;height:34vw;bottom:-16vw;left:-12vw;background:var(--bB);opacity:.7}
+  [data-theme="peach"] {background:var(--peach);--bA:var(--peach2);--bB:var(--butter2)}
+  [data-theme="cream"] {background:var(--cream);--bA:var(--mint2);--bB:var(--pink2)}
+  [data-theme="butter"]{background:var(--butter);--bA:var(--butter2);--bB:var(--mint2)}
+  [data-theme="mint"]  {background:var(--mint);--bA:var(--mint2);--bB:var(--peach2)}
+  [data-theme="lav"]   {background:var(--lav);--bA:var(--lav2);--bB:var(--peach2)}
+  [data-theme="pink"]  {background:var(--pink);--bA:var(--pink2);--bB:var(--sky2)}
+  [data-theme="sky"]   {background:var(--sky);--bA:var(--sky2);--bB:var(--butter2)}
+
+  .wrap{position:relative;z-index:2;width:100%}
+  .slide .wrap{margin-top:auto;margin-bottom:auto}
+  .anim{opacity:0}
+  .slide.active .anim{animation:rise .7s cubic-bezier(.22,.9,.32,1) forwards;animation-delay:calc(var(--d,0)*.09s)}
+  @keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+
+  .kicker{display:inline-flex;align-items:center;gap:8px;font-family:'Fredoka';font-weight:600;font-size:13px;letter-spacing:.14em;text-transform:uppercase;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:8px 18px;box-shadow:4px 4px 0 var(--ink)}
+  .kicker svg{width:16px;height:16px}
+  h2.title{font-size:clamp(30px,3.6vw,48px);font-weight:700;margin:18px 0 8px;line-height:1.12}
+  p.lead{font-size:clamp(15px,1.3vw,19px);color:var(--ink-soft);max-width:680px;font-weight:500}
+  .hl{background:linear-gradient(transparent 62%,var(--butter2) 62%);padding:0 3px;border-radius:3px}
+  .hl.m{background:linear-gradient(transparent 62%,var(--mint2) 62%)}
+  .hl.p{background:linear-gradient(transparent 62%,var(--pink2) 62%)}
+  .hl.l{background:linear-gradient(transparent 62%,var(--lav2) 62%)}
+  .card{background:#fff;border:3px solid var(--ink);border-radius:20px;box-shadow:var(--shadow)}
+  .btn{display:inline-flex;align-items:center;gap:10px;font-family:'Fredoka';font-weight:600;font-size:17px;color:var(--ink);background:var(--coral);border:3px solid var(--ink);border-radius:14px;padding:13px 26px;box-shadow:5px 5px 0 var(--ink);cursor:pointer;transition:.15s;text-decoration:none}
+  .btn svg{width:20px;height:20px}
+  .btn:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+  .btn.sun{background:var(--sun)} .btn.mint{background:var(--mint2)} .btn.ghost{background:#fff}
+  .hidden{display:none !important}
+  .deco{position:absolute;z-index:1;pointer-events:none;color:var(--ink);opacity:.55}
+  .deco svg{width:100%;height:100%}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}50%{transform:translateY(-14px) rotate(var(--r,0deg))}}
+  .bob{animation:bob 4.5s ease-in-out infinite}
+
+  /* ===== HERO ===== */
+  .s-hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center}
+  .badge-row{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap}
+  .badge{display:inline-flex;align-items:center;gap:8px;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:8px 16px;font-weight:700;font-size:14px;box-shadow:3px 3px 0 var(--ink)}
+  .badge svg{width:17px;height:17px}
+  .b1{background:var(--mint2)} .b2{background:var(--pink2)} .b3{background:var(--butter2)}
+  .art-stage{position:relative;display:grid;place-items:center;min-height:460px}
+  .art-stage>svg{width:min(400px,90%);filter:drop-shadow(8px 10px 0 rgba(69,58,78,.18))}
+  .fchip{position:absolute;display:grid;place-items:center;border:3px solid var(--ink);border-radius:50%;box-shadow:4px 4px 0 var(--ink)}
+  .fchip svg{width:52%;height:52%}
+  .fc1{width:74px;height:74px;background:var(--coral);color:#fff;top:36px;left:34px;--r:-8deg}
+  .fc2{width:64px;height:64px;background:var(--sun);top:118px;right:26px;--r:10deg}
+  .fc3{width:70px;height:70px;background:var(--teal);color:#fff;bottom:92px;left:14px;--r:6deg}
+  .fc4{width:60px;height:60px;background:var(--lav2);bottom:34px;right:48px;--r:-10deg}
+  .fc5{width:52px;height:52px;background:var(--pink2);top:8px;right:130px;--r:14deg}
+
+  /* ===== GOALS ===== */
+  .goal-list{margin-top:30px;display:flex;flex-direction:column;gap:16px;max-width:880px}
+  .goal{display:flex;align-items:center;gap:22px;background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:16px 24px}
+  .goal:nth-child(odd){margin-right:56px}.goal:nth-child(even){margin-left:56px}
+  .gnum{flex:0 0 56px;height:56px;border-radius:50%;border:3px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:24px}
+  .g1{background:var(--coral);color:#fff}.g2{background:var(--sun)}.g3{background:var(--mint2)}.g4{background:var(--pink2)}
+  .goal h3{font-size:19px;font-weight:600;margin-bottom:3px}
+  .goal p{font-size:14.5px;color:var(--ink-soft);font-weight:500}
+
+  /* ===== PEMANASAN : TEBAK PEMBELI ===== */
+  .wu-shell{margin-top:26px;display:grid;grid-template-columns:330px 1fr;gap:32px;align-items:start}
+  .prod{border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);overflow:hidden;background:#fff}
+  .prod-media{height:200px;display:grid;place-items:center;border-bottom:2.5px solid var(--ink)}
+  .prod-media .ic{width:110px;height:110px;border-radius:50%;background:#fff;border:3px solid var(--ink);display:grid;place-items:center;box-shadow:5px 5px 0 var(--ink)}
+  .prod-media .ic svg{width:54px;height:54px}
+  .prod-cap{padding:14px 18px}
+  .prod-cap h4{font-family:'Fredoka';font-size:21px;line-height:1.15}
+  .prod-cap .sub{font-size:13.5px;font-weight:600;margin-top:4px;color:var(--ink-soft)}
+  .prod-cap .price{display:inline-block;margin-top:8px;font-family:'Fredoka';font-weight:700;font-size:14px;border:2.5px solid var(--ink);border-radius:10px;padding:4px 10px;background:var(--butter2)}
+  .wu-round{font-family:'Fredoka';font-weight:600;font-size:14px;color:var(--ink-soft)}
+  .wu-q{font-family:'Fredoka';font-weight:600;font-size:clamp(19px,1.8vw,23px);margin:6px 0 14px}
+  .wu-opts{display:flex;flex-direction:column;gap:12px;max-width:430px}
+  .wu-opt{display:flex;align-items:center;gap:13px;text-align:left;background:#fff;border:3px solid var(--ink);border-radius:14px;padding:12px 18px;font-family:'Plus Jakarta Sans';font-weight:600;font-size:15.5px;cursor:pointer;transition:.15s;color:var(--ink);box-shadow:4px 4px 0 var(--ink)}
+  .wu-opt:hover:not(:disabled){transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .wu-opt:disabled{cursor:default}
+  .wu-opt .letter{flex:0 0 34px;height:34px;border-radius:10px;border:2.5px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;background:var(--butter2)}
+  .wu-opt.good{background:var(--mint2)} .wu-opt.good .letter{background:var(--teal);color:#fff}
+  .wu-opt.bad{background:var(--pink2)} .wu-opt.bad .letter{background:var(--coral);color:#fff}
+  .wu-fb{margin-top:16px;display:flex;gap:12px;align-items:flex-start;background:var(--butter);border:2.5px solid var(--ink);border-radius:14px;padding:14px 18px;font-size:14.5px;font-weight:600;line-height:1.55;max-width:430px}
+  .wu-fb svg{width:20px;height:20px;flex:0 0 20px;margin-top:2px}
+  .wu-next{margin-top:14px}
+  .wu-done{background:#fff;border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);padding:30px 34px;max-width:640px;text-align:center}
+  .wu-done .tro{width:84px;height:84px;border-radius:50%;background:var(--sun);border:3px solid var(--ink);display:grid;place-items:center;margin:0 auto 14px;box-shadow:4px 4px 0 var(--ink)}
+  .wu-done .tro svg{width:40px;height:40px}
+  .wu-done h3{font-size:26px;margin-bottom:8px}
+  .wu-done p{font-weight:600;color:var(--ink-soft);line-height:1.6}
+  .wu-done .sc{font-family:'Fredoka';font-weight:700;font-size:19px;color:var(--teal);margin-top:10px}
+
+  /* ===== DEFINISI ===== */
+  .s-def .wrap{display:grid;grid-template-columns:1.08fr .92fr;gap:40px;align-items:center}
+  .define{margin-top:24px;background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:22px 26px;font-size:clamp(16px,1.45vw,20px);font-weight:600;line-height:1.6}
+  .define .q{color:var(--coral);font-family:'Fredoka'}
+  .analog{margin-top:18px;display:flex;gap:16px;align-items:flex-start;background:var(--lav);border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:18px 22px}
+  .analog .ic{flex:0 0 46px;height:46px;border-radius:50%;background:var(--lav2);display:grid;place-items:center;border:2.5px solid var(--ink)}
+  .analog .ic svg{width:24px;height:24px}
+  .analog p{font-size:15.5px;font-weight:500;line-height:1.55}
+  .target-art{display:grid;place-items:center}
+  .target-art svg{width:min(380px,100%);height:auto;filter:drop-shadow(8px 10px 0 rgba(69,58,78,.18))}
+
+  /* ===== SEMUA ORANG VS TARGET ===== */
+  .vs2{margin-top:28px;display:grid;grid-template-columns:1fr 84px 1fr;align-items:stretch}
+  .vs2-col{border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);padding:22px 26px;background:#fff}
+  .vs2-col.bad{background:var(--pink)}
+  .vs2-col.good{background:var(--mint)}
+  .vs2-col .lab{font-family:'Fredoka';font-weight:700;font-size:13px;letter-spacing:.12em;text-transform:uppercase;display:inline-flex;gap:7px;align-items:center;border:2.5px solid var(--ink);border-radius:999px;padding:5px 14px;margin-bottom:14px}
+  .vs2-col .lab svg{width:15px;height:15px}
+  .bad .lab{background:var(--pink2)} .good .lab{background:var(--mint2)}
+  .vs2-col .bigline{font-family:'Fredoka';font-weight:700;font-size:clamp(20px,2vw,25px);line-height:1.25;margin-bottom:12px}
+  .vs2-col .promo{background:#fff;border:2.5px dashed var(--ink);border-radius:14px;padding:12px 16px;font-size:15px;font-weight:600;line-height:1.5;margin-bottom:12px}
+  .vs2-col p{font-size:14.5px;font-weight:500;color:var(--ink-soft);line-height:1.55}
+  .vs2-mid{display:grid;place-items:center}
+  .vs2-badge{width:60px;height:60px;border-radius:50%;background:var(--sun);border:3px solid var(--ink);display:grid;place-items:center;box-shadow:4px 4px 0 var(--ink);font-family:'Fredoka';font-weight:700;font-size:18px}
+  .vs-note{margin-top:22px;background:#fff;border:3px solid var(--ink);border-left:14px solid var(--sun);border-radius:16px;box-shadow:var(--shadow);padding:15px 22px;font-weight:600;font-size:15px;line-height:1.55;max-width:860px}
+
+  /* ===== FLIP 4 PERTANYAAN ===== */
+  .fgrid{margin-top:26px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+  .fcard{perspective:1100px;min-height:250px;cursor:pointer}
+  .finner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.3,.8,.3,1)}
+  .fcard.flipped .finner{transform:rotateY(180deg)}
+  .fface{position:absolute;inset:0;backface-visibility:hidden;border:3px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 var(--ink);padding:18px 20px;display:flex;flex-direction:column}
+  .ffront{background:#fff}
+  .fback{background:var(--mint2);transform:rotateY(180deg)}
+  .fic{width:52px;height:52px;border-radius:15px;border:2.5px solid var(--ink);display:grid;place-items:center;margin-bottom:12px}
+  .fic svg{width:24px;height:24px}
+  .ffront h3{font-size:22px;line-height:1.15}
+  .ffront .tease{font-size:13.5px;font-weight:600;color:var(--ink-soft);line-height:1.45;margin-top:6px}
+  .ffront .hint{margin-top:auto;display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;color:var(--ink-soft)}
+  .ffront .hint svg{width:15px;height:15px}
+  .fback .tag{font-family:'Fredoka';font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;background:var(--ink);color:#fff;border-radius:999px;padding:4px 12px;align-self:flex-start;margin-bottom:10px}
+  .fback p{font-size:13.8px;font-weight:600;line-height:1.55;flex:1}
+  .fback .eg{font-size:12.5px;font-weight:700;opacity:.8;margin-top:8px;border-top:2px dashed rgba(69,58,78,.4);padding-top:8px;flex:0 0 auto}
+
+  /* ===== MESIN TARGET ===== */
+  .lab{margin-top:24px;display:grid;grid-template-columns:300px 1fr;gap:28px;align-items:start}
+  .picks{display:flex;flex-direction:column;gap:10px}
+  .pk{display:flex;align-items:center;gap:12px;text-align:left;background:#fff;border:2.5px solid var(--ink);border-radius:14px;padding:10px 14px;cursor:pointer;box-shadow:3px 3px 0 var(--ink);transition:.15s;font-family:'Fredoka';font-weight:600;font-size:15px;color:var(--ink)}
+  .pk .ti{width:38px;height:38px;border-radius:11px;border:2px solid var(--ink);display:grid;place-items:center;flex:0 0 38px}
+  .pk .ti svg{width:19px;height:19px}
+  .pk small{display:block;font-family:'Plus Jakarta Sans';font-size:12px;font-weight:600;color:var(--ink-soft)}
+  .pk:hover{transform:translateX(3px)}
+  .pk.on{background:var(--ink);color:#fff}
+  .pk.on small{color:var(--butter2)}
+  .pk.on .ti{border-color:#fff}
+  .lab-seen{margin-top:6px;font-family:'Fredoka';font-weight:600;font-size:13px;background:var(--butter2);border:2.5px solid var(--ink);border-radius:999px;display:inline-flex;align-items:center;gap:8px;padding:6px 14px;box-shadow:3px 3px 0 var(--ink);align-self:flex-start}
+  .lab-seen svg{width:14px;height:14px}
+  .tmap{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .tq{background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:5px 5px 0 var(--ink);padding:14px 16px}
+  .tq h4{font-family:'Fredoka';font-size:15px;display:flex;align-items:center;gap:9px;margin-bottom:6px}
+  .tq h4 span.i{width:30px;height:30px;border-radius:9px;border:2px solid var(--ink);display:grid;place-items:center}
+  .tq h4 svg{width:16px;height:16px}
+  .tq p{font-size:14px;font-weight:600;line-height:1.5}
+  .tsum{grid-column:1/-1;background:var(--ink);color:#fff;border-radius:16px;box-shadow:5px 5px 0 var(--sun);padding:14px 18px;font-size:15px;font-weight:600;line-height:1.55}
+  .tsum b{color:var(--sun);font-family:'Fredoka'}
+  .tsum .idea{display:block;margin-top:6px;font-size:13.5px;color:var(--mint2)}
+
+  /* ===== PRODUK SAMA, TARGET BEDA ===== */
+  .swap{margin-top:24px;display:grid;grid-template-columns:340px 1fr;gap:32px;align-items:start}
+  .toggle{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+  .tg{display:inline-flex;align-items:center;gap:8px;font-family:'Fredoka';font-weight:600;font-size:15px;border:2.5px solid var(--ink);border-radius:12px;padding:9px 16px;background:#fff;cursor:pointer;box-shadow:3px 3px 0 var(--ink);color:var(--ink)}
+  .tg svg{width:17px;height:17px}
+  .tg.on{background:var(--ink);color:#fff}
+  .poster{border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);min-height:400px;padding:26px 22px;position:relative;transition:background .45s;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px}
+  .pp-plat{position:absolute;top:14px;left:14px;display:inline-flex;gap:7px;align-items:center;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:6px 13px;font-family:'Fredoka';font-weight:700;font-size:12.5px;box-shadow:3px 3px 0 var(--ink)}
+  .pp-plat svg{width:15px;height:15px}
+  .pp-ic{width:86px;height:86px;border-radius:50%;background:#fff;border:3px solid var(--ink);display:grid;place-items:center;box-shadow:4px 4px 0 var(--ink)}
+  .pp-ic svg{width:42px;height:42px}
+  .pp-title{font-family:'Fredoka';font-weight:700;font-size:28px;line-height:1.12}
+  .pp-sub{font-weight:600;font-size:14px;line-height:1.5;max-width:270px}
+  .pp-price{font-family:'Fredoka';font-weight:700;font-size:15px;border:2.5px solid var(--ink);border-radius:10px;padding:5px 12px;background:#fff;box-shadow:3px 3px 0 var(--ink)}
+  .pp-cta{display:inline-flex;gap:8px;align-items:center;font-family:'Fredoka';font-weight:700;font-size:14.5px;padding:9px 18px;border:2.5px solid var(--ink);border-radius:999px;box-shadow:3px 3px 0 var(--ink)}
+  .pp-cta svg{width:15px;height:15px}
+  .diff{background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+  .diff table{width:100%;border-collapse:collapse}
+  .diff th,.diff td{text-align:left;padding:11px 16px;border-top:2px dashed rgba(69,58,78,.22);font-size:14px;vertical-align:top}
+  .diff th{font-family:'Fredoka';font-weight:600;font-size:14px;width:130px;border-top:2px dashed rgba(69,58,78,.22)}
+  .diff tr:first-child th,.diff tr:first-child td{border-top:none}
+  .diff td{font-weight:600}
+  .same{margin-top:16px;display:flex;gap:12px;align-items:flex-start;background:var(--sun);border:3px solid var(--ink);border-radius:16px;box-shadow:5px 5px 0 var(--ink);padding:12px 16px;font-size:14px;font-weight:600;line-height:1.5}
+  .same svg{width:20px;height:20px;flex:0 0 20px;margin-top:1px}
+
+  /* ===== GAME ===== */
+  .match-list{margin-top:26px;display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .m-card{background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:18px 20px}
+  .m-card.solved{background:var(--mint)}
+  .m-card h3{font-size:14.5px;font-weight:600;line-height:1.5;margin-bottom:12px;font-family:'Plus Jakarta Sans'}
+  .m-card h3 b{font-family:'Fredoka'}
+  .m-opts{display:flex;gap:9px;flex-wrap:wrap}
+  .m-opt{display:inline-flex;align-items:center;gap:7px;font-family:'Fredoka';font-weight:600;font-size:13.5px;border:2.5px solid var(--ink);border-radius:999px;padding:8px 15px;background:#fff;cursor:pointer;box-shadow:3px 3px 0 var(--ink);transition:.15s;color:var(--ink)}
+  .m-opt:hover:not(:disabled){transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--ink)}
+  .m-opt:disabled{cursor:default}
+  .m-opt.good{background:var(--teal);color:#fff}
+  .m-opt.bad{background:var(--pink2)}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+  .m-opt.shake{animation:shake .3s}
+  .m-why{margin-top:12px;background:var(--butter);border:2.5px solid var(--ink);border-radius:12px;padding:10px 14px;font-size:13px;font-weight:600;line-height:1.5;display:flex;gap:9px}
+  .m-why svg{width:17px;height:17px;flex:0 0 17px;margin-top:1px}
+  .m-score{margin-top:22px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;background:var(--ink);color:#fff;border-radius:16px;padding:14px 24px;max-width:640px;box-shadow:var(--shadow)}
+  .m-score b{font-family:'Fredoka';font-size:20px;color:var(--sun)}
+
+  /* ===== QUIZ ===== */
+  .quiz-shell{max-width:780px;margin:0 auto}
+  .q-meta{display:flex;justify-content:space-between;align-items:center;margin:0 0 16px}
+  .q-badge{font-family:'Fredoka';font-weight:700;background:var(--coral);color:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:7px 18px;box-shadow:3px 3px 0 var(--ink);font-size:14px}
+  .q-score{font-family:'Fredoka';font-weight:700;background:var(--sun);border:2.5px solid var(--ink);border-radius:999px;padding:7px 18px;box-shadow:3px 3px 0 var(--ink);font-size:14px;display:flex;align-items:center;gap:7px}
+  .q-score svg{width:16px;height:16px}
+  .q-card{padding:28px 32px;margin-top:20px}
+  .q-q{font-size:clamp(19px,1.8vw,25px);font-weight:600;line-height:1.4;margin-bottom:20px}
+  .q-opts{display:flex;flex-direction:column;gap:12px}
+  .opt{display:flex;align-items:center;gap:16px;text-align:left;background:#fff;border:3px solid var(--ink);border-radius:14px;padding:13px 18px;font-family:'Plus Jakarta Sans';font-weight:600;font-size:16px;cursor:pointer;transition:.15s;color:var(--ink);box-shadow:4px 4px 0 var(--ink)}
+  .opt:hover:not(:disabled){transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .opt:disabled{cursor:default}
+  .opt .letter{flex:0 0 36px;height:36px;border-radius:10px;border:2.5px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;background:var(--lav2)}
+  .opt.good{background:var(--mint2)} .opt.good .letter{background:var(--teal);color:#fff}
+  .opt.bad{background:var(--pink2);opacity:.9} .opt.bad .letter{background:var(--coral);color:#fff}
+  .q-foot{margin-top:18px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+  .q-why{display:flex;gap:12px;align-items:flex-start;background:var(--butter);border:2.5px solid var(--ink);border-radius:14px;padding:14px 18px;font-size:14.5px;font-weight:600;line-height:1.5;flex:1}
+  .q-why svg{width:20px;height:20px;flex:0 0 20px;margin-top:2px}
+  .q-done{text-align:center;padding:38px 30px}
+  .q-done .tro{width:96px;height:96px;border-radius:50%;background:var(--sun);border:3px solid var(--ink);display:grid;place-items:center;margin:0 auto 18px;box-shadow:5px 5px 0 var(--ink)}
+  .q-done .tro svg{width:48px;height:48px}
+  .q-done h3{font-size:30px;margin-bottom:8px}
+  .q-done .big{font-family:'Fredoka';font-size:56px;font-weight:700;color:var(--coral);margin:6px 0 10px}
+  .q-done p{font-weight:600;color:var(--ink-soft);margin-bottom:22px}
+
+  /* ===== MISI ===== */
+  .s-misi .wrap{display:grid;grid-template-columns:1.12fr .88fr;gap:38px;align-items:start}
+  .steps{margin-top:24px;display:flex;flex-direction:column;gap:14px}
+  .step{display:flex;gap:18px;align-items:flex-start;background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:var(--shadow);padding:15px 20px}
+  .step:nth-child(even){margin-left:44px}
+  .snum{flex:0 0 46px;height:46px;border-radius:50%;border:3px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:19px}
+  .st1{background:var(--coral);color:#fff}.st2{background:var(--sun)}.st3{background:var(--mint2)}.st4{background:var(--pink2)}
+  .step h3{font-size:16.5px;font-weight:600}
+  .step p{font-size:13.5px;color:var(--ink-soft);font-weight:500;margin-top:2px;line-height:1.5}
+  .blank-card{padding:18px 22px;background:#fff;border:3px dashed var(--ink);border-radius:16px}
+  .blank-card h4{font-family:'Fredoka';font-size:15.5px;margin-bottom:10px;display:flex;gap:8px;align-items:center}
+  .blank-card h4 svg{width:17px;height:17px}
+  .bl{display:flex;gap:8px;font-size:13px;font-weight:600;padding:5px 0}
+  .bl b{flex:0 0 96px}
+  .bl span{flex:1;border-bottom:2px dotted var(--ink-soft);min-height:18px}
+  .sentence{margin-top:12px;background:var(--butter);border:2.5px solid var(--ink);border-radius:12px;padding:10px 14px;font-size:13.5px;font-weight:600;line-height:1.7}
+  .mini-rubrik{margin-top:18px;padding:18px 22px;background:#fff}
+  .rubrik-row{display:flex;justify-content:space-between;gap:12px;font-size:13.5px;font-weight:700;padding:6px 0;border-top:2px dashed rgba(69,58,78,.25)}
+  .rubrik-row:first-of-type{border-top:none}
+  .rubrik-row span:last-child{color:var(--coral);font-family:'Fredoka';white-space:nowrap}
+
+  /* ===== PENUTUP ===== */
+  .s-end .wrap{display:grid;grid-template-columns:1fr .85fr;gap:44px;align-items:center}
+  .refl{margin-top:24px;display:flex;flex-direction:column;gap:14px;max-width:600px}
+  .refl-item{display:flex;gap:16px;align-items:center;background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:var(--shadow);padding:14px 20px}
+  .rnum{flex:0 0 44px;height:44px;border-radius:50%;border:2.5px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:18px}
+  .r1{background:var(--coral);color:#fff}.r2{background:var(--mint2)}.r3{background:var(--pink2)}
+  .refl-item p{font-size:15.5px;font-weight:600}
+  .end-art{position:relative;display:grid;place-items:center;min-height:420px}
+  .quote{position:relative;background:var(--sun);border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);padding:30px 34px;text-align:center;max-width:380px;transform:rotate(-2deg)}
+  .quote h3{font-size:25px;line-height:1.3;margin-bottom:10px}
+  .quote p{font-weight:600;font-size:14.5px}
+  .end-btn{margin-top:26px;display:flex;gap:14px;flex-wrap:wrap}
+
+  #confetti{position:fixed;inset:0;z-index:100;pointer-events:none}
+
+  .s-tall{padding-top:40px;padding-bottom:88px}
+  .s-tall h2.title{margin-top:12px}
+
+  /* ===== PONSEL / POSTINGAN ===== */
+  .phone{background:#fff;border:3px solid var(--ink);border-radius:30px;box-shadow:var(--shadow);padding:12px 12px 16px;width:100%;max-width:320px;margin:0 auto}
+  .ph-top{display:flex;align-items:center;gap:9px;padding:4px 4px 10px}
+  .ph-av{width:34px;height:34px;border-radius:50%;border:2.5px solid var(--ink);display:grid;place-items:center;background:var(--sun)}
+  .ph-av svg{width:17px;height:17px}
+  .ph-name{font-family:'Fredoka';font-weight:600;font-size:14px;line-height:1.1}
+  .ph-name small{display:block;font-family:'Plus Jakarta Sans';font-size:11px;color:var(--ink-soft);font-weight:600}
+  .ph-img{height:170px;border:2.5px solid var(--ink);border-radius:16px;display:grid;place-items:center;transition:background .3s}
+  .ph-img .ic{width:86px;height:86px;border-radius:50%;background:#fff;border:3px solid var(--ink);display:grid;place-items:center;box-shadow:4px 4px 0 var(--ink)}
+  .ph-img .ic svg{width:42px;height:42px}
+  .ph-act{display:flex;gap:12px;padding:10px 4px 6px}
+  .ph-act svg{width:20px;height:20px}
+  .ph-act .sp{margin-left:auto}
+  .ph-cap{font-size:13.5px;font-weight:500;line-height:1.5;padding:0 4px;min-height:60px}
+  .ph-cap b{font-family:'Fredoka';font-weight:600}
+  .ph-cap .more{color:var(--ink-soft);font-weight:700}
+  .ph-cap .tags{color:#2F6FB5;font-weight:700}
+  .ph-cap .ph{color:var(--ink-soft);opacity:.6;font-style:italic}
+  .seg-k1{background:var(--peach2);border-radius:4px;padding:0 2px}
+  .seg-k2{background:var(--mint2);border-radius:4px;padding:0 2px}
+  .seg-k3{background:var(--butter2);border-radius:4px;padding:0 2px}
+
+  /* ===== PEMANASAN : SCROLL ATAU BERHENTI ===== */
+  .sc-shell{margin-top:22px;display:grid;grid-template-columns:320px 1fr;gap:34px;align-items:start}
+  .sc-btns{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px}
+  .sc-btn{display:inline-flex;align-items:center;gap:9px;font-family:'Fredoka';font-weight:600;font-size:16px;border:3px solid var(--ink);border-radius:14px;padding:12px 20px;background:#fff;cursor:pointer;box-shadow:4px 4px 0 var(--ink);color:var(--ink);transition:.15s}
+  .sc-btn svg{width:20px;height:20px}
+  .sc-btn:hover:not(:disabled){transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .sc-btn:disabled{cursor:default;opacity:.55}
+  .sc-btn.pick{opacity:1;background:var(--ink);color:#fff}
+
+  /* ===== KONSEP 3K ===== */
+  .k3-card{background:#fff;border:3px solid var(--ink);border-radius:20px;box-shadow:var(--shadow);padding:20px 22px}
+  .k3-card h4{font-family:'Fredoka';font-size:16px;margin-bottom:12px;display:flex;gap:8px;align-items:center}
+  .k3-card h4 svg{width:18px;height:18px}
+  .k3-row{display:flex;gap:14px;align-items:flex-start;padding:11px 0;border-top:2px dashed rgba(69,58,78,.22)}
+  .k3-row:first-of-type{border-top:none}
+  .k3-tag{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;font-family:'Fredoka';font-weight:700;font-size:13px;border:2.5px solid var(--ink);border-radius:999px;padding:4px 11px;min-width:126px}
+  .k3-tag svg{width:15px;height:15px}
+  .k3-row p{font-size:14.5px;font-weight:600;line-height:1.5}
+  .k3-row small{display:block;font-size:12.5px;color:var(--ink-soft);font-weight:600;margin-top:2px}
+
+  /* ===== BATTLE KAIT ===== */
+  .bt-head{margin-top:20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+  .bt-prod{display:inline-flex;align-items:center;gap:8px;font-family:'Fredoka';font-weight:600;font-size:15px;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:6px 14px;box-shadow:3px 3px 0 var(--ink)}
+  .bt-prod svg{width:17px;height:17px}
+  .bt-arena{margin-top:16px;display:grid;grid-template-columns:1fr 70px 1fr;align-items:stretch}
+  .bt-side{background:#fff;border:3px solid var(--ink);border-radius:20px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:12px;transition:background .3s}
+  .bt-side.win{background:var(--mint)}
+  .bt-side.lose{background:#fff;opacity:.75}
+  .bt-lab{display:flex;align-items:center;gap:10px;font-family:'Fredoka';font-weight:700;font-size:15px}
+  .bt-lab span{width:36px;height:36px;border-radius:11px;border:2.5px solid var(--ink);display:grid;place-items:center;background:var(--butter2);font-size:17px}
+  .bt-hook{font-family:'Fredoka';font-weight:600;font-size:clamp(19px,1.8vw,24px);line-height:1.3;flex:1}
+  .bt-vote{display:flex;align-items:center;gap:12px}
+  .bt-bar{flex:1;height:16px;border:2.5px solid var(--ink);border-radius:999px;background:var(--cream);overflow:hidden}
+  .bt-bar i{display:block;height:100%;width:0;background:var(--coral);transition:width .3s}
+  .bt-n{font-family:'Fredoka';font-weight:700;font-size:20px;min-width:30px;text-align:right}
+  .bt-plus{width:42px;height:42px;border-radius:12px;border:2.5px solid var(--ink);background:var(--sun);display:grid;place-items:center;cursor:pointer;box-shadow:3px 3px 0 var(--ink);color:var(--ink)}
+  .bt-plus svg{width:20px;height:20px}
+  .bt-plus:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+  .bt-why{margin-top:16px;display:flex;gap:12px;align-items:flex-start;background:var(--butter);border:2.5px solid var(--ink);border-radius:14px;padding:12px 16px;font-size:14.5px;font-weight:600;line-height:1.55}
+  .bt-why svg{width:20px;height:20px;flex:0 0 20px;margin-top:2px}
+  .bt-foot{margin-top:14px;display:flex;gap:12px;flex-wrap:wrap}
+
+  /* ===== CIRI -> MANFAAT ===== */
+  .cm-tabs{margin-top:20px;display:flex;gap:10px;flex-wrap:wrap}
+  .cm-wrap{margin-top:16px;display:grid;grid-template-columns:.9fr 1.1fr;gap:28px;align-items:start}
+  .cm-chips{display:flex;flex-direction:column;gap:10px}
+  .cm-chip{display:flex;align-items:center;gap:12px;text-align:left;background:#fff;border:2.5px solid var(--ink);border-radius:14px;padding:11px 15px;cursor:pointer;box-shadow:3px 3px 0 var(--ink);font-family:'Plus Jakarta Sans';font-weight:700;font-size:14.5px;color:var(--ink);transition:.15s}
+  .cm-chip svg{width:18px;height:18px;flex:0 0 18px}
+  .cm-chip:hover{transform:translateX(3px)}
+  .cm-chip.on{background:var(--ink);color:#fff}
+  .cm-chip.done:not(.on){background:var(--mint)}
+  .cm-out{background:#fff;border:3px solid var(--ink);border-radius:20px;box-shadow:var(--shadow);padding:20px 22px}
+  .cm-box{border:2.5px solid var(--ink);border-radius:14px;padding:12px 16px}
+  .cm-box .lb{font-family:'Fredoka';font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;display:flex;gap:6px;align-items:center}
+  .cm-box .lb svg{width:14px;height:14px}
+  .cm-box p{font-size:16px;font-weight:700;line-height:1.45}
+  .cm-ciri{background:var(--lav)}
+  .cm-manf{background:var(--mint2)}
+  .cm-arrow{display:flex;align-items:center;gap:10px;padding:10px 4px;font-family:'Fredoka';font-weight:600;font-size:14px;color:var(--ink-soft)}
+  .cm-arrow svg{width:22px;height:22px;color:var(--coral)}
+  .cm-pop{animation:rise .45s cubic-bezier(.22,.9,.32,1)}
+  .cm-cap{margin-top:12px;font-size:13.5px;font-weight:600;line-height:1.55;background:var(--cream);border:2px dashed var(--ink-soft);border-radius:12px;padding:10px 14px}
+  .cm-count{margin-top:12px;font-family:'Fredoka';font-weight:600;font-size:13px;color:var(--ink-soft)}
+
+  /* ===== CAPTION BUILDER ===== */
+  .cb-wrap{margin-top:18px;display:grid;grid-template-columns:1fr 320px;gap:30px;align-items:start}
+  .cb-steps{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+  .cb-step{display:inline-flex;align-items:center;gap:7px;font-family:'Fredoka';font-weight:600;font-size:14px;border:2.5px solid var(--ink);border-radius:12px;padding:7px 13px;background:#fff;cursor:pointer;box-shadow:3px 3px 0 var(--ink);color:var(--ink)}
+  .cb-step svg{width:16px;height:16px}
+  .cb-step.on{background:var(--ink);color:#fff}
+  .cb-step .okd{width:9px;height:9px;border-radius:50%;background:var(--ink-soft);opacity:.35}
+  .cb-step.filled .okd{background:var(--teal);opacity:1}
+  .cb-hint{font-size:13.5px;font-weight:600;color:var(--ink-soft);margin-bottom:10px}
+  .cb-opts{display:flex;flex-direction:column;gap:9px}
+  .cb-opt{text-align:left;background:#fff;border:2.5px solid var(--ink);border-radius:14px;padding:11px 15px;cursor:pointer;box-shadow:3px 3px 0 var(--ink);font-family:'Plus Jakarta Sans';font-weight:600;font-size:14.5px;line-height:1.45;color:var(--ink);transition:.15s}
+  .cb-opt:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink)}
+  .cb-opt.on{background:var(--mint2)}
+  .cb-opt.on.warn{background:var(--pink2)}
+  .tagchips{display:flex;gap:8px;flex-wrap:wrap}
+  .tagchip{font-family:'Fredoka';font-weight:600;font-size:14px;border:2.5px solid var(--ink);border-radius:999px;padding:7px 13px;background:#fff;cursor:pointer;box-shadow:2px 2px 0 var(--ink);color:var(--ink)}
+  .tagchip.on{background:#2F6FB5;color:#fff}
+  .cb-checks{margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .ck{display:flex;gap:9px;align-items:center;background:#fff;border:2.5px solid var(--ink);border-radius:12px;padding:7px 11px;font-size:13px;font-weight:700;line-height:1.3}
+  .ck svg{width:18px;height:18px;flex:0 0 18px}
+  .ck.ok{background:var(--mint2)} .ck.no{background:var(--pink2)} .ck.wait{background:#fff;color:var(--ink-soft)}
+  .cb-wrap .phone .ph-img{height:130px}
+  .cb-wrap .phone .ph-cap{max-height:190px;overflow:auto}
+
+  .sc-shell>*,.cm-wrap>*,.cb-wrap>*,.hs-wrap>*{min-width:0}
+
+  /* ===== GAME HASHTAG ===== */
+  .hs-wrap{margin-top:20px;display:grid;grid-template-columns:1fr 300px;gap:28px;align-items:start}
+  .hs-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .hs-card{display:flex;align-items:center;gap:10px;background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:4px 4px 0 var(--ink);padding:8px 12px;flex-wrap:wrap}
+  .hs-card .ht{font-family:'Fredoka';font-weight:700;font-size:16px;color:#2F6FB5;flex:1;min-width:120px;word-break:break-word}
+  .hs-card .hb{display:inline-flex;align-items:center;gap:5px;font-family:'Fredoka';font-weight:600;font-size:13px;border:2.5px solid var(--ink);border-radius:10px;padding:5px 10px;background:#fff;cursor:pointer;box-shadow:2px 2px 0 var(--ink);color:var(--ink)}
+  .hs-card .hb svg{width:15px;height:15px}
+  .hs-card .hb:disabled{cursor:default}
+  .hs-card.keep{background:var(--mint)}
+  .hs-card.toss{background:var(--pink)}
+  .hs-card.toss .ht{text-decoration:line-through;color:var(--ink-soft)}
+  .hs-card .hw{flex-basis:100%;font-size:12px;font-weight:600;line-height:1.35;color:var(--ink)}
+  .hb.shake{animation:shake .3s}
+  .hs-rule{background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:16px 18px}
+  .hs-rule h4{font-family:'Fredoka';font-size:16px;display:flex;gap:8px;align-items:center;margin-bottom:8px}
+  .hs-rule h4 svg{width:18px;height:18px}
+  .hs-rule li{font-size:13.5px;font-weight:600;line-height:1.5;margin:0 0 6px 18px}
+  .hs-prod{margin-top:14px}
+
+  @media (max-width:960px){
+    .s-hero .wrap,.s-def .wrap,.s-misi .wrap,.s-end .wrap{grid-template-columns:1fr}
+    .wu-shell,.lab,.swap{grid-template-columns:1fr}
+    .fgrid{grid-template-columns:1fr 1fr}
+    .vs2{grid-template-columns:1fr}
+    .vs2-mid{margin:14px 0}
+    .match-list{grid-template-columns:1fr}
+    .goal:nth-child(odd),.goal:nth-child(even){margin:0}
+    .step:nth-child(even){margin-left:0}
+    .art-stage,.end-art{min-height:340px}
+    .picks{flex-direction:row;flex-wrap:wrap}
+    .slide{padding:40px 20px 110px}
+  }
+
+  /* ===== MOBILE ===== */
+  @media (max-width:640px){
+    .slide{padding:22px 16px 104px}
+    .slide::before{width:70vw;height:70vw;top:-30vw;right:-30vw}
+    .slide::after{width:60vw;height:60vw;bottom:-28vw;left:-26vw}
+    .kicker{font-size:11px;letter-spacing:.1em;padding:6px 12px;box-shadow:3px 3px 0 var(--ink)}
+    h2.title{font-size:27px;margin:14px 0 6px}
+    p.lead{font-size:15px}
+    .card,.goal,.step,.m-card,.refl-item,.tq,.vs2-col,.prod,.poster,.diff{box-shadow:4px 4px 0 var(--ink)}
+    .deco{display:none}
+    .dots{display:none}
+    .navbar-bg{display:block}
+    .pagenum{left:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));font-size:13px;padding:6px 14px;box-shadow:3px 3px 0 var(--ink)}
+    .navbtns{right:16px;bottom:calc(12px + env(safe-area-inset-bottom,0px))}
+    .nav{width:48px;height:48px;box-shadow:3px 3px 0 var(--ink)}
+    .s-hero .wrap{gap:12px}
+    .art-stage{min-height:300px}
+    .art-stage>svg{width:min(260px,76%)}
+    .fchip{transform:scale(.7)}
+    .badge{font-size:13px;padding:6px 12px}
+    .goal{gap:14px;padding:12px 16px}
+    .gnum{flex:0 0 44px;height:44px;font-size:20px}
+    .goal h3{font-size:16.5px}
+    .goal p{font-size:13.5px}
+    .prod-media{height:150px}
+    .define{padding:16px 18px}
+    .fgrid{grid-template-columns:1fr}
+    .fcard{min-height:200px}
+    .picks{flex-wrap:nowrap;overflow-x:auto;margin-right:-16px;padding:2px 4px 8px 2px;scrollbar-width:none}
+    .picks::-webkit-scrollbar{display:none}
+    .pk{flex:0 0 auto;white-space:nowrap}
+    .pk:hover{transform:none}
+    .tmap{grid-template-columns:1fr}
+    .poster{min-height:340px}
+    .diff th{width:96px}
+    .q-card{padding:18px 16px}
+    .q-q{font-size:18px}
+    .opt{font-size:14.5px;padding:10px 14px;gap:12px}
+    .q-foot{flex-direction:column;align-items:stretch}
+    .q-done .big{font-size:44px}
+    .quote{padding:22px}
+    .quote h3{font-size:21px}
+    .end-art{min-height:300px}
+  }
+
+  @media (max-width:960px){
+    .sc-shell,.cm-wrap,.cb-wrap,.hs-wrap{grid-template-columns:1fr}
+    .bt-arena{grid-template-columns:1fr}
+    .bt-arena .vs2-mid{margin:12px 0}
+  }
+  @media (max-width:640px){
+    .phone{max-width:300px;border-radius:26px;box-shadow:4px 4px 0 var(--ink)}
+    .ph-img{height:130px}
+    .k3-card,.bt-side,.cm-out,.hs-rule{box-shadow:4px 4px 0 var(--ink)}
+    .k3-row{flex-direction:column;gap:6px}
+    .bt-side{padding:14px 16px}
+    .bt-hook{font-size:18px}
+    .cm-chip:hover{transform:none}
+    .cm-tabs,.cb-steps{flex-wrap:nowrap;overflow-x:auto;margin-right:-16px;padding:2px 4px 8px 2px;scrollbar-width:none}
+    .cm-tabs::-webkit-scrollbar,.cb-steps::-webkit-scrollbar{display:none}
+    .cm-tabs .tg,.cb-step{flex:0 0 auto;white-space:nowrap}
+    .cb-wrap>:last-child{order:-1}
+    .cb-checks{grid-template-columns:1fr}
+    .hs-grid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<div id="bar"></div>
+
+<!-- ============ SLIDE 1 : JUDUL ============ -->
+<section class="slide active" data-theme="peach">
+  <div class="deco bob" style="top:14%;left:5%;width:26px;height:26px">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 2v20M2 12h20"/></svg>
+  </div>
+  <div class="deco bob" style="bottom:18%;left:12%;width:34px;height:34px;animation-delay:1.2s">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/></svg>
+  </div>
+  <div class="s-hero wrap" style="display:contents"><div class="wrap">
+    <div>
+      <span class="kicker anim" style="--d:0"><i data-lucide="message-square-text"></i> Digital Marketing · Pertemuan 6 · SMP Kelas 7</span>
+      <h1 class="anim" style="--d:1;font-size:clamp(38px,4.6vw,62px);font-weight:700;line-height:1.08;margin:20px 0 14px">
+        Caption yang<br>Bikin <span class="hl">Berhenti</span> Scroll
+      </h1>
+      <p class="lead anim" style="--d:2">Foto bagus membuat orang melirik. <b>Caption</b> yang bagus membuat orang berhenti, membaca, lalu membeli.
+      Hari ini kita belajar menulis caption dengan <b>Rumus 3K</b>.</p>
+      <div class="badge-row anim" style="--d:3">
+        <span class="badge b2"><i data-lucide="magnet"></i> Kait</span>
+        <span class="badge b1"><i data-lucide="gift"></i> Kasih Nilai</span>
+        <span class="badge b3"><i data-lucide="megaphone"></i> Kasih Ajakan</span>
+      </div>
+    </div>
+    <div class="art-stage anim" style="--d:2">
+      <svg viewBox="0 0 380 420" aria-hidden="true">
+        <ellipse cx="190" cy="210" rx="170" ry="190" fill="#FFCBB5"/>
+        <rect x="104" y="40" width="172" height="340" rx="30" fill="#fff" stroke="#453A4E" stroke-width="5"/>
+        <rect x="160" y="54" width="60" height="9" rx="4.5" fill="#453A4E"/>
+        <circle cx="132" cy="90" r="12" fill="#FFC531" stroke="#453A4E" stroke-width="3"/>
+        <rect x="152" y="84" width="70" height="10" rx="5" fill="#453A4E"/>
+        <rect x="120" y="112" width="140" height="110" rx="14" fill="#BFEAD2" stroke="#453A4E" stroke-width="4"/>
+        <circle cx="190" cy="167" r="28" fill="#fff" stroke="#453A4E" stroke-width="4"/>
+        <path d="M178 158h24l-3 22h-18z" fill="#FF7E67" stroke="#453A4E" stroke-width="3" stroke-linejoin="round"/>
+        <rect x="120" y="238" width="128" height="12" rx="6" fill="#FFCBB5" stroke="#453A4E" stroke-width="2.5"/>
+        <rect x="120" y="260" width="140" height="12" rx="6" fill="#BFEAD2" stroke="#453A4E" stroke-width="2.5"/>
+        <rect x="120" y="282" width="100" height="12" rx="6" fill="#FFE39A" stroke="#453A4E" stroke-width="2.5"/>
+        <rect x="120" y="306" width="74" height="9" rx="4.5" fill="#C5DCF2"/>
+        <!-- tangan berhenti -->
+        <g transform="translate(262 300) rotate(-12)">
+          <rect x="-34" y="-34" width="68" height="68" rx="20" fill="#FFC531" stroke="#453A4E" stroke-width="4.5"/>
+          <path d="M-14 -4v-14a4 4 0 0 1 8 0v10m0-14a4 4 0 0 1 8 0v14m0-10a4 4 0 0 1 8 0v18c0 10-8 16-16 16s-12-4-16-10l-6-10a4 4 0 0 1 7-4l3 4" fill="none" stroke="#453A4E" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+      </svg>
+      <span class="fchip fc1 bob"><i data-lucide="magnet"></i></span>
+      <span class="fchip fc2 bob" style="animation-delay:.8s"><i data-lucide="gift"></i></span>
+      <span class="fchip fc3 bob" style="animation-delay:1.6s"><i data-lucide="megaphone"></i></span>
+      <span class="fchip fc4 bob" style="animation-delay:.4s"><i data-lucide="hash"></i></span>
+      <span class="fchip fc5 bob" style="animation-delay:2s"><i data-lucide="heart"></i></span>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============ SLIDE 2 : TUJUAN ============ -->
+<section class="slide" data-theme="cream">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="map"></i> Rencana Belajar Hari Ini</span>
+    <h2 class="title anim" style="--d:1">Hari ini kita akan...</h2>
+    <div class="goal-list">
+      <div class="goal anim" style="--d:2">
+        <div class="gnum g1">1</div>
+        <div><h3>Kenal Rumus 3K</h3><p>Kait, Kasih Nilai, Kasih Ajakan: tiga bagian caption yang bikin orang membeli.</p></div>
+      </div>
+      <div class="goal anim" style="--d:3">
+        <div class="gnum g2">2</div>
+        <div><h3>Menulis Kalimat Pembuka 3 Detik</h3><p>Adu kait di Battle Kait dan pelajari 4 jurusnya.</p></div>
+      </div>
+      <div class="goal anim" style="--d:4">
+        <div class="gnum g3">3</div>
+        <div><h3>Ubah Ciri Menjadi Manfaat</h3><p>Pembeli tidak membeli "700 ml". Mereka membeli "segar sampai jam pulang".</p></div>
+      </div>
+      <div class="goal anim" style="--d:5">
+        <div class="gnum g4">4</div>
+        <div><h3>Pilih Hashtag yang Tepat</h3><p>Sedikit, nyambung, dan jujur. Misi akhir: 3 caption untuk foto produk dari Pertemuan 5.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 3 : PEMANASAN ============ -->
+<section class="slide" data-theme="butter">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="hand"></i> Pemanasan · Scroll atau Berhenti?</span>
+    <h2 class="title anim" style="--d:1">Kamu cuma punya <span class="hl p">3 detik!</span></h2>
+    <p class="lead anim" style="--d:1.5">Bayangkan kamu sedang scroll HP. Baca baris pertama caption ini. Kamu terus scroll atau berhenti membaca?</p>
+    <div class="sc-shell anim" style="--d:2" id="scShell">
+      <div class="phone" id="scPhone">
+        <div class="ph-top"><span class="ph-av"><i data-lucide="store"></i></span><span class="ph-name" id="scName"><small>Bersponsor · Usaha siswa</small></span></div>
+        <div class="ph-img" id="scImg"><span class="ic" id="scIc"></span></div>
+        <div class="ph-act"><i data-lucide="heart"></i><i data-lucide="message-circle"></i><i data-lucide="send"></i><i data-lucide="bookmark" class="sp"></i></div>
+        <div class="ph-cap" id="scCap"></div>
+      </div>
+      <div>
+        <div class="wu-round" id="scRound"></div>
+        <div class="wu-q">Kalau kamu melihat ini di beranda, kamu akan...</div>
+        <div class="sc-btns" id="scBtns">
+          <button class="sc-btn" data-v="0"><i data-lucide="arrow-down"></i> Terus scroll</button>
+          <button class="sc-btn" data-v="1"><i data-lucide="hand"></i> Berhenti &amp; baca</button>
+        </div>
+        <div class="wu-fb hidden" id="scFb"><i data-lucide="lightbulb"></i><span></span></div>
+        <button class="btn mint wu-next hidden" id="scNext"><i data-lucide="arrow-right"></i> <span>Caption Berikutnya</span></button>
+      </div>
+    </div>
+    <div class="wu-done hidden anim" id="scDone" style="--d:0;margin-top:24px">
+      <div class="tro"><i data-lucide="trophy"></i></div>
+      <h3>Begitulah cara orang membaca caption!</h3>
+      <p>Orang memutuskan berhenti atau tidak hanya dari <b>baris pertama</b>. Kalimat pembuka yang membuat penasaran disebut <b>kait</b>.
+      Itu huruf K pertama di Rumus 3K.</p>
+      <div class="sc">Pilihanmu sama dengan pembina: <span id="scScore">0</span> dari 4</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 4 : RUMUS 3K ============ -->
+<section class="slide" data-theme="mint">
+  <div class="s-def wrap" style="display:contents"><div class="wrap">
+    <div>
+      <span class="kicker anim" style="--d:0"><i data-lucide="search"></i> Konsep Utama</span>
+      <h2 class="title anim" style="--d:1">Caption dengan <span class="hl m">Rumus 3K</span></h2>
+      <div class="define anim" style="--d:2">
+        <span class="q">Catat baik-baik, ya!</span><br>
+        Caption adalah tulisan di bawah foto atau video. Caption yang baik punya 3 bagian:
+        <span class="hl">Kait</span>, <span class="hl">Kasih Nilai</span>, dan <span class="hl">Kasih Ajakan</span>.
+      </div>
+      <div class="analog anim" style="--d:3">
+        <div class="ic"><i data-lucide="store"></i></div>
+        <p><b>Ibarat pedagang di pasar:</b> pertama ia <b>memanggil</b> supaya orang menoleh, lalu <b>menjelaskan</b> kenapa dagangannya bagus,
+        terakhir <b>mengajak</b>: "Ayo, mampir dulu!" Caption bekerja dengan cara yang sama.</p>
+      </div>
+    </div>
+    <div class="k3-card anim" style="--d:3">
+      <h4><i data-lucide="message-square-text"></i> Contoh caption Es Teh Jumbo</h4>
+      <div class="k3-row"><span class="k3-tag" style="background:var(--peach2)"><i data-lucide="magnet"></i> K1 · Kait</span>
+        <p>"Haus habis olahraga? Ini penyelamatmu!"<small>Kalimat pertama yang membuat orang berhenti scroll.</small></p></div>
+      <div class="k3-row"><span class="k3-tag" style="background:var(--mint2)"><i data-lucide="gift"></i> K2 · Kasih Nilai</span>
+        <p>"Gelas 700 ml, esnya dari air matang. Segar sampai jam pulang."<small>Manfaat yang jujur untuk pembeli.</small></p></div>
+      <div class="k3-row"><span class="k3-tag" style="background:var(--butter2)"><i data-lucide="megaphone"></i> K3 · Kasih Ajakan</span>
+        <p>"Mampir ke stan kami di depan gerbang, ya!"<small>Kasih tahu pembeli harus melakukan apa.</small></p></div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============ SLIDE 5 : 4 JURUS KAIT ============ -->
+<section class="slide" data-theme="pink">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="magnet"></i> K1 · 4 Jurus Kait</span>
+    <h2 class="title anim" style="--d:1">Cara membuat <span class="hl p">kalimat pembuka</span> yang kuat</h2>
+    <p class="lead anim" style="--d:1.5">Pilih salah satu jurus untuk baris pertama caption. Klik kartunya untuk melihat contoh!</p>
+    <div class="fgrid">
+      <div class="fcard anim" style="--d:2" onclick="this.classList.toggle('flipped')">
+        <div class="finner">
+          <div class="fface ffront">
+            <span class="fic" style="background:var(--butter2)"><i data-lucide="circle-help"></i></span>
+            <h3>1. Bertanya</h3><p class="tease">Ajukan pertanyaan yang jawabannya "iya, itu aku!"</p>
+            <span class="hint"><i data-lucide="mouse-pointer-click"></i> klik untuk contoh</span>
+          </div>
+          <div class="fface fback">
+            <span class="tag">Contoh</span>
+            <p>"Uang jajan tinggal <b>Rp5.000</b> tapi masih lapar?"</p>
+            <p class="eg">Pembaca merasa pertanyaan itu ditujukan untuknya.</p>
+          </div>
+        </div>
+      </div>
+      <div class="fcard anim" style="--d:2.4" onclick="this.classList.toggle('flipped')">
+        <div class="finner">
+          <div class="fface ffront">
+            <span class="fic" style="background:var(--sky2)"><i data-lucide="hash"></i></span>
+            <h3>2. Pakai Angka</h3><p class="tease">Angka membuat kalimat terasa jelas dan cepat dibaca.</p>
+            <span class="hint"><i data-lucide="mouse-pointer-click"></i> klik untuk contoh</span>
+          </div>
+          <div class="fface fback">
+            <span class="tag">Contoh</span>
+            <p>"<b>3 rasa</b> keripik yang selalu habis sebelum jam istirahat."</p>
+            <p class="eg">Angkanya harus benar, jangan dikarang!</p>
+          </div>
+        </div>
+      </div>
+      <div class="fcard anim" style="--d:2.8" onclick="this.classList.toggle('flipped')">
+        <div class="finner">
+          <div class="fface ffront">
+            <span class="fic" style="background:var(--mint2)"><i data-lucide="frown"></i></span>
+            <h3>3. Sebut Masalah</h3><p class="tease">Tulis masalah yang sering dialami pembeli.</p>
+            <span class="hint"><i data-lucide="mouse-pointer-click"></i> klik untuk contoh</span>
+          </div>
+          <div class="fface fback">
+            <span class="tag">Contoh</span>
+            <p>"Bekal cepat basi gara-gara cuaca panas? Coba ini."</p>
+            <p class="eg">Lalu tunjukkan bahwa produkmu membantu.</p>
+          </div>
+        </div>
+      </div>
+      <div class="fcard anim" style="--d:3.2" onclick="this.classList.toggle('flipped')">
+        <div class="finner">
+          <div class="fface ffront">
+            <span class="fic" style="background:var(--peach2)"><i data-lucide="sparkles"></i></span>
+            <h3>4. Bikin Penasaran</h3><p class="tease">Buka sedikit rahasia, sisanya dibaca di bawah.</p>
+            <span class="hint"><i data-lucide="mouse-pointer-click"></i> klik untuk contoh</span>
+          </div>
+          <div class="fface fback">
+            <span class="tag">Contoh</span>
+            <p>"Rahasia kue bolu yang tetap lembut sampai sore..."</p>
+            <p class="eg">Jujur, ya! Isi caption harus sesuai janji kalimat pertama.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="vs-note anim" style="--d:4"><b>Hindari kait bohong (clickbait).</b> "GRATIS IPHONE!!!" padahal jualan keripik membuat orang kecewa dan tidak percaya lagi.</div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 6 : BATTLE KAIT ============ -->
+<section class="slide" data-theme="sky">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="swords"></i> Ayo Voting · Battle Kait</span>
+    <h2 class="title anim" style="--d:1">Kait mana yang <span class="hl">lebih kuat?</span></h2>
+    <p class="lead anim" style="--d:1.5">Angkat tangan untuk A atau B. Pembina menekan tombol + sesuai jumlah tangan, lalu buka pendapat pembina.</p>
+    <div class="anim" style="--d:2">
+      <div class="bt-head">
+        <span class="bt-prod" id="btProd"></span>
+        <span class="wu-round" id="btRound"></span>
+      </div>
+      <div class="bt-arena">
+        <div class="bt-side" id="btA">
+          <div class="bt-lab"><span>A</span> Kait A</div>
+          <div class="bt-hook" id="btHookA"></div>
+          <div class="bt-vote"><div class="bt-bar"><i id="btBarA"></i></div><span class="bt-n" id="btNA">0</span><button class="bt-plus" data-s="0" aria-label="Tambah suara A"><i data-lucide="plus"></i></button></div>
+        </div>
+        <div class="vs2-mid"><div class="vs2-badge">VS</div></div>
+        <div class="bt-side" id="btB">
+          <div class="bt-lab"><span>B</span> Kait B</div>
+          <div class="bt-hook" id="btHookB"></div>
+          <div class="bt-vote"><div class="bt-bar"><i id="btBarB"></i></div><span class="bt-n" id="btNB">0</span><button class="bt-plus" data-s="1" aria-label="Tambah suara B"><i data-lucide="plus"></i></button></div>
+        </div>
+      </div>
+      <div class="bt-why hidden" id="btWhy"><i data-lucide="lightbulb"></i><span></span></div>
+      <div class="bt-foot">
+        <button class="btn sun" id="btReveal"><i data-lucide="eye"></i> Buka Pendapat Pembina</button>
+        <button class="btn mint hidden" id="btNext"><i data-lucide="arrow-right"></i> <span>Ronde Berikutnya</span></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 7 : CIRI -> MANFAAT ============ -->
+<section class="slide" data-theme="lav">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="gift"></i> K2 · Pengubah Ciri Jadi Manfaat</span>
+    <h2 class="title anim" style="--d:1">Jual <span class="hl l">manfaatnya</span>, bukan hanya cirinya</h2>
+    <p class="lead anim" style="--d:1.5"><b>Ciri</b> = fakta tentang produk. <b>Manfaat</b> = apa untungnya untuk pembeli. Pilih produk, lalu klik setiap ciri untuk mengubahnya!</p>
+    <div class="cm-tabs hscroll anim" style="--d:2" id="cmTabs"></div>
+    <div class="cm-wrap">
+      <div class="cm-chips anim" style="--d:2.5" id="cmChips"></div>
+      <div class="anim" style="--d:3">
+        <div class="cm-out" id="cmOut"></div>
+        <div class="cm-count">Ciri yang sudah diubah: <span id="cmN">0</span> / <span id="cmT">0</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 8 : CAPTION BUILDER ============ -->
+<section class="slide s-tall" data-theme="peach">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="pencil-line"></i> Coba Langsung · Mesin Caption 3K</span>
+    <h2 class="title anim" style="--d:1">Rakit caption-mu <span class="hl">sendiri!</span></h2>
+    <p class="lead anim" style="--d:1.5">Pilih produk, lalu isi setiap bagian. Lihat caption-nya muncul di HP dan cek apakah sudah lengkap.</p>
+    <div class="cb-wrap">
+      <div class="anim" style="--d:2">
+        <div class="toggle" id="cbProds"></div>
+        <div class="cb-steps hscroll" id="cbSteps"></div>
+        <div class="cb-hint" id="cbHint"></div>
+        <div id="cbOpts"></div>
+        <div class="cb-checks" id="cbChecks"></div>
+      </div>
+      <div class="anim" style="--d:3">
+        <div class="phone">
+          <div class="ph-top"><span class="ph-av" id="cbAv"></span><span class="ph-name" id="cbName"></span></div>
+          <div class="ph-img" id="cbImg"><span class="ic" id="cbIc"></span></div>
+          <div class="ph-act"><i data-lucide="heart"></i><i data-lucide="message-circle"></i><i data-lucide="send"></i><i data-lucide="bookmark" class="sp"></i></div>
+          <div class="ph-cap" id="cbCap"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 9 : GAME HASHTAG ============ -->
+<section class="slide s-tall" data-theme="mint">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="hash"></i> Ayo Main · Sortir Hashtag</span>
+    <h2 class="title anim" style="--d:1">Hashtag mana yang <span class="hl m">pantas dipakai?</span></h2>
+    <p class="lead anim" style="--d:1.5">Produk: <b>Keripik Pisang Kriuk</b>, usaha siswa di Bandung. Pilih <b>Pakai</b> atau <b>Buang</b> untuk setiap hashtag.</p>
+    <div class="hs-wrap">
+      <div class="hs-grid anim" style="--d:2" id="hsGrid"></div>
+      <div class="anim" style="--d:3">
+        <div class="hs-rule">
+          <h4><i data-lucide="list-checks"></i> Aturan hashtag</h4>
+          <ul>
+            <li><b>3–5 hashtag</b> saja, jangan 30.</li>
+            <li>Nyambung dengan <b>produk</b>, <b>lokasi</b>, atau <b>jenis</b> jualan.</li>
+            <li>Tidak menumpang nama artis atau hadiah palsu.</li>
+            <li>Terlalu umum (#viral) membuat postingan tenggelam.</li>
+          </ul>
+        </div>
+        <div class="m-score hs-prod">
+          <span>Tepat:</span><b><span id="hsDone">0</span> / 10</b>
+          <span id="hsMsg" style="font-weight:600;font-size:14px;color:var(--butter2);flex-basis:100%"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 10 : KUIS ============ -->
+<section class="slide" data-theme="lav">
+  <div class="wrap quiz-shell">
+    <div style="text-align:center">
+      <span class="kicker anim" style="--d:0"><i data-lucide="trophy"></i> Kuis Seru</span>
+      <h2 class="title anim" style="--d:1">Uji Pemahaman Caption-mu!</h2>
+    </div>
+    <div id="quizArea" class="anim" style="--d:2"></div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 11 : MISI ============ -->
+<section class="slide" data-theme="pink">
+  <div class="s-misi wrap" style="display:contents"><div class="wrap">
+    <div>
+      <span class="kicker anim" style="--d:0"><i data-lucide="flag"></i> Giliranmu!</span>
+      <h2 class="title anim" style="--d:1">Misi: <span class="hl p">3 Caption</span> untuk foto produkmu</h2>
+      <p class="lead anim" style="--d:2">Pakai foto produk sebelum &amp; sesudah dari Pertemuan 5. Tulis di kertas atau di catatan HP, belum diposting.</p>
+      <div class="steps">
+        <div class="step anim" style="--d:3"><div class="snum st1">1</div>
+          <div><h3>Tulis 3 kait dengan jurus berbeda</h3><p>Misalnya: bertanya, pakai angka, dan sebut masalah.</p></div></div>
+        <div class="step anim" style="--d:4"><div class="snum st2">2</div>
+          <div><h3>Ubah 2 ciri produk jadi manfaat</h3><p>Pakai kata jembatan "jadi kamu bisa...". Pastikan semuanya benar.</p></div></div>
+        <div class="step anim" style="--d:5"><div class="snum st3">3</div>
+          <div><h3>Tutup dengan ajakan yang jelas</h3><p>Pembeli harus tahu: datang ke mana, pesan lewat apa, atau kapan.</p></div></div>
+        <div class="step anim" style="--d:6"><div class="snum st4">4</div>
+          <div><h3>Pilih 3–5 hashtag, lalu cek pembina</h3><p>Caption diposting lewat akun usaha kelompok, bukan akun pribadi, setelah disetujui pembina.</p></div></div>
+      </div>
+    </div>
+    <div>
+      <div class="blank-card anim" style="--d:4">
+        <h4><i data-lucide="message-square-text"></i> Lembar caption — salin 3 kali</h4>
+        <div class="bl"><b>K1 Kait:</b><span></span></div>
+        <div class="bl"><b>Jurus:</b><span></span></div>
+        <div class="bl"><b>K2 Nilai:</b><span></span></div>
+        <div class="bl"><b>K3 Ajakan:</b><span></span></div>
+        <div class="bl"><b>Hashtag:</b><span></span></div>
+        <div class="sentence">"Produk kami punya <b>___</b> (ciri), <b>jadi kamu bisa</b> <b>___</b> (manfaat)."</div>
+      </div>
+      <div class="mini-rubrik card anim" style="--d:5">
+        <h3 style="font-family:'Fredoka';font-size:17px;margin-bottom:8px;display:flex;align-items:center;gap:9px"><i data-lucide="clipboard-check" style="width:19px;height:19px"></i> Cara Penilaian</h3>
+        <div class="rubrik-row"><span>3K lengkap di setiap caption</span><span>40 poin</span></div>
+        <div class="rubrik-row"><span>Menulis manfaat, bukan hanya ciri</span><span>20 poin</span></div>
+        <div class="rubrik-row"><span>Jujur, tanpa klaim berlebihan</span><span>20 poin</span></div>
+        <div class="rubrik-row"><span>3–5 hashtag yang nyambung</span><span>20 poin</span></div>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============ SLIDE 12 : PENUTUP ============ -->
+<section class="slide" data-theme="peach">
+  <div class="deco bob" style="top:16%;right:8%;width:30px;height:30px">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 2v20M2 12h20"/></svg>
+  </div>
+  <div class="s-end wrap" style="display:contents"><div class="wrap">
+    <div>
+      <span class="kicker anim" style="--d:0"><i data-lucide="message-circle-heart"></i> Refleksi &amp; Penutup</span>
+      <h2 class="title anim" style="--d:1">Sebelum pulang, <span class="hl p">ayo curhat dikit!</span></h2>
+      <div class="refl">
+        <div class="refl-item anim" style="--d:2"><div class="rnum r1">1</div>
+          <p>Apa saja tiga K dalam Rumus 3K?</p></div>
+        <div class="refl-item anim" style="--d:3"><div class="rnum r2">2</div>
+          <p>Jurus kait mana yang paling cocok untuk produk kelompokmu?</p></div>
+        <div class="refl-item anim" style="--d:4"><div class="rnum r3">3</div>
+          <p>Ubah satu ciri produkmu menjadi manfaat, sekarang juga!</p></div>
+      </div>
+      <div class="end-btn anim" style="--d:5">
+        <button class="btn sun" id="partyBtn"><i data-lucide="party-popper"></i> Rayakan Hari Ini!</button>
+        <a class="btn ghost" href="poster.html"><i data-lucide="arrow-right"></i> Pertemuan 7: Poster</a>
+        <a class="btn ghost" href="silabus.html"><i data-lucide="book-open"></i> Lihat Silabus</a>
+      </div>
+    </div>
+    <div class="end-art anim" style="--d:3">
+      <div class="quote">
+        <h3>Foto membuat orang melirik, caption membuat orang membeli.</h3>
+        <p>Pertemuan berikutnya: <b>Desain Poster Promosi</b>. Bawa foto produk dan caption terbaikmu, ya!</p>
+      </div>
+      <span class="fchip fc1 bob"><i data-lucide="magnet"></i></span>
+      <span class="fchip fc2 bob" style="animation-delay:.7s"><i data-lucide="gift"></i></span>
+      <span class="fchip fc4 bob" style="animation-delay:1.4s"><i data-lucide="megaphone"></i></span>
+      <span class="fchip fc5 bob" style="animation-delay:2s"><i data-lucide="sparkles"></i></span>
+    </div>
+  </div></div>
+</section>
+
+<!-- NAV -->
+<div class="navbar-bg"></div>
+<div class="pagenum"><span id="cur">01</span> / <span id="tot">12</span></div>
+<div class="dots" id="dots"></div>
+<div class="navbtns">
+  <button class="nav" id="prev" aria-label="Sebelumnya"><i data-lucide="chevron-left"></i></button>
+  <button class="nav" id="next" aria-label="Berikutnya"><i data-lucide="chevron-right"></i></button>
+</div>
+<canvas id="confetti"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.454.0/dist/umd/lucide.min.js"></script>
+<script>
+/* ================= NAVIGASI ================= */
+const slides=[...document.querySelectorAll('.slide')];
+const dotsBox=document.getElementById('dots');
+let cur=0;
+slides.forEach((_,i)=>{
+  const d=document.createElement('button');
+  d.className='dot'+(i===0?' on':'');d.title='Slide '+(i+1);
+  d.onclick=()=>go(i);dotsBox.appendChild(d);
+});
+const dots=[...dotsBox.children];
+document.getElementById('tot').textContent=String(slides.length).padStart(2,'0');
+function go(i){
+  cur=Math.max(0,Math.min(slides.length-1,i));
+  slides.forEach((s,k)=>s.classList.toggle('active',k===cur));
+  slides[cur].scrollTop=0;
+  dots.forEach((d,k)=>d.classList.toggle('on',k===cur));
+  document.getElementById('cur').textContent=String(cur+1).padStart(2,'0');
+  document.getElementById('bar').style.width=((cur+1)/slides.length*100)+'%';
+  document.getElementById('prev').disabled=cur===0;
+  document.getElementById('next').disabled=cur===slides.length-1;
+}
+document.getElementById('prev').onclick=()=>go(cur-1);
+document.getElementById('next').onclick=()=>go(cur+1);
+addEventListener('keydown',e=>{
+  if(e.target.closest&&e.target.closest('input,textarea,select'))return;
+  if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();go(cur+1)}
+  if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(cur-1)}
+});
+let tx=0,ty=0,txSkip=false;
+addEventListener('touchstart',e=>{
+  tx=e.touches[0].clientX;ty=e.touches[0].clientY;
+  txSkip=!!e.target.closest('.picks,.hscroll,input[type=range]');
+},{passive:true});
+addEventListener('touchend',e=>{
+  if(txSkip)return;
+  const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;
+  // hanya geser mendatar yang jelas, supaya scroll ke bawah tidak ikut pindah slide
+  if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5) dx<0?go(cur+1):go(cur-1);
+},{passive:true});
+go(+location.hash.slice(1)||0);
+
+const LET=['A','B','C'];
+const QUIZ_MSG=["Sempurna! Kamu sudah jago menulis caption!","Hebat! Sedikit lagi menuju sempurna!","Bagus! Ayo bahas lagi soal yang keliru bareng teman sebangku.","Tidak apa-apa — belajar memang proses. Coba ulangi, ya!"];
+
+/* ================= PEMANASAN : SCROLL ATAU BERHENTI ================= */
+const SC=[
+  {acc:'warung.bu.sri',icon:'cup-soda',bg:'var(--sky2)',cap:'Halo semua, selamat pagi, semoga sehat selalu, hari ini kami mau',a:0,
+   why:'Pembukanya hanya salam panjang. Belum ada alasan untuk berhenti, jadi kebanyakan orang langsung scroll.'},
+  {acc:'kriuk.bersama',icon:'cookie',bg:'var(--peach2)',cap:'Uang jajan tinggal Rp5.000 tapi masih lapar? Tenang, ini camilan',a:1,
+   why:'Pertanyaannya pas dengan masalah anak sekolah. Pembaca merasa "itu aku!" dan ingin tahu lanjutannya.'},
+  {acc:'rajut.mungil',icon:'gift',bg:'var(--lav2)',cap:'Produk kami bagus. Silakan dibeli.',a:0,
+   why:'Terlalu umum. "Bagus" seperti apa? Tidak ada yang membuat penasaran.'},
+  {acc:'roti.bakar.7a',icon:'sandwich',bg:'var(--butter2)',cap:'Kenapa roti bakar ini selalu habis sebelum jam 10 pagi?',a:1,
+   why:'Membuat penasaran! Orang ingin tahu rahasianya, jadi mereka berhenti dan membaca sampai habis.'}
+];
+let scI=0,scScore=0;
+function renderSc(){
+  const s=SC[scI];
+  document.getElementById('scName').innerHTML=`${s.acc}<small>Usaha siswa · contoh</small>`;
+  document.getElementById('scImg').style.background=s.bg;
+  document.getElementById('scIc').innerHTML=`<i data-lucide="${s.icon}"></i>`;
+  document.getElementById('scCap').innerHTML=`<b>${s.acc}</b> ${s.cap}<span class="more">... selengkapnya</span>`;
+  document.getElementById('scRound').textContent=`Caption ${scI+1} dari ${SC.length}`;
+  document.getElementById('scFb').classList.add('hidden');
+  document.getElementById('scNext').classList.add('hidden');
+  document.querySelectorAll('#scBtns .sc-btn').forEach(b=>{b.disabled=false;b.classList.remove('pick')});
+  window.lucide&&lucide.createIcons();
+}
+document.querySelectorAll('#scBtns .sc-btn').forEach(b=>b.onclick=()=>{
+  const s=SC[scI],v=+b.dataset.v;
+  document.querySelectorAll('#scBtns .sc-btn').forEach(x=>x.disabled=true);
+  b.classList.add('pick');
+  if(v===s.a){scScore++;celebrate(50)}
+  const fb=document.getElementById('scFb');
+  fb.querySelector('span').innerHTML=`<b>Kata pembina: ${s.a?'kaitnya kuat, berhenti!':'kaitnya lemah, scroll.'}</b> ${s.why}`;
+  fb.classList.remove('hidden');
+  const nx=document.getElementById('scNext');
+  nx.querySelector('span').textContent=scI===SC.length-1?'Lihat Hasil':'Caption Berikutnya';
+  nx.classList.remove('hidden');
+});
+document.getElementById('scNext').onclick=()=>{
+  scI++;
+  if(scI<SC.length){renderSc();return}
+  document.getElementById('scShell').classList.add('hidden');
+  document.getElementById('scScore').textContent=scScore;
+  document.getElementById('scDone').classList.remove('hidden');
+  celebrate(200);
+};
+renderSc();
+
+/* ================= BATTLE KAIT ================= */
+const BT=[
+  {prod:['cup-soda','Es Teh Jumbo'],a:'Es teh dijual di sini.',b:'Haus habis olahraga? Ini penyelamatmu!',win:1,
+   why:'B memakai jurus <b>bertanya</b> dan <b>menyebut masalah</b> (haus). A hanya memberi informasi tanpa alasan untuk berhenti.'},
+  {prod:['flame','Keripik Pedas'],a:'3 dari 5 temanmu menyerah di level 5. Kamu berani?',b:'Keripik pedas enak dan gurih.',win:0,
+   why:'A memakai <b>angka</b> dan <b>tantangan</b>. Kata "enak dan gurih" di B terlalu umum, semua penjual bilang begitu.'},
+  {prod:['cake-slice','Bolu Pandan'],a:'Rahasia bolu yang tetap lembut sampai sore...',b:'SEGERA BELI!!! BOLU TERENAK SEDUNIA, BIKIN PINTAR!!!',win:0,
+   why:'A <b>membuat penasaran</b> dengan jujur. B berteriak dengan huruf kapital dan berbohong: bolu tidak bisa membuat orang pintar.'},
+  {prod:['key-round','Gantungan Kunci Rajut'],a:'Kami menjual gantungan kunci rajut.',b:'Tasmu polos? Kasih teman kecil yang lucu.',win:1,
+   why:'B <b>menyebut masalah</b> (tas polos) dan langsung memberi bayangan hasilnya. A terasa seperti pengumuman biasa.'}
+];
+let btI=0,btV=[0,0],btShown=false;
+function renderBt(){
+  const r=BT[btI];
+  document.getElementById('btProd').innerHTML=`<i data-lucide="${r.prod[0]}"></i> ${r.prod[1]}`;
+  document.getElementById('btRound').textContent=`Ronde ${btI+1} dari ${BT.length}`;
+  document.getElementById('btHookA').textContent=`"${r.a}"`;
+  document.getElementById('btHookB').textContent=`"${r.b}"`;
+  btV=[0,0];btShown=false;
+  ['btA','btB'].forEach(id=>document.getElementById(id).classList.remove('win','lose'));
+  document.getElementById('btWhy').classList.add('hidden');
+  document.getElementById('btReveal').classList.remove('hidden');
+  document.getElementById('btNext').classList.add('hidden');
+  renderVotes();
+  window.lucide&&lucide.createIcons();
+}
+function renderVotes(){
+  const t=Math.max(1,btV[0]+btV[1]);
+  document.getElementById('btNA').textContent=btV[0];
+  document.getElementById('btNB').textContent=btV[1];
+  document.getElementById('btBarA').style.width=(btV[0]/t*100)+'%';
+  document.getElementById('btBarB').style.width=(btV[1]/t*100)+'%';
+}
+document.querySelectorAll('.bt-plus').forEach(b=>b.onclick=()=>{btV[+b.dataset.s]++;renderVotes()});
+document.getElementById('btReveal').onclick=()=>{
+  const r=BT[btI];
+  document.getElementById(r.win?'btB':'btA').classList.add('win');
+  document.getElementById(r.win?'btA':'btB').classList.add('lose');
+  const kelas=btV[0]===btV[1]?null:(btV[1]>btV[0]?1:0);
+  const w=document.getElementById('btWhy');
+  w.querySelector('span').innerHTML=`<b>Pembina memilih ${'AB'[r.win]}.</b> ${r.why}`+
+    (kelas===null?'':kelas===r.win?' <b>Kelas kompak, pilihannya sama!</b>':' Kelas memilih yang lain. Ayo diskusikan!');
+  w.classList.remove('hidden');
+  document.getElementById('btReveal').classList.add('hidden');
+  const nx=document.getElementById('btNext');
+  nx.querySelector('span').textContent=btI===BT.length-1?'Ulangi dari Awal':'Ronde Berikutnya';
+  nx.classList.remove('hidden');
+  celebrate(kelas===r.win?120:50);
+};
+document.getElementById('btNext').onclick=()=>{btI=(btI+1)%BT.length;renderBt()};
+renderBt();
+
+/* ================= CIRI -> MANFAAT ================= */
+const CM={
+  esteh:{icon:'cup-soda',name:'Es Teh Jumbo',items:[
+    ['Gelas 700 ml','Cukup untuk berdua, atau bikin kamu segar sampai jam pulang.'],
+    ['Es batu dari air matang','Lebih aman diminum, perut tetap tenang.'],
+    ['Harga Rp4.000','Uang jajanmu masih sisa untuk ditabung.'],
+    ['Tutup segel rapat','Tidak tumpah walau dibawa naik sepeda.']]},
+  keripik:{icon:'cookie',name:'Keripik Pisang',items:[
+    ['Tanpa pengawet','Aman untuk bekal, adikmu juga boleh ikut makan.'],
+    ['Kemasan zip lock','Bisa ditutup lagi, besok masih renyah.'],
+    ['Pisang dari petani sekitar','Kamu ikut membantu petani di dekat sekolah.'],
+    ['Isi 100 gram','Pas dibagi bareng 3–4 teman saat istirahat.']]},
+  boba:{icon:'milk',name:'Boba Gula Aren',items:[
+    ['Boba dimasak setiap pagi','Kenyal dan segar, bukan sisa kemarin.'],
+    ['Manisnya bisa dipilih','Kamu atur sendiri: normal atau sedikit manis.'],
+    ['Gelas bisa dipakai ulang','Bisa dipakai lagi untuk minum di rumah, sampah plastik berkurang.']]}
+};
+let cmK='esteh';const cmDone=new Set();
+const cmTabs=document.getElementById('cmTabs');
+cmTabs.innerHTML=Object.entries(CM).map(([k,p])=>`<button class="tg" data-k="${k}"><i data-lucide="${p.icon}"></i> ${p.name}</button>`).join('');
+cmTabs.querySelectorAll('.tg').forEach(b=>b.onclick=()=>{cmK=b.dataset.k;renderCm(-1)});
+document.getElementById('cmT').textContent=Object.values(CM).reduce((n,p)=>n+p.items.length,0);
+function renderCm(sel){
+  const p=CM[cmK];
+  cmTabs.querySelectorAll('.tg').forEach(b=>b.classList.toggle('on',b.dataset.k===cmK));
+  const box=document.getElementById('cmChips');
+  box.innerHTML=p.items.map(([c],i)=>`<button class="cm-chip${i===sel?' on':''}${cmDone.has(cmK+i)?' done':''}" data-i="${i}"><i data-lucide="${cmDone.has(cmK+i)?'circle-check':'tag'}"></i>${c}</button>`).join('');
+  box.querySelectorAll('.cm-chip').forEach(b=>b.onclick=()=>{
+    const i=+b.dataset.i;cmDone.add(cmK+i);renderCm(i);
+    document.getElementById('cmN').textContent=cmDone.size;
+    if(cmDone.size===11&&!renderCm.cheered){renderCm.cheered=true;celebrate(200)}
+  });
+  const out=document.getElementById('cmOut');
+  if(sel<0){
+    out.innerHTML=`<div class="cm-box cm-ciri"><div class="lb"><i data-lucide="tag"></i> Ciri</div><p>Klik salah satu ciri dulu...</p></div>
+      <div class="cm-arrow"><i data-lucide="arrow-down"></i> jadi kamu bisa...</div>
+      <div class="cm-box cm-manf" style="opacity:.5"><div class="lb"><i data-lucide="gift"></i> Manfaat</div><p>?</p></div>`;
+  }else{
+    const [c,m]=p.items[sel];
+    out.innerHTML=`<div class="cm-box cm-ciri"><div class="lb"><i data-lucide="tag"></i> Ciri</div><p>${c}</p></div>
+      <div class="cm-arrow"><i data-lucide="arrow-down"></i> jadi kamu bisa...</div>
+      <div class="cm-box cm-manf cm-pop"><div class="lb"><i data-lucide="gift"></i> Manfaat</div><p>${m}</p></div>
+      <div class="cm-cap"><b>Di caption:</b> "${p.name} kami ${c.charAt(0).toLowerCase()+c.slice(1)}. ${m}"</div>`;
+  }
+  window.lucide&&lucide.createIcons();
+}
+renderCm(-1);
+
+/* ================= CAPTION BUILDER ================= */
+const CB={
+  esteh:{icon:'cup-soda',bg:'var(--sky2)',acc:'esteh.segar.7b',name:'Es Teh Jumbo',
+    k1:['Haus habis olahraga? Ini penyelamatmu!','Cuma Rp4.000, segarnya tahan sampai jam pulang.','Kenapa antrean di depan gerbang selalu panjang jam 12?'],
+    k2:[['Gelas jumbo 700 ml, esnya dari air matang. Segar dan aman diminum.',1],['Ada 3 rasa: original, lemon, dan leci. Pilih sesuai mood-mu.',1],['Es teh TERENAK SEDUNIA, dijamin bikin nilai ujian naik!',0]],
+    k3:['Mampir ke stan kami di depan gerbang, ya!','Pesan lewat akun usaha kami, ambil saat istirahat.','Tag teman yang selalu haus habis olahraga!'],
+    tags:[['#estehjumbo',1],['#minumansegar',1],['#jajanansekolah',1],['#pulangsekolah',1],['#kpop',0],['#giveawayiphone',0]]},
+  keripik:{icon:'cookie',bg:'var(--peach2)',acc:'kriuk.bersama',name:'Keripik Pisang',
+    k1:['Camilan sore yang bikin nagih? Ini dia!','3 dari 5 temanmu langsung nambah. Kamu kuat cuma satu?','Rahasia keripik pisang yang tetap renyah sampai besok...'],
+    k2:[['Tanpa pengawet, dikemas zip lock jadi tetap renyah.',1],['Pisangnya dari petani sekitar sekolah, digoreng setiap pagi.',1],['Makan keripik ini dijamin langsung kurus dan pintar!',0]],
+    k3:['Beli di kantin mulai besok, Rp5.000 per bungkus.','Kirim pesan ke akun usaha kami untuk pesan.','Simpan postingan ini biar tidak lupa!'],
+    tags:[['#keripikpisang',1],['#camilansehat',1],['#jajanansekolah',1],['#usahasiswa',1],['#viral',0],['#followforfollow',0]]}
+};
+const STEPS=[['k1','magnet','K1 Kait','Pilih kalimat pembuka yang membuat orang berhenti scroll.'],
+             ['k2','gift','K2 Nilai','Pilih manfaat untuk pembeli. Hati-hati dengan janji yang berlebihan!'],
+             ['k3','megaphone','K3 Ajakan','Pilih ajakan: pembeli harus melakukan apa?'],
+             ['tags','hash','Hashtag','Pilih 3–5 hashtag yang nyambung dengan produk.']];
+let cbK='esteh',cbStep=0,cb={k1:-1,k2:-1,k3:-1,tags:new Set()};
+const cbProds=document.getElementById('cbProds');
+cbProds.innerHTML=Object.entries(CB).map(([k,p])=>`<button class="tg" data-k="${k}"><i data-lucide="${p.icon}"></i> ${p.name}</button>`).join('');
+cbProds.querySelectorAll('.tg').forEach(b=>b.onclick=()=>{cbK=b.dataset.k;cbStep=0;cb={k1:-1,k2:-1,k3:-1,tags:new Set()};renderCb()});
+function renderCb(){
+  const p=CB[cbK];
+  cbProds.querySelectorAll('.tg').forEach(b=>b.classList.toggle('on',b.dataset.k===cbK));
+  const filled=[cb.k1>=0,cb.k2>=0,cb.k3>=0,cb.tags.size>0];
+  const stBox=document.getElementById('cbSteps');
+  stBox.innerHTML=STEPS.map(([k,icn,lab],i)=>`<button class="cb-step${i===cbStep?' on':''}${filled[i]?' filled':''}" data-i="${i}"><i data-lucide="${icn}"></i>${lab}<span class="okd"></span></button>`).join('');
+  stBox.querySelectorAll('.cb-step').forEach(b=>b.onclick=()=>{cbStep=+b.dataset.i;renderCb()});
+  const [key,,,hint]=STEPS[cbStep];
+  document.getElementById('cbHint').textContent=hint;
+  const ob=document.getElementById('cbOpts');
+  if(key==='tags'){
+    ob.innerHTML=`<div class="tagchips">${p.tags.map(([t],i)=>`<button class="tagchip${cb.tags.has(i)?' on':''}" data-i="${i}">${t}</button>`).join('')}</div>`;
+    ob.querySelectorAll('.tagchip').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;cb.tags.has(i)?cb.tags.delete(i):cb.tags.add(i);renderCb()});
+  }else{
+    const list=p[key].map(x=>Array.isArray(x)?x:[x,1]);
+    ob.innerHTML=`<div class="cb-opts">${list.map(([t,ok],i)=>`<button class="cb-opt${cb[key]===i?' on':''}${cb[key]===i&&!ok?' warn':''}" data-i="${i}">${t}</button>`).join('')}</div>`;
+    ob.querySelectorAll('.cb-opt').forEach(b=>b.onclick=()=>{
+      cb[key]=+b.dataset.i;
+      const okPick=key!=='k2'||p.k2[cb.k2][1];
+      if(okPick&&cbStep<3)cbStep++;
+      renderCb();
+    });
+  }
+  // preview
+  document.getElementById('cbAv').innerHTML=`<i data-lucide="store"></i>`;
+  document.getElementById('cbName').innerHTML=`${p.acc}<small>Akun usaha kelompok</small>`;
+  document.getElementById('cbImg').style.background=p.bg;
+  document.getElementById('cbIc').innerHTML=`<i data-lucide="${p.icon}"></i>`;
+  const seg=(cls,txt,ph)=>txt?`<span class="${cls}">${txt}</span>`:`<span class="ph">${ph}</span>`;
+  const tags=[...cb.tags].sort().map(i=>p.tags[i][0]).join(' ');
+  document.getElementById('cbCap').innerHTML=`<b>${p.acc}</b> `+
+    seg('seg-k1',cb.k1>=0&&p.k1[cb.k1],'[kait]')+' '+
+    seg('seg-k2',cb.k2>=0&&p.k2[cb.k2][0],'[nilai]')+' '+
+    seg('seg-k3',cb.k3>=0&&p.k3[cb.k3],'[ajakan]')+
+    (tags?`<br><span class="tags">${tags}</span>`:' <span class="ph">[hashtag]</span>');
+  // checks
+  const bad=[...cb.tags].filter(i=>!p.tags[i][1]).length;
+  const nTag=cb.tags.size;
+  const C=[
+    cb.k1>=0?['ok','Kait sudah ada']:['wait','Kait belum dipilih'],
+    cb.k2<0?['wait','Nilai belum dipilih']:p.k2[cb.k2][1]?['ok','Nilai jujur dan jelas']:['no','Nilai berlebihan, tidak jujur!'],
+    cb.k3>=0?['ok','Ajakan sudah ada']:['wait','Ajakan belum dipilih'],
+    nTag===0?['wait','Hashtag belum dipilih']:bad?['no',`${bad} hashtag tidak nyambung`]:nTag<3?['no','Tambah sampai 3–5 hashtag']:['ok',`${nTag} hashtag, semua nyambung`]
+  ];
+  const icon={ok:'circle-check',no:'circle-x',wait:'circle-dashed'};
+  document.getElementById('cbChecks').innerHTML=C.map(([s,t])=>`<div class="ck ${s}"><i data-lucide="${icon[s]}"></i>${t}</div>`).join('');
+  if(C.every(c=>c[0]==='ok')&&!renderCb['done_'+cbK]){renderCb['done_'+cbK]=true;celebrate(180)}
+  window.lucide&&lucide.createIcons();
+}
+renderCb();
+
+/* ================= GAME HASHTAG ================= */
+const HS=[
+  ['#keripikpisang',1,'Nyambung langsung dengan produknya.'],
+  ['#bts',0,'Menumpang nama artis yang tidak ada hubungannya. Pembaca merasa tertipu.'],
+  ['#camilanbandung',1,'Menyebut jenis produk dan lokasi. Pembeli di sekitar mudah menemukan.'],
+  ['#giveawayiphone',0,'Hadiah palsu! Ini termasuk menipu pembeli.'],
+  ['#jajanansekolah',1,'Cocok dengan target market: anak sekolah.'],
+  ['#viral',0,'Terlalu umum. Jutaan postingan memakainya, jadi postinganmu tenggelam.'],
+  ['#usahasiswa',1,'Menunjukkan bahwa ini usaha siswa. Jujur dan menarik.'],
+  ['#followforfollow',0,'Tidak ada hubungannya dengan keripik. Yang datang bukan calon pembeli.'],
+  ['#oleholehbandung',1,'Cocok untuk orang yang mencari camilan khas Bandung.'],
+  ['#makanmakanmakanenakbanget',0,'Terlalu panjang dan tidak dicari orang.']
+];
+let hsDone=0;
+document.getElementById('hsGrid').innerHTML=HS.map(([t],i)=>`<div class="hs-card" data-i="${i}"><span class="ht">${t}</span>
+  <button class="hb" data-v="1"><i data-lucide="check"></i> Pakai</button><button class="hb" data-v="0"><i data-lucide="x"></i> Buang</button></div>`).join('');
+document.querySelectorAll('#hsGrid .hs-card').forEach(card=>{
+  const [,ok,why]=HS[+card.dataset.i];
+  card.querySelectorAll('.hb').forEach(b=>b.onclick=()=>{
+    if(+b.dataset.v===ok){
+      card.classList.add(ok?'keep':'toss');
+      card.querySelectorAll('.hb').forEach(x=>{x.disabled=true;if(x!==b)x.classList.add('hidden')});
+      card.insertAdjacentHTML('beforeend',`<span class="hw">${why}</span>`);
+      hsDone++;document.getElementById('hsDone').textContent=hsDone;celebrate(40);
+      if(hsDone===HS.length){document.getElementById('hsMsg').textContent='Hebat! Dari 5 hashtag yang pas, pilih 3–5 saja untuk caption-mu.';celebrate(220)}
+    }else{
+      b.classList.add('shake');setTimeout(()=>b.classList.remove('shake'),350);
+    }
+  });
+});
+
+/* ================= KUIS ================= */
+const quizData=[
+  {q:"Rumus 3K untuk caption adalah...", opts:[
+    "Kait, Kasih Nilai, Kasih Ajakan",
+    "Kata, Kalimat, Komentar",
+    "Kirim, Kirim, Kirim"],a:0,
+    why:"Betul! Kait untuk berhenti scroll, Nilai untuk alasan membeli, Ajakan untuk langkah berikutnya."},
+  {q:"Kalimat kait mana yang paling kuat?", opts:[
+    "Selamat pagi semua, semoga sehat selalu.",
+    "Uang jajan tinggal Rp5.000 tapi masih lapar?",
+    "Kami menjual makanan."],a:1,
+    why:"Tepat! Pertanyaan itu menyebut masalah pembaca, jadi mereka merasa \"itu aku!\"."},
+  {q:"Mana yang merupakan MANFAAT, bukan ciri?", opts:[
+    "Kemasan zip lock",
+    "Berat 100 gram",
+    "Bisa ditutup lagi, jadi besok masih renyah"],a:2,
+    why:"Iya! Zip lock dan 100 gram adalah ciri. Manfaat menjelaskan untungnya untuk pembeli."},
+  {q:"Berapa hashtag yang sebaiknya dipakai?", opts:[
+    "3–5 hashtag yang nyambung dengan produk",
+    "30 hashtag apa saja yang sedang ramai",
+    "Nama artis terkenal supaya banyak yang lihat"],a:0,
+    why:"Betul! Sedikit tapi nyambung membuat postingan ditemukan oleh calon pembeli yang tepat."},
+  {q:"Caption keripik: \"Dijamin langsung kurus dan pintar!\" Apa masalahnya?", opts:[
+    "Kalimatnya terlalu pendek",
+    "Janjinya tidak jujur dan bisa menipu pembeli",
+    "Tidak ada masalah, justru bagus"],a:1,
+    why:"Tepat! Promosi harus jujur. Klaim berlebihan membuat pembeli kecewa dan tidak percaya lagi."}
+];
+
+const quizArea=document.getElementById('quizArea');
+let qi=0,score=0;
+function renderQuiz(){
+  if(qi>=quizData.length){renderDone();return}
+  const d=quizData[qi];
+  quizArea.innerHTML=`
+    <div class="q-card card">
+      <div class="q-meta">
+        <span class="q-badge">Soal ${qi+1} dari ${quizData.length}</span>
+        <span class="q-score"><i data-lucide="star"></i> Skor: ${score}</span>
+      </div>
+      <h3 class="q-q">${d.q}</h3>
+      <div class="q-opts">
+        ${d.opts.map((o,i)=>`<button class="opt" data-i="${i}"><span class="letter">${LET[i]}</span>${o}</button>`).join('')}
+      </div>
+      <div class="q-foot hidden" id="qFoot">
+        <div class="q-why" id="qWhy"></div>
+        <button class="btn mint" id="qNext">${qi===quizData.length-1?'Lihat Hasil':'Lanjut'} <i data-lucide="chevron-right"></i></button>
+      </div>
+    </div>`;
+  window.lucide&&lucide.createIcons();
+  quizArea.querySelectorAll('.opt').forEach(btn=>{
+    btn.onclick=()=>{
+      const pick=+btn.dataset.i;
+      quizArea.querySelectorAll('.opt').forEach(b=>b.disabled=true);
+      quizArea.querySelector(`.opt[data-i="${d.a}"]`).classList.add('good');
+      if(pick===d.a){score++;celebrate(60)}
+      else btn.classList.add('bad');
+      document.getElementById('qWhy').innerHTML=`<i data-lucide="${pick===d.a?'circle-check':'info'}"></i><span>${d.why}</span>`;
+      document.getElementById('qFoot').classList.remove('hidden');
+      window.lucide&&lucide.createIcons();
+      document.getElementById('qNext').onclick=()=>{qi++;renderQuiz()};
+    };
+  });
+}
+function renderDone(){
+  let msg;
+  if(score===5)msg=QUIZ_MSG[0];
+  else if(score===4)msg=QUIZ_MSG[1];
+  else if(score===3)msg=QUIZ_MSG[2];
+  else msg=QUIZ_MSG[3];
+  quizArea.innerHTML=`
+    <div class="q-card card q-done">
+      <div class="tro"><i data-lucide="trophy"></i></div>
+      <h3>Kuis Selesai!</h3>
+      <div class="big">${score} / 5</div>
+      <p>${msg}</p>
+      <button class="btn" id="qRetry"><i data-lucide="rotate-ccw"></i> Ulangi Kuis</button>
+    </div>`;
+  window.lucide&&lucide.createIcons();
+  celebrate(180);
+  document.getElementById('qRetry').onclick=()=>{qi=0;score=0;renderQuiz()};
+}
+renderQuiz();
+
+/* ================= KONFETI ================= */
+const cvs=document.getElementById('confetti'),ctx=cvs.getContext('2d');
+const COLORS=['#FF7E67','#FFC531','#3FBF8F','#FFA8C5','#B9A7F2','#7FD8A6'];
+let parts=[],raf=null;
+function sizeC(){cvs.width=innerWidth;cvs.height=innerHeight}
+sizeC();addEventListener('resize',sizeC);
+function celebrate(n=140){
+  for(let i=0;i<n;i++){
+    parts.push({
+      x:Math.random()*cvs.width,y:-30-Math.random()*cvs.height*.35,
+      vx:-1.6+Math.random()*3.2,vy:2.2+Math.random()*3.4,
+      w:9+Math.random()*9,h:5+Math.random()*6,
+      rot:Math.random()*Math.PI,vr:-.16+Math.random()*.32,
+      ph:Math.random()*Math.PI*2,
+      c:COLORS[Math.floor(Math.random()*COLORS.length)],
+      shape:Math.floor(Math.random()*3)
+    });
+  }
+  if(!raf)tick();
+}
+function tick(){
+  ctx.clearRect(0,0,cvs.width,cvs.height);
+  parts.forEach(p=>{
+    p.x+=p.vx;p.y+=p.vy;p.rot+=p.vr;p.ph+=.1;p.vy+=.015;
+    ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);
+    ctx.scale(1,Math.abs(Math.sin(p.ph))*.85+.15);
+    ctx.fillStyle=p.c;
+    if(p.shape===0){ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h)}
+    else if(p.shape===1){ctx.beginPath();ctx.arc(0,0,p.h,0,7);ctx.fill()}
+    else{ctx.beginPath();ctx.moveTo(0,-p.h);ctx.lineTo(p.w/2,p.h/2);ctx.lineTo(-p.w/2,p.h/2);ctx.closePath();ctx.fill()}
+    ctx.restore();
+  });
+  parts=parts.filter(p=>p.y<cvs.height+40);
+  if(parts.length)raf=requestAnimationFrame(tick);
+  else{raf=null;ctx.clearRect(0,0,cvs.width,cvs.height)}
+}
+document.getElementById('partyBtn').onclick=()=>{celebrate(260);setTimeout(()=>celebrate(160),700)};
+
+window.lucide&&lucide.createIcons();
+</script>
+</body>
+</html>

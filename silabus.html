@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Silabus Digital Marketing — Ekstrakurikuler SMP Kelas 7</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#453A4E; --ink-soft:#6B5F75; --cream:#FDF7EF;
+    --peach:#FFF1E8; --peach2:#FFCBB5;
+    --mint:#EAF7F0;  --mint2:#BFEAD2;
+    --butter:#FFF6DF;--butter2:#FFE39A;
+    --lav:#F3F0FC;   --lav2:#DCD2F7;
+    --pink:#FFF0F5;  --pink2:#FFC9DC;
+    --sky:#E9F1FB;   --sky2:#C5DCF2;
+    --coral:#FF7E67; --teal:#3FBF8F; --sun:#FFC531;
+    --shadow:6px 6px 0 var(--ink);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--ink);background:var(--cream);line-height:1.55}
+  h1,h2,h3,h4{font-family:'Fredoka',sans-serif;line-height:1.15}
+  a{color:inherit}
+  .page{max-width:1180px;margin:0 auto;padding:48px max(24px,env(safe-area-inset-right,0px)) 80px max(24px,env(safe-area-inset-left,0px))}
+
+  .kicker{display:inline-flex;align-items:center;gap:8px;font-family:'Fredoka';font-weight:600;font-size:13px;letter-spacing:.14em;text-transform:uppercase;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:8px 18px;box-shadow:4px 4px 0 var(--ink)}
+  .kicker svg{width:16px;height:16px}
+  .hl{background:linear-gradient(transparent 62%,var(--butter2) 62%);padding:0 3px;border-radius:3px}
+  .card{background:#fff;border:3px solid var(--ink);border-radius:20px;box-shadow:var(--shadow)}
+  .btn{display:inline-flex;align-items:center;gap:9px;font-family:'Fredoka';font-weight:600;font-size:15px;color:var(--ink);background:var(--coral);border:3px solid var(--ink);border-radius:14px;padding:10px 18px;box-shadow:4px 4px 0 var(--ink);cursor:pointer;transition:.15s;text-decoration:none}
+  .btn svg{width:18px;height:18px}
+  .btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .btn.ghost{background:#fff}
+
+  /* ===== HERO ===== */
+  .hero{display:grid;grid-template-columns:1.3fr .7fr;gap:36px;align-items:center}
+  .hero h1{font-size:clamp(34px,4.4vw,56px);font-weight:700;margin:18px 0 12px}
+  .hero p.lead{font-size:clamp(15px,1.3vw,18px);color:var(--ink-soft);font-weight:500;max-width:620px}
+  .facts{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .fact{border:3px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 var(--ink);padding:14px 16px}
+  .fact b{display:block;font-family:'Fredoka';font-size:30px;line-height:1}
+  .fact span{font-size:13px;font-weight:700}
+  .f1{background:var(--peach2)}.f2{background:var(--butter2)}.f3{background:var(--mint2)}.f4{background:var(--lav2)}
+
+  /* ===== PROGRES ===== */
+  .progress{margin-top:36px;padding:18px 22px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+  .progress h3{font-size:18px;flex:0 0 auto}
+  .ptrack{flex:1;min-width:200px;height:18px;border:2.5px solid var(--ink);border-radius:999px;overflow:hidden;background:var(--cream);display:flex}
+  .pfill{background:var(--teal);height:100%}
+  .ptxt{font-family:'Fredoka';font-weight:700;font-size:15px}
+  .filters{display:flex;gap:8px;flex-wrap:wrap}
+  .fbtn{font-family:'Fredoka';font-weight:600;font-size:14px;border:2.5px solid var(--ink);border-radius:999px;padding:6px 14px;background:#fff;cursor:pointer;box-shadow:3px 3px 0 var(--ink);color:var(--ink)}
+  .fbtn.on{background:var(--ink);color:#fff}
+
+  /* ===== UNIT ===== */
+  section.unit{margin-top:44px}
+  .unit-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+  .unit-head .num{font-family:'Fredoka';font-weight:700;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+  .unit-head h2{font-size:clamp(24px,2.6vw,32px);margin-top:4px}
+  .unit-head p{font-size:14.5px;font-weight:500;color:var(--ink-soft);max-width:560px;margin-top:4px}
+  .unit-tag{font-family:'Fredoka';font-weight:600;font-size:13px;border:2.5px solid var(--ink);border-radius:999px;padding:5px 12px}
+  .meetings{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+  .mt{background:#fff;border:3px solid var(--ink);border-radius:20px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+  .mt.done{background:var(--mint)}
+  .mt-top{display:flex;align-items:flex-start;gap:14px}
+  .mnum{flex:0 0 52px;height:52px;border-radius:16px;border:3px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:22px}
+  .mt-top h3{font-size:19px}
+  .mt-top .goal{font-size:13.8px;font-weight:600;color:var(--ink-soft);margin-top:3px}
+  .status{margin-left:auto;flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;font-family:'Fredoka';font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;border:2.5px solid var(--ink);border-radius:999px;padding:4px 10px;white-space:nowrap}
+  .status svg{width:13px;height:13px}
+  .status.done{background:var(--teal);color:#fff}
+  .status.todo{background:var(--butter2)}
+  .mt h4{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+  .acts{list-style:none;display:flex;flex-direction:column;gap:4px}
+  .acts li{display:flex;gap:8px;font-size:14px;font-weight:500;line-height:1.5}
+  .acts li svg{width:16px;height:16px;flex:0 0 16px;margin-top:3px;color:var(--coral)}
+  .out{display:flex;gap:9px;align-items:flex-start;background:var(--butter);border:2.5px solid var(--ink);border-radius:12px;padding:9px 12px;font-size:13.5px;font-weight:600;line-height:1.5}
+  .out svg{width:17px;height:17px;flex:0 0 17px;margin-top:2px}
+  .mt-foot{margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding-top:4px}
+  .mt-foot .file{font-size:12.5px;font-weight:700;color:var(--ink-soft);font-family:ui-monospace,Menlo,monospace}
+  .mt-foot .btn{font-size:14px;padding:7px 14px;background:var(--sun)}
+  .u1 .mnum,.u1 .unit-tag{background:var(--peach2)}
+  .u2 .mnum,.u2 .unit-tag{background:var(--butter2)}
+  .u3 .mnum,.u3 .unit-tag{background:var(--sky2)}
+  .u4 .mnum,.u4 .unit-tag{background:var(--pink2)}
+
+  /* ===== RUBRIK & CATATAN ===== */
+  .twocol{margin-top:48px;display:grid;grid-template-columns:1.1fr .9fr;gap:24px;align-items:start}
+  .box{padding:22px 24px}
+  .box h2{font-size:24px;display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .box h2 svg{width:22px;height:22px;color:var(--coral)}
+  .box > p{font-size:14.5px;font-weight:500;color:var(--ink-soft);margin-bottom:12px}
+  .tbl{overflow-x:auto}
+  table{width:100%;border-collapse:collapse;min-width:440px}
+  th,td{text-align:left;padding:9px 10px;border-top:2px dashed rgba(69,58,78,.22);font-size:13.8px;vertical-align:top}
+  th{font-family:'Fredoka';font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);border-top:none}
+  td b{font-family:'Fredoka';font-weight:600}
+  td.pts{font-family:'Fredoka';font-weight:700;color:var(--coral);white-space:nowrap}
+  .notes{list-style:none;display:flex;flex-direction:column;gap:2px}
+  .notes li{display:flex;gap:10px;font-size:14px;font-weight:600;line-height:1.5;padding:8px 0;border-top:2px dashed rgba(69,58,78,.2)}
+  .notes li:first-child{border-top:none}
+  .notes li svg{width:18px;height:18px;flex:0 0 18px;margin-top:2px;color:var(--teal)}
+  .notes li.warn svg{color:var(--coral)}
+  .flow{margin-top:18px;background:var(--lav);border:3px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 var(--ink);padding:16px 18px}
+  .flow h3{font-size:17px;margin-bottom:10px}
+  .flow-steps{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13px;font-weight:700}
+  .flow-steps span.s{background:#fff;border:2.5px solid var(--ink);border-radius:10px;padding:5px 10px}
+  .flow-steps svg{width:14px;height:14px}
+
+  footer{margin-top:48px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;font-size:13px;font-weight:600;color:var(--ink-soft)}
+
+  @media (max-width:900px){
+    .hero,.twocol{grid-template-columns:1fr}
+    .meetings{grid-template-columns:1fr}
+  }
+  @media (max-width:560px){
+    .page{padding-top:28px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+    .kicker{font-size:11px;padding:6px 12px}
+    .mt{padding:16px}
+    .mt-top{flex-wrap:wrap;gap:12px}
+    .mt-top>div:not(.mnum){flex:1;min-width:0}
+    .mnum{flex-basis:44px;height:44px;font-size:19px}
+    .status{margin-left:56px}
+    .box{padding:18px 16px}
+    .card,.mt,.fact{box-shadow:4px 4px 0 var(--ink)}
+  }
+</style>
+</head>
+<body>
+<main class="page">
+
+  <header class="hero">
+    <div>
+      <span class="kicker"><i data-lucide="book-open"></i> Silabus · Ekstrakurikuler · SMP Kelas 7</span>
+      <h1>Digital Marketing <span class="hl">untuk Pemula</span></h1>
+      <p class="lead">Selama satu semester, siswa belajar memperkenalkan dan menjual produk lewat internet dengan cara yang menarik dan jujur.
+      Setiap unit diakhiri dengan karya nyata, dan semua karya dikumpulkan menjadi <b>kampanye mini</b> di akhir semester.</p>
+    </div>
+    <div class="facts">
+      <div class="fact f1"><b>16</b><span>pertemuan</span></div>
+      <div class="fact f2"><b>4</b><span>unit</span></div>
+      <div class="fact f3"><b>2 × 40'</b><span>per pertemuan</span></div>
+      <div class="fact f4"><b>1</b><span>projek akhir</span></div>
+    </div>
+  </header>
+
+  <div class="progress card">
+    <h3>Media pembelajaran</h3>
+    <div class="ptrack"><div class="pfill" id="pfill"></div></div>
+    <span class="ptxt" id="ptxt"></span>
+    <div class="filters">
+      <button class="fbtn on" data-f="all">Semua</button>
+      <button class="fbtn" data-f="done">Sudah ada</button>
+      <button class="fbtn" data-f="todo">Belum dibuat</button>
+    </div>
+  </div>
+
+  <div id="units"></div>
+
+  <div class="twocol">
+    <div class="box card">
+      <h2><i data-lucide="clipboard-check"></i> Penilaian</h2>
+      <p>Ekstrakurikuler dinilai dari karya dan sikap, bukan ujian tertulis. Kuis di setiap pertemuan dipakai untuk mengecek pemahaman saja.</p>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>Komponen</th><th>Yang dinilai</th><th>Bobot</th></tr></thead>
+          <tbody>
+            <tr><td><b>Portofolio karya</b></td><td>Misi di akhir setiap pertemuan: kartu persona, foto produk, caption, poster, video, kalender konten.</td><td class="pts">40%</td></tr>
+            <tr><td><b>Projek akhir</b></td><td>Kampanye mini kelompok (P14–P16): kesesuaian dengan persona, kualitas konten, kejujuran promosi.</td><td class="pts">35%</td></tr>
+            <tr><td><b>Presentasi</b></td><td>Menjelaskan alasan setiap keputusan kampanye di pameran P16.</td><td class="pts">15%</td></tr>
+            <tr><td><b>Keaktifan &amp; kerja sama</b></td><td>Ikut berdiskusi, bermain, dan membagi peran dalam kelompok.</td><td class="pts">10%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="flow">
+        <h3>Alur setiap pertemuan (80 menit)</h3>
+        <div class="flow-steps">
+          <span class="s">Pemanasan 10'</span><i data-lucide="arrow-right"></i>
+          <span class="s">Konsep 20'</span><i data-lucide="arrow-right"></i>
+          <span class="s">Main &amp; coba 20'</span><i data-lucide="arrow-right"></i>
+          <span class="s">Misi 20'</span><i data-lucide="arrow-right"></i>
+          <span class="s">Kuis &amp; refleksi 10'</span>
+        </div>
+      </div>
+    </div>
+    <div class="box card">
+      <h2><i data-lucide="lightbulb"></i> Catatan untuk Pembina</h2>
+      <ul class="notes">
+        <li class="warn"><i data-lucide="shield-alert"></i><span>Siswa kelas 7 umumnya berusia 12–13 tahun. Banyak platform media sosial dan aplikasi AI baru boleh dipakai mulai 13 tahun. <b>Konten tidak diunggah dari akun pribadi siswa</b>; gunakan kertas, Canva, atau akun ekskul yang dikelola pembina.</span></li>
+        <li><i data-lucide="users"></i><span>Bentuk kelompok tetap 3–4 orang sejak P2. Kelompok yang sama memakai satu "usaha" sampai projek akhir, jadi karyanya saling menyambung.</span></li>
+        <li><i data-lucide="store"></i><span>Pakai produk nyata di sekitar sekolah: jajanan kantin, UMKM orang tua, atau karya siswa sendiri.</span></li>
+        <li><i data-lucide="smartphone"></i><span>Tidak semua siswa punya HP. Siapkan 1 HP per kelompok dan alternatif kertas untuk setiap misi.</span></li>
+        <li><i data-lucide="heart-handshake"></i><span>Tekankan kejujuran di setiap unit: foto, caption, dan iklan harus sesuai dengan produk aslinya.</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    <span>Silabus disusun untuk 16 pertemuan dalam satu semester. Urutan dan isi bisa disesuaikan dengan kalender sekolah.</span>
+    <a class="btn ghost" href="index.html"><i data-lucide="presentation"></i> Buka Pertemuan 1</a>
+  </footer>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.454.0/dist/umd/lucide.min.js"></script>
+<script>
+const UNITS=[
+  {n:1,cls:'u1',title:'Kenalan dengan Dunia Digital Marketing',tag:'Fondasi',
+   desc:'Siswa memahami apa itu digital marketing, siapa pembelinya, dan dasar-dasar desain.'},
+  {n:2,cls:'u2',title:'Membuat Konten yang Menjual',tag:'Produksi',
+   desc:'Siswa membuat foto, tulisan, poster, dan video pendek untuk produk kelompoknya.'},
+  {n:3,cls:'u3',title:'Menyebarkan & Mengukur',tag:'Strategi',
+   desc:'Siswa memilih tempat promosi, menyusun jadwal, membaca data, dan belajar etika.'},
+  {n:4,cls:'u4',title:'Projek Akhir: Kampanye Mini',tag:'Projek',
+   desc:'Kelompok merancang, membuat, dan memamerkan satu kampanye lengkap.'}
+];
+const MEETINGS=[
+  {n:1,u:1,title:'Kenalan dengan Digital Marketing',file:'index.html',
+   goal:'Menjelaskan arti digital marketing dan menemukan contohnya di sekitar.',
+   acts:['Ngobrol: pernah beli karena lihat di HP?','Membandingkan pemasaran dulu vs sekarang','Mengenal 4 cara memperkenalkan produk di internet'],
+   out:'Ide produk kelompok dan cara mempromosikannya.'},
+  {n:2,u:1,title:'Target Market: Siapa Pembeli Kita?',file:'target-market.html',
+   goal:'Menentukan kelompok pembeli berdasarkan umur, minat, dan lokasi.',
+   acts:['Tebak: produk ini cocok untuk siapa?','Memetakan pembeli dengan 3 pertanyaan: siapa, di mana, butuh apa','Game memasangkan produk dengan kelompok pembeli'],
+   out:'Peta target market untuk produk kelompok.'},
+  {n:3,u:1,title:'Desain Dasar dengan Canva',file:'canva-dasar.html',
+   goal:'Memakai warna, huruf, dan tata letak sederhana untuk membuat desain yang rapi.',
+   acts:['Mengenal tampilan Canva dan memilih template','Aturan dasar: 2 warna utama, 2 jenis huruf, ruang kosong','Praktik membuat kartu nama usaha'],
+   out:'Logo atau kartu nama usaha kelompok.'},
+  {n:4,u:1,title:'Persona & Desain',file:'pertemuan-2.html',
+   goal:'Membuat kartu persona dan memakainya untuk menentukan keputusan desain.',
+   acts:['Tebak: desain ini dibuat untuk siapa?','Mengisi 6 bagian kartu persona','Mesin Persona: pilih orangnya, lihat desainnya berubah'],
+   out:'Kartu persona dan satu desain untuk persona tersebut.'},
+  {n:5,u:2,title:'Foto Jualan Pakai HP & AI',file:'pertemuan-3.html',
+   goal:'Memotret produk dengan HP dan menyempurnakannya dengan AI secara jujur.',
+   acts:['6 jurus foto HP dan Studio Mini','Jalan A vs Jalan B: foto dari AI atau foto HP + AI','Rumus Prompt 5 Bagian dan Bank Prompt'],
+   out:'Foto produk sebelum & sesudah.'},
+  {n:6,u:2,title:'Caption yang Bikin Berhenti Scroll',file:'caption.html',
+   goal:'Menulis caption promosi dengan Rumus 3K: Kait, Kasih Nilai, Kasih Ajakan.',
+   acts:['Battle Kait: kalimat pembuka 3 detik','Menulis manfaat, bukan hanya ciri produk','Memilih hashtag yang tepat dan tidak berlebihan'],
+   out:'3 caption untuk foto produk dari P5.'},
+  {n:7,u:2,title:'Desain Poster Promosi',file:'poster.html',
+   goal:'Menggabungkan foto, judul, harga, dan ajakan dalam satu poster yang mudah dibaca.',
+   acts:['Membaca hierarki visual: mata melihat apa dulu?','Ukuran poster untuk feed, story, dan cetak','Praktik di Canva memakai foto dari P5'],
+   out:'Poster promo untuk feed (1:1) dan story (9:16).'},
+  {n:8,u:2,title:'Video Pendek I: Ide & Storyboard',file:'video-storyboard.html',
+   goal:'Merancang video promosi 15–30 detik dengan pembuka yang menarik.',
+   acts:['Membedah video viral: detik ke berapa kita tertarik?','Format video: tutorial, sebelum-sesudah, behind the scene','Menggambar storyboard 4 kotak'],
+   out:'Storyboard video kelompok.'},
+  {n:9,u:2,title:'Video Pendek II: Rekam & Edit di HP',file:'video-edit.html',
+   goal:'Merekam dan mengedit video sederhana dengan aplikasi di HP.',
+   acts:['Merekam dengan HP mendatar atau tegak sesuai platform','Memotong, menambah teks, dan musik bebas hak cipta','Mengecek video: jelas, singkat, ada ajakan'],
+   out:'Video promosi 15–30 detik.'},
+  {n:10,u:3,title:'Memilih Kanal Promosi',file:'kanal-promosi.html',
+   goal:'Memilih tempat promosi yang sesuai dengan kebiasaan online persona.',
+   acts:['Mengenal WhatsApp, Instagram, TikTok, marketplace, dan Google Maps','Game memasangkan persona dengan kanal','Menentukan 2 kanal utama untuk usaha kelompok'],
+   out:'Peta kanal promosi beserta alasannya.'},
+  {n:11,u:3,title:'Kalender Konten',file:'kalender-konten.html',
+   goal:'Menyusun jadwal posting satu minggu yang bervariasi.',
+   acts:['Kenapa posting harus rutin, bukan sekaligus banyak','Campuran konten: info, hiburan, promo','Menyusun kalender 7 hari di kertas atau Canva'],
+   out:'Kalender konten 1 minggu.'},
+  {n:12,u:3,title:'Membaca Data Sederhana',file:'data-sederhana.html',
+   goal:'Membaca views, suka, klik, dan pembelian untuk menilai keberhasilan promosi.',
+   acts:['Corong pembeli: lihat → suka → klik → beli','Menghitung persentase pembeli dari jumlah penonton','Detektif Data: konten mana yang paling berhasil?'],
+   out:'Analisis 2 konten contoh beserta saran perbaikan.'},
+  {n:13,u:3,title:'Etika & Keamanan Digital',file:'etika-digital.html',
+   goal:'Membedakan promosi jujur dari yang menipu dan menjaga data pribadi.',
+   acts:['Spot the Red Flag: clickbait, diskon palsu, testimoni palsu','Label iklan dan endorse','Privasi, hak cipta foto, dan batas usia aplikasi'],
+   out:'Daftar "Aturan Jujur" kelompok.'},
+  {n:14,u:4,title:'Projek: Rancang Kampanye',file:'projek-rancang.html',
+   goal:'Merencanakan kampanye mini dari persona sampai jadwal.',
+   acts:['Memilih tujuan kampanye: dikenal, dikunjungi, atau dibeli','Menyusun rencana: persona, pesan, kanal, jadwal','Konsultasi rencana dengan pembina'],
+   out:'Lembar rencana kampanye.'},
+  {n:15,u:4,title:'Projek: Produksi Konten',file:'projek-produksi.html',
+   goal:'Membuat semua konten kampanye sesuai rencana.',
+   acts:['Bagi peran: fotografer, penulis, desainer, editor video','Produksi foto, poster, caption, dan video','Cek bersama memakai daftar Aturan Jujur'],
+   out:'Paket konten kampanye lengkap.'},
+  {n:16,u:4,title:'Pameran & Presentasi Kampanye',file:'pameran.html',
+   goal:'Mempresentasikan kampanye dan menjelaskan alasan di balik setiap keputusan.',
+   acts:['Pameran karya ala galeri','Presentasi 3 menit per kelompok','Voting kampanye favorit dan refleksi satu semester'],
+   out:'Presentasi kampanye dan portofolio akhir.'}
+];
+
+function card(m){
+  const done=!!m.file;
+  return `<article class="mt ${done?'done':''}" data-s="${done?'done':'todo'}">
+    <div class="mt-top">
+      <div class="mnum">${m.n}</div>
+      <div><h3>${m.title}</h3><p class="goal">${m.goal}</p></div>
+      <span class="status ${done?'done':'todo'}"><i data-lucide="${done?'circle-check':'clock'}"></i>${done?'Sudah ada':'Belum dibuat'}</span>
+    </div>
+    <h4>Kegiatan</h4>
+    <ul class="acts">${m.acts.map(a=>`<li><i data-lucide="chevron-right"></i><span>${a}</span></li>`).join('')}</ul>
+    <div class="out"><i data-lucide="package-check"></i><span><b>Karya:</b> ${m.out}</span></div>
+    ${done?`<div class="mt-foot"><span class="file">${m.file}</span><a class="btn" href="${m.file}"><i data-lucide="presentation"></i> Buka slide</a></div>`:''}
+  </article>`;
+}
+document.getElementById('units').innerHTML=UNITS.map(u=>{
+  const ms=MEETINGS.filter(m=>m.u===u.n);
+  return `<section class="unit ${u.cls}">
+    <div class="unit-head">
+      <div><span class="num">Unit ${u.n} · Pertemuan ${ms[0].n}–${ms[ms.length-1].n}</span><h2>${u.title}</h2><p>${u.desc}</p></div>
+      <span class="unit-tag">${u.tag}</span>
+    </div>
+    <div class="meetings">${ms.map(card).join('')}</div>
+  </section>`;
+}).join('');
+
+const doneCount=MEETINGS.filter(m=>m.file).length;
+document.getElementById('pfill').style.width=(doneCount/MEETINGS.length*100)+'%';
+document.getElementById('ptxt').textContent=`${doneCount} dari ${MEETINGS.length} sudah ada`;
+
+document.querySelectorAll('.fbtn').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.fbtn').forEach(x=>x.classList.toggle('on',x===b));
+  const f=b.dataset.f;
+  document.querySelectorAll('.mt').forEach(c=>c.style.display=(f==='all'||c.dataset.s===f)?'':'none');
+  document.querySelectorAll('section.unit').forEach(s=>{
+    s.style.display=[...s.querySelectorAll('.mt')].some(c=>c.style.display!=='none')?'':'none';
+  });
+});
+
+window.lucide&&lucide.createIcons();
+</script>
+</body>
+</html>

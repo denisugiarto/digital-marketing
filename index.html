@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Digital Marketing — Media Pembelajaran SMP Kelas 7</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -49,13 +49,14 @@
   .nav:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
   .nav:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
   .nav:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:4px 4px 0 var(--ink)}
+  .navbar-bg{display:none;position:fixed;left:0;right:0;bottom:0;height:calc(76px + env(safe-area-inset-bottom,0px));z-index:55;background:rgba(253,247,239,.94);border-top:3px solid var(--ink);backdrop-filter:blur(6px)}
 
   /* ====== DECK & SLIDES ====== */
   .slide{
-    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;
     opacity:0;visibility:hidden;transform:translateX(46px);
     transition:opacity .5s ease,transform .55s cubic-bezier(.22,.9,.32,1),visibility .5s;
-    overflow:auto;padding:56px 40px 96px;
+    overflow:auto;padding:56px 40px 100px;
   }
   .slide.active{opacity:1;visibility:visible;transform:none;z-index:5}
   .slide::before,.slide::after{content:'';position:absolute;border-radius:50%;z-index:0}
@@ -68,7 +69,8 @@
   [data-theme="lav"]   {background:var(--lav);--bA:var(--lav2);--bB:var(--peach2)}
   [data-theme="pink"]  {background:var(--pink);--bA:var(--pink2);--bB:var(--butter2)}
 
-  .wrap{position:relative;z-index:2;width:min(1180px,100%)}
+  .wrap{position:relative;z-index:2;width:100%}
+  .slide .wrap{margin-top:auto;margin-bottom:auto}
   .anim{opacity:0}
   .slide.active .anim{animation:rise .7s cubic-bezier(.22,.9,.32,1) forwards;animation-delay:calc(var(--d,0)*.09s)}
   @keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
@@ -343,7 +345,7 @@
   }
   .quote h3{font-size:26px;line-height:1.3;margin-bottom:10px}
   .quote p{font-weight:600;font-size:14.5px}
-  .end-btn{margin-top:26px;display:flex;justify-content:center;flex-wrap:wrap;gap:14px}
+  .end-btn{margin-top:26px;display:flex;flex-wrap:wrap;gap:14px}
   a.btn{text-decoration:none}
 
   /* ====== CONFETTI ====== */
@@ -359,6 +361,37 @@
     .goal:nth-child(odd),.goal:nth-child(even){margin:0}
     .way:nth-child(even) .way-body{margin-left:0}
     .slide{padding:40px 20px 110px}
+  }
+
+  /* ====== MOBILE ====== */
+  @media (max-width:640px){
+    .slide{padding:22px 16px 104px}
+    .slide::before{width:70vw;height:70vw;top:-30vw;right:-30vw}
+    .slide::after{width:60vw;height:60vw;bottom:-28vw;left:-26vw}
+    .kicker{font-size:11px;letter-spacing:.1em;padding:6px 12px;box-shadow:3px 3px 0 var(--ink)}
+    h2.title{font-size:27px;margin:14px 0 6px}
+    p.lead{font-size:15px}
+    .card,.goal,.step,.refl-item,.tcard .tface,.vs-col,.way-body,.spot{box-shadow:4px 4px 0 var(--ink)}
+    .deco{display:none}
+    .dots{display:none}
+    .navbar-bg{display:block}
+    .pagenum{left:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));font-size:13px;padding:6px 14px;box-shadow:3px 3px 0 var(--ink)}
+    .navbtns{right:16px;bottom:calc(12px + env(safe-area-inset-bottom,0px))}
+    .nav{width:48px;height:48px;box-shadow:3px 3px 0 var(--ink)}
+    .s-hero .wrap{gap:12px}
+    .art-stage,.orbit-wrap,.end-art{min-height:300px}
+    .art-stage>svg{width:min(260px,76%)}
+    .fchip{transform:scale(.7)}
+    .badge{font-size:13px;padding:6px 12px}
+    .goal{gap:14px;padding:12px 16px}
+    .define{padding:16px 18px}
+    .q-card{padding:18px 16px}
+    .q-q{font-size:18px}
+    .opt{font-size:14.5px;padding:10px 14px;gap:12px}
+    .q-foot{flex-direction:column;align-items:stretch}
+    .q-done .big{font-size:44px}
+    .quote{padding:22px}
+    .quote h3{font-size:21px}
   }
 </style>
 </head>
@@ -376,7 +409,7 @@
   </div>
   <div class="s-hero wrap" style="display:contents"><div class="wrap">
     <div>
-      <span class="kicker anim" style="--d:0"><i data-lucide="graduation-cap"></i> Media Pembelajaran · SMP Kelas 7</span>
+      <span class="kicker anim" style="--d:0"><i data-lucide="graduation-cap"></i> Digital Marketing · Pertemuan 1 · SMP Kelas 7</span>
       <h1 class="anim" style="--d:1;font-size:clamp(38px,4.6vw,62px);font-weight:700;line-height:1.08;margin:20px 0 14px">
         Ayo Kenalan dengan <span class="hl">Digital Marketing!</span>
       </h1>
@@ -387,6 +420,7 @@
         <span class="badge b3"><i data-lucide="puzzle"></i> Main &amp; Kuis</span>
         <span class="badge b2"><i data-lucide="lightbulb"></i> Contoh Nyata</span>
       </div>
+      <div class="anim" style="--d:4;margin-top:22px"><a class="btn ghost" href="silabus.html"><i data-lucide="book-open"></i> Silabus 16 Pertemuan</a></div>
     </div>
     <div class="art-stage anim" style="--d:2">
       <svg viewBox="0 0 360 470" aria-hidden="true">
@@ -789,8 +823,8 @@
       </div>
       <div class="end-btn anim" style="--d:5">
         <button class="btn sun" id="partyBtn"><i data-lucide="party-popper"></i> Rayakan Hari Ini!</button>
-        <a class="btn mint" href="pertemuan-2.html"><i data-lucide="id-card"></i> Pertemuan 2: Persona</a>
-        <a class="btn ghost" href="pertemuan-3.html"><i data-lucide="camera"></i> Pertemuan 3: Foto Jualan</a>
+        <a class="btn mint" href="target-market.html"><i data-lucide="target"></i> Pertemuan 2: Target Market</a>
+        <a class="btn ghost" href="silabus.html"><i data-lucide="book-open"></i> Lihat Silabus</a>
       </div>
     </div>
     <div class="end-art anim" style="--d:3">
@@ -807,6 +841,7 @@
 </section>
 
 <!-- NAV -->
+<div class="navbar-bg"></div>
 <div class="pagenum"><span id="cur">01</span> / <span id="tot">11</span></div>
 <div class="dots" id="dots"></div>
 <div class="navbtns">
@@ -843,13 +878,14 @@ addEventListener('keydown',e=>{
   if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();go(cur+1)}
   if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(cur-1)}
 });
-let tx=0;
-addEventListener('touchstart',e=>tx=e.touches[0].clientX,{passive:true});
+let tx=0,ty=0;
+addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
 addEventListener('touchend',e=>{
-  const dx=e.changedTouches[0].clientX-tx;
-  if(Math.abs(dx)>60) dx<0?go(cur+1):go(cur-1);
+  const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;
+  // hanya geser mendatar yang jelas, supaya scroll ke bawah tidak ikut pindah slide
+  if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5) dx<0?go(cur+1):go(cur-1);
 },{passive:true});
-go(0);
+go(+location.hash.slice(1)||0);
 
 /* ================= POLL PEMANASAN ================= */
 let cYes=0,cNo=0;
@@ -910,7 +946,7 @@ function renderQuiz(){
         <button class="btn mint" id="qNext">${qi===quizData.length-1?'Lihat Hasil':'Lanjut'} <i data-lucide="chevron-right"></i></button>
       </div>
     </div>`;
-  lucide.createIcons();
+  window.lucide&&lucide.createIcons();
   quizArea.querySelectorAll('.opt').forEach(btn=>{
     btn.onclick=()=>{
       const pick=+btn.dataset.i;
@@ -922,7 +958,7 @@ function renderQuiz(){
       const why=document.getElementById('qWhy');
       why.innerHTML=`<i data-lucide="${pick===d.a?'circle-check':'info'}"></i><span>${d.why}</span>`;
       document.getElementById('qFoot').classList.remove('hidden');
-      lucide.createIcons();
+      window.lucide&&lucide.createIcons();
       document.getElementById('qNext').onclick=()=>{qi++;renderQuiz()};
     };
   });
@@ -941,7 +977,7 @@ function renderDone(){
       <p>${msg}</p>
       <button class="btn" id="qRetry"><i data-lucide="rotate-ccw"></i> Ulangi Kuis</button>
     </div>`;
-  lucide.createIcons();
+  window.lucide&&lucide.createIcons();
   celebrate(180);
   document.getElementById('qRetry').onclick=()=>{qi=0;score=0;renderQuiz()};
 }
@@ -986,7 +1022,7 @@ function tick(){
 document.getElementById('partyBtn').onclick=()=>{celebrate(260);setTimeout(()=>celebrate(160),700)};
 
 /* ikon */
-lucide.createIcons();
+window.lucide&&lucide.createIcons();
 </script>
 </body>
 </html>

@@ -329,7 +329,8 @@
   .quote{position:relative;background:var(--sun);border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);padding:30px 34px;text-align:center;max-width:380px;transform:rotate(-2deg)}
   .quote h3{font-size:25px;line-height:1.3;margin-bottom:10px}
   .quote p{font-weight:600;font-size:14.5px}
-  .end-btn{margin-top:26px}
+  .end-btn{margin-top:26px;display:flex;gap:14px;flex-wrap:wrap}
+  .btn.ghost{background:#fff} a.btn{text-decoration:none}
 
   #confetti{position:fixed;inset:0;z-index:100;pointer-events:none}
 
@@ -399,7 +400,7 @@
   </div>
   <div class="s-hero wrap" style="display:contents"><div class="wrap">
     <div>
-      <span class="kicker anim" style="--d:0"><i data-lucide="user-round"></i> Digital Marketing · Lanjutan · SMP Kelas 7</span>
+      <span class="kicker anim" style="--d:0"><i data-lucide="user-round"></i> Digital Marketing · Pertemuan 4 · SMP Kelas 7</span>
       <h1 class="anim" style="--d:1;font-size:clamp(38px,4.6vw,62px);font-weight:700;line-height:1.08;margin:20px 0 14px">
         Kenalan Dulu,<br><span class="hl">Baru Desain!</span>
       </h1>
@@ -967,6 +968,8 @@
       </div>
       <div class="end-btn anim" style="--d:5">
         <button class="btn sun" id="partyBtn"><i data-lucide="party-popper"></i> Rayakan Hari Ini!</button>
+        <a class="btn ghost" href="pertemuan-3.html"><i data-lucide="arrow-right"></i> Pertemuan 5: Foto Jualan</a>
+        <a class="btn ghost" href="silabus.html"><i data-lucide="book-open"></i> Lihat Silabus</a>
       </div>
     </div>
     <div class="end-art anim" style="--d:3">
@@ -1061,9 +1064,9 @@ document.querySelectorAll('.wu').forEach(wu=>{
           document.getElementById('wuScoreTxt').textContent=wuScore;
           celebrate(220);
         }
-        lucide.createIcons();
+        window.lucide&&lucide.createIcons();
       };
-      lucide.createIcons();
+      window.lucide&&lucide.createIcons();
     };
   });
 });
@@ -1148,7 +1151,7 @@ function selectPersona(k){
     <div class="lp-rows">${p.rows.map(r=>`<div class="r"><b>${r[0]}:</b><span>${r[1]}</span></div>`).join('')}</div>`;
   document.getElementById('lpReasons').innerHTML=p.why.map(w=>`<li><i data-lucide="circle-check"></i><span>${w}</span></li>`).join('');
   document.querySelectorAll('.lpb').forEach(b=>b.classList.toggle('on',b.dataset.k===k));
-  lucide.createIcons();
+  window.lucide&&lucide.createIcons();
   seen.add(k);
   document.getElementById('labSeen').textContent=seen.size;
   if(seen.size===4){celebrate(200)}
@@ -1232,7 +1235,7 @@ function renderQuiz(){
         <button class="btn mint" id="qNext">${qi===quizData.length-1?'Lihat Hasil':'Lanjut'} <i data-lucide="chevron-right"></i></button>
       </div>
     </div>`;
-  lucide.createIcons();
+  window.lucide&&lucide.createIcons();
   quizArea.querySelectorAll('.opt').forEach(btn=>{
     btn.onclick=()=>{
       const pick=+btn.dataset.i;
@@ -1244,7 +1247,7 @@ function renderQuiz(){
       const why=document.getElementById('qWhy');
       why.innerHTML=`<i data-lucide="${pick===d.a?'circle-check':'info'}"></i><span>${d.why}</span>`;
       document.getElementById('qFoot').classList.remove('hidden');
-      lucide.createIcons();
+      window.lucide&&lucide.createIcons();
       document.getElementById('qNext').onclick=()=>{qi++;renderQuiz()};
     };
   });
@@ -1263,7 +1266,7 @@ function renderDone(){
       <p>${msg}</p>
       <button class="btn" id="qRetry"><i data-lucide="rotate-ccw"></i> Ulangi Kuis</button>
     </div>`;
-  lucide.createIcons();
+  window.lucide&&lucide.createIcons();
   celebrate(180);
   document.getElementById('qRetry').onclick=()=>{qi=0;score=0;renderQuiz()};
 }
@@ -1307,7 +1310,7 @@ function tick(){
 }
 document.getElementById('partyBtn').onclick=()=>{celebrate(260);setTimeout(()=>celebrate(160),700)};
 
-lucide.createIcons();
+window.lucide&&lucide.createIcons();
 </script>
 </body>
 </html>

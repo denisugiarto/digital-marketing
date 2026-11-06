@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Video Pendek II: Rekam &amp; Edit di HP · SMP Kelas 7</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#453A4E; --ink-soft:#6B5F75; --cream:#FDF7EF;
+    --peach:#FFF1E8; --peach2:#FFCBB5;
+    --mint:#EAF7F0;  --mint2:#BFEAD2;
+    --butter:#FFF6DF;--butter2:#FFE39A;
+    --lav:#F3F0FC;   --lav2:#DCD2F7;
+    --pink:#FFF0F5;  --pink2:#FFC9DC;
+    --sky:#E9F1FB;   --sky2:#C5DCF2;
+    --coral:#FF7E67; --teal:#3FBF8F; --sun:#FFC531;
+    --shadow:6px 6px 0 var(--ink);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--ink);background:var(--cream);overflow:hidden}
+  h1,h2,h3,.disp{font-family:'Fredoka',sans-serif}
+
+  /* ===== CHROME ===== */
+  #bar{position:fixed;top:0;left:0;height:6px;background:var(--coral);width:0;z-index:60;transition:width .4s ease;border-radius:0 4px 4px 0}
+  .pagenum{position:fixed;left:26px;bottom:22px;z-index:60;font-family:'Fredoka';font-weight:600;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:7px 16px;box-shadow:4px 4px 0 var(--ink);font-size:14px;letter-spacing:.06em}
+  .dots{position:fixed;left:50%;transform:translateX(-50%);bottom:24px;z-index:60;display:flex;gap:9px}
+  .dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--ink);background:#fff;cursor:pointer;transition:.25s;padding:0}
+  .dot.on{background:var(--sun);transform:scale(1.35)}
+  .navbtns{position:fixed;right:26px;bottom:18px;z-index:60;display:flex;gap:10px}
+  .nav{width:52px;height:52px;border-radius:50%;background:#fff;border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink);cursor:pointer;display:grid;place-items:center;transition:.15s;color:var(--ink)}
+  .nav:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .nav:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+  .nav:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:4px 4px 0 var(--ink)}
+  .navbar-bg{display:none;position:fixed;left:0;right:0;bottom:0;height:calc(76px + env(safe-area-inset-bottom,0px));z-index:55;background:rgba(253,247,239,.94);border-top:3px solid var(--ink);backdrop-filter:blur(6px)}
+
+  /* ===== SLIDES ===== */
+  .slide{position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;opacity:0;visibility:hidden;transform:translateX(46px);transition:opacity .5s ease,transform .55s cubic-bezier(.22,.9,.32,1),visibility .5s;overflow:auto;padding:56px 40px 100px}
+  .slide.active{opacity:1;visibility:visible;transform:none;z-index:5}
+  .slide::before,.slide::after{content:'';position:absolute;border-radius:50%;z-index:0}
+  .slide::before{width:44vw;height:44vw;top:-20vw;right:-14vw;background:var(--bA);opacity:.75}
+  .slide::after{width:34vw;height:34vw;bottom:-16vw;left:-12vw;background:var(--bB);opacity:.7}
+  [data-theme="peach"] {background:var(--peach);--bA:var(--peach2);--bB:var(--butter2)}
+  [data-theme="cream"] {background:var(--cream);--bA:var(--mint2);--bB:var(--pink2)}
+  [data-theme="butter"]{background:var(--butter);--bA:var(--butter2);--bB:var(--mint2)}
+  [data-theme="mint"]  {background:var(--mint);--bA:var(--mint2);--bB:var(--peach2)}
+  [data-theme="lav"]   {background:var(--lav);--bA:var(--lav2);--bB:var(--peach2)}
+  [data-theme="pink"]  {background:var(--pink);--bA:var(--pink2);--bB:var(--sky2)}
+  [data-theme="sky"]   {background:var(--sky);--bA:var(--sky2);--bB:var(--butter2)}
+
+  .wrap{position:relative;z-index:2;width:100%}
+  .slide .wrap{margin-top:auto;margin-bottom:auto}
+  .anim{opacity:0}
+  .slide.active .anim{animation:rise .7s cubic-bezier(.22,.9,.32,1) forwards;animation-delay:calc(var(--d,0)*.09s)}
+  @keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+
+  .kicker{display:inline-flex;align-items:center;gap:8px;font-family:'Fredoka';font-weight:600;font-size:13px;letter-spacing:.14em;text-transform:uppercase;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:8px 18px;box-shadow:4px 4px 0 var(--ink)}
+  .kicker svg{width:16px;height:16px}
+  h2.title{font-size:clamp(30px,3.6vw,48px);font-weight:700;margin:18px 0 8px;line-height:1.12}
+  p.lead{font-size:clamp(15px,1.3vw,19px);color:var(--ink-soft);max-width:680px;font-weight:500}
+  .hl{background:linear-gradient(transparent 62%,var(--butter2) 62%);padding:0 3px;border-radius:3px}
+  .hl.m{background:linear-gradient(transparent 62%,var(--mint2) 62%)}
+  .hl.p{background:linear-gradient(transparent 62%,var(--pink2) 62%)}
+  .hl.l{background:linear-gradient(transparent 62%,var(--lav2) 62%)}
+  .card{background:#fff;border:3px solid var(--ink);border-radius:20px;box-shadow:var(--shadow)}
+  .btn{display:inline-flex;align-items:center;gap:10px;font-family:'Fredoka';font-weight:600;font-size:17px;color:var(--ink);background:var(--coral);border:3px solid var(--ink);border-radius:14px;padding:13px 26px;box-shadow:5px 5px 0 var(--ink);cursor:pointer;transition:.15s;text-decoration:none}
+  .btn svg{width:20px;height:20px}
+  .btn:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+  .btn.sun{background:var(--sun)} .btn.mint{background:var(--mint2)} .btn.ghost{background:#fff}
+  .hidden{display:none !important}
+  .deco{position:absolute;z-index:1;pointer-events:none;color:var(--ink);opacity:.55}
+  .deco svg{width:100%;height:100%}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}50%{transform:translateY(-14px) rotate(var(--r,0deg))}}
+  .bob{animation:bob 4.5s ease-in-out infinite}
+
+  /* ===== HERO ===== */
+  .s-hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center}
+  .badge-row{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap}
+  .badge{display:inline-flex;align-items:center;gap:8px;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:8px 16px;font-weight:700;font-size:14px;box-shadow:3px 3px 0 var(--ink)}
+  .badge svg{width:17px;height:17px}
+  .b1{background:var(--mint2)} .b2{background:var(--pink2)} .b3{background:var(--butter2)}
+  .art-stage{position:relative;display:grid;place-items:center;min-height:460px}
+  .art-stage>svg{width:min(400px,90%);filter:drop-shadow(8px 10px 0 rgba(69,58,78,.18))}
+  .fchip{position:absolute;display:grid;place-items:center;border:3px solid var(--ink);border-radius:50%;box-shadow:4px 4px 0 var(--ink)}
+  .fchip svg{width:52%;height:52%}
+  .fc1{width:74px;height:74px;background:var(--coral);color:#fff;top:36px;left:34px;--r:-8deg}
+  .fc2{width:64px;height:64px;background:var(--sun);top:118px;right:26px;--r:10deg}
+  .fc3{width:70px;height:70px;background:var(--teal);color:#fff;bottom:92px;left:14px;--r:6deg}
+  .fc4{width:60px;height:60px;background:var(--lav2);bottom:34px;right:48px;--r:-10deg}
+  .fc5{width:52px;height:52px;background:var(--pink2);top:8px;right:130px;--r:14deg}
+
+  /* ===== GOALS ===== */
+  .goal-list{margin-top:30px;display:flex;flex-direction:column;gap:16px;max-width:880px}
+  .goal{display:flex;align-items:center;gap:22px;background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:16px 24px}
+  .goal:nth-child(odd){margin-right:56px}.goal:nth-child(even){margin-left:56px}
+  .gnum{flex:0 0 56px;height:56px;border-radius:50%;border:3px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:24px}
+  .g1{background:var(--coral);color:#fff}.g2{background:var(--sun)}.g3{background:var(--mint2)}.g4{background:var(--pink2)}
+  .goal h3{font-size:19px;font-weight:600;margin-bottom:3px}
+  .goal p{font-size:14.5px;color:var(--ink-soft);font-weight:500}
+
+  /* ===== PEMANASAN : TEBAK PEMBELI ===== */
+  .wu-shell{margin-top:26px;display:grid;grid-template-columns:330px 1fr;gap:32px;align-items:start}
+  .prod{border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);overflow:hidden;background:#fff}
+  .prod-media{height:200px;display:grid;place-items:center;border-bottom:2.5px solid var(--ink)}
+  .prod-media .ic{width:110px;height:110px;border-radius:50%;background:#fff;border:3px solid var(--ink);display:grid;place-items:center;box-shadow:5px 5px 0 var(--ink)}
+  .prod-media .ic svg{width:54px;height:54px}
+  .prod-cap{padding:14px 18px}
+  .prod-cap h4{font-family:'Fredoka';font-size:21px;line-height:1.15}
+  .prod-cap .sub{font-size:13.5px;font-weight:600;margin-top:4px;color:var(--ink-soft)}
+  .prod-cap .price{display:inline-block;margin-top:8px;font-family:'Fredoka';font-weight:700;font-size:14px;border:2.5px solid var(--ink);border-radius:10px;padding:4px 10px;background:var(--butter2)}
+  .wu-round{font-family:'Fredoka';font-weight:600;font-size:14px;color:var(--ink-soft)}
+  .wu-q{font-family:'Fredoka';font-weight:600;font-size:clamp(19px,1.8vw,23px);margin:6px 0 14px}
+  .wu-opts{display:flex;flex-direction:column;gap:12px;max-width:430px}
+  .wu-opt{display:flex;align-items:center;gap:13px;text-align:left;background:#fff;border:3px solid var(--ink);border-radius:14px;padding:12px 18px;font-family:'Plus Jakarta Sans';font-weight:600;font-size:15.5px;cursor:pointer;transition:.15s;color:var(--ink);box-shadow:4px 4px 0 var(--ink)}
+  .wu-opt:hover:not(:disabled){transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .wu-opt:disabled{cursor:default}
+  .wu-opt .letter{flex:0 0 34px;height:34px;border-radius:10px;border:2.5px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;background:var(--butter2)}
+  .wu-opt.good{background:var(--mint2)} .wu-opt.good .letter{background:var(--teal);color:#fff}
+  .wu-opt.bad{background:var(--pink2)} .wu-opt.bad .letter{background:var(--coral);color:#fff}
+  .wu-fb{margin-top:16px;display:flex;gap:12px;align-items:flex-start;background:var(--butter);border:2.5px solid var(--ink);border-radius:14px;padding:14px 18px;font-size:14.5px;font-weight:600;line-height:1.55;max-width:430px}
+  .wu-fb svg{width:20px;height:20px;flex:0 0 20px;margin-top:2px}
+  .wu-next{margin-top:14px}
+  .wu-done{background:#fff;border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);padding:30px 34px;max-width:640px;text-align:center}
+  .wu-done .tro{width:84px;height:84px;border-radius:50%;background:var(--sun);border:3px solid var(--ink);display:grid;place-items:center;margin:0 auto 14px;box-shadow:4px 4px 0 var(--ink)}
+  .wu-done .tro svg{width:40px;height:40px}
+  .wu-done h3{font-size:26px;margin-bottom:8px}
+  .wu-done p{font-weight:600;color:var(--ink-soft);line-height:1.6}
+  .wu-done .sc{font-family:'Fredoka';font-weight:700;font-size:19px;color:var(--teal);margin-top:10px}
+
+  /* ===== DEFINISI ===== */
+  .s-def .wrap{display:grid;grid-template-columns:1.08fr .92fr;gap:40px;align-items:center}
+  .define{margin-top:24px;background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:22px 26px;font-size:clamp(16px,1.45vw,20px);font-weight:600;line-height:1.6}
+  .define .q{color:var(--coral);font-family:'Fredoka'}
+  .analog{margin-top:18px;display:flex;gap:16px;align-items:flex-start;background:var(--lav);border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:18px 22px}
+  .analog .ic{flex:0 0 46px;height:46px;border-radius:50%;background:var(--lav2);display:grid;place-items:center;border:2.5px solid var(--ink)}
+  .analog .ic svg{width:24px;height:24px}
+  .analog p{font-size:15.5px;font-weight:500;line-height:1.55}
+  .target-art{display:grid;place-items:center}
+  .target-art svg{width:min(380px,100%);height:auto;filter:drop-shadow(8px 10px 0 rgba(69,58,78,.18))}
+
+  /* ===== SEMUA ORANG VS TARGET ===== */
+  .vs2{margin-top:28px;display:grid;grid-template-columns:1fr 84px 1fr;align-items:stretch}
+  .vs2-col{border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);padding:22px 26px;background:#fff}
+  .vs2-col.bad{background:var(--pink)}
+  .vs2-col.good{background:var(--mint)}
+  .vs2-col .lab{font-family:'Fredoka';font-weight:700;font-size:13px;letter-spacing:.12em;text-transform:uppercase;display:inline-flex;gap:7px;align-items:center;border:2.5px solid var(--ink);border-radius:999px;padding:5px 14px;margin-bottom:14px}
+  .vs2-col .lab svg{width:15px;height:15px}
+  .bad .lab{background:var(--pink2)} .good .lab{background:var(--mint2)}
+  .vs2-col .bigline{font-family:'Fredoka';font-weight:700;font-size:clamp(20px,2vw,25px);line-height:1.25;margin-bottom:12px}
+  .vs2-col .promo{background:#fff;border:2.5px dashed var(--ink);border-radius:14px;padding:12px 16px;font-size:15px;font-weight:600;line-height:1.5;margin-bottom:12px}
+  .vs2-col p{font-size:14.5px;font-weight:500;color:var(--ink-soft);line-height:1.55}
+  .vs2-mid{display:grid;place-items:center}
+  .vs2-badge{width:60px;height:60px;border-radius:50%;background:var(--sun);border:3px solid var(--ink);display:grid;place-items:center;box-shadow:4px 4px 0 var(--ink);font-family:'Fredoka';font-weight:700;font-size:18px}
+  .vs-note{margin-top:22px;background:#fff;border:3px solid var(--ink);border-left:14px solid var(--sun);border-radius:16px;box-shadow:var(--shadow);padding:15px 22px;font-weight:600;font-size:15px;line-height:1.55;max-width:860px}
+
+  /* ===== FLIP 4 PERTANYAAN ===== */
+  .fgrid{margin-top:26px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+  .fcard{perspective:1100px;min-height:250px;cursor:pointer}
+  .finner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.3,.8,.3,1)}
+  .fcard.flipped .finner{transform:rotateY(180deg)}
+  .fface{position:absolute;inset:0;backface-visibility:hidden;border:3px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 var(--ink);padding:18px 20px;display:flex;flex-direction:column}
+  .ffront{background:#fff}
+  .fback{background:var(--mint2);transform:rotateY(180deg)}
+  .fic{width:52px;height:52px;border-radius:15px;border:2.5px solid var(--ink);display:grid;place-items:center;margin-bottom:12px}
+  .fic svg{width:24px;height:24px}
+  .ffront h3{font-size:22px;line-height:1.15}
+  .ffront .tease{font-size:13.5px;font-weight:600;color:var(--ink-soft);line-height:1.45;margin-top:6px}
+  .ffront .hint{margin-top:auto;display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;color:var(--ink-soft)}
+  .ffront .hint svg{width:15px;height:15px}
+  .fback .tag{font-family:'Fredoka';font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;background:var(--ink);color:#fff;border-radius:999px;padding:4px 12px;align-self:flex-start;margin-bottom:10px}
+  .fback p{font-size:13.8px;font-weight:600;line-height:1.55;flex:1}
+  .fback .eg{font-size:12.5px;font-weight:700;opacity:.8;margin-top:8px;border-top:2px dashed rgba(69,58,78,.4);padding-top:8px;flex:0 0 auto}
+
+  /* ===== MESIN TARGET ===== */
+  .lab{margin-top:24px;display:grid;grid-template-columns:300px 1fr;gap:28px;align-items:start}
+  .picks{display:flex;flex-direction:column;gap:10px}
+  .pk{display:flex;align-items:center;gap:12px;text-align:left;background:#fff;border:2.5px solid var(--ink);border-radius:14px;padding:10px 14px;cursor:pointer;box-shadow:3px 3px 0 var(--ink);transition:.15s;font-family:'Fredoka';font-weight:600;font-size:15px;color:var(--ink)}
+  .pk .ti{width:38px;height:38px;border-radius:11px;border:2px solid var(--ink);display:grid;place-items:center;flex:0 0 38px}
+  .pk .ti svg{width:19px;height:19px}
+  .pk small{display:block;font-family:'Plus Jakarta Sans';font-size:12px;font-weight:600;color:var(--ink-soft)}
+  .pk:hover{transform:translateX(3px)}
+  .pk.on{background:var(--ink);color:#fff}
+  .pk.on small{color:var(--butter2)}
+  .pk.on .ti{border-color:#fff}
+  .lab-seen{margin-top:6px;font-family:'Fredoka';font-weight:600;font-size:13px;background:var(--butter2);border:2.5px solid var(--ink);border-radius:999px;display:inline-flex;align-items:center;gap:8px;padding:6px 14px;box-shadow:3px 3px 0 var(--ink);align-self:flex-start}
+  .lab-seen svg{width:14px;height:14px}
+  .tmap{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .tq{background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:5px 5px 0 var(--ink);padding:14px 16px}
+  .tq h4{font-family:'Fredoka';font-size:15px;display:flex;align-items:center;gap:9px;margin-bottom:6px}
+  .tq h4 span.i{width:30px;height:30px;border-radius:9px;border:2px solid var(--ink);display:grid;place-items:center}
+  .tq h4 svg{width:16px;height:16px}
+  .tq p{font-size:14px;font-weight:600;line-height:1.5}
+  .tsum{grid-column:1/-1;background:var(--ink);color:#fff;border-radius:16px;box-shadow:5px 5px 0 var(--sun);padding:14px 18px;font-size:15px;font-weight:600;line-height:1.55}
+  .tsum b{color:var(--sun);font-family:'Fredoka'}
+  .tsum .idea{display:block;margin-top:6px;font-size:13.5px;color:var(--mint2)}
+
+  /* ===== PRODUK SAMA, TARGET BEDA ===== */
+  .swap{margin-top:24px;display:grid;grid-template-columns:340px 1fr;gap:32px;align-items:start}
+  .toggle{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+  .tg{display:inline-flex;align-items:center;gap:8px;font-family:'Fredoka';font-weight:600;font-size:15px;border:2.5px solid var(--ink);border-radius:12px;padding:9px 16px;background:#fff;cursor:pointer;box-shadow:3px 3px 0 var(--ink);color:var(--ink)}
+  .tg svg{width:17px;height:17px}
+  .tg.on{background:var(--ink);color:#fff}
+  .poster{border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);min-height:400px;padding:26px 22px;position:relative;transition:background .45s;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px}
+  .pp-plat{position:absolute;top:14px;left:14px;display:inline-flex;gap:7px;align-items:center;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:6px 13px;font-family:'Fredoka';font-weight:700;font-size:12.5px;box-shadow:3px 3px 0 var(--ink)}
+  .pp-plat svg{width:15px;height:15px}
+  .pp-ic{width:86px;height:86px;border-radius:50%;background:#fff;border:3px solid var(--ink);display:grid;place-items:center;box-shadow:4px 4px 0 var(--ink)}
+  .pp-ic svg{width:42px;height:42px}
+  .pp-title{font-family:'Fredoka';font-weight:700;font-size:28px;line-height:1.12}
+  .pp-sub{font-weight:600;font-size:14px;line-height:1.5;max-width:270px}
+  .pp-price{font-family:'Fredoka';font-weight:700;font-size:15px;border:2.5px solid var(--ink);border-radius:10px;padding:5px 12px;background:#fff;box-shadow:3px 3px 0 var(--ink)}
+  .pp-cta{display:inline-flex;gap:8px;align-items:center;font-family:'Fredoka';font-weight:700;font-size:14.5px;padding:9px 18px;border:2.5px solid var(--ink);border-radius:999px;box-shadow:3px 3px 0 var(--ink)}
+  .pp-cta svg{width:15px;height:15px}
+  .diff{background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+  .diff table{width:100%;border-collapse:collapse}
+  .diff th,.diff td{text-align:left;padding:11px 16px;border-top:2px dashed rgba(69,58,78,.22);font-size:14px;vertical-align:top}
+  .diff th{font-family:'Fredoka';font-weight:600;font-size:14px;width:130px;border-top:2px dashed rgba(69,58,78,.22)}
+  .diff tr:first-child th,.diff tr:first-child td{border-top:none}
+  .diff td{font-weight:600}
+  .same{margin-top:16px;display:flex;gap:12px;align-items:flex-start;background:var(--sun);border:3px solid var(--ink);border-radius:16px;box-shadow:5px 5px 0 var(--ink);padding:12px 16px;font-size:14px;font-weight:600;line-height:1.5}
+  .same svg{width:20px;height:20px;flex:0 0 20px;margin-top:1px}
+
+  /* ===== GAME ===== */
+  .match-list{margin-top:26px;display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .m-card{background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:18px 20px}
+  .m-card.solved{background:var(--mint)}
+  .m-card h3{font-size:14.5px;font-weight:600;line-height:1.5;margin-bottom:12px;font-family:'Plus Jakarta Sans'}
+  .m-card h3 b{font-family:'Fredoka'}
+  .m-opts{display:flex;gap:9px;flex-wrap:wrap}
+  .m-opt{display:inline-flex;align-items:center;gap:7px;font-family:'Fredoka';font-weight:600;font-size:13.5px;border:2.5px solid var(--ink);border-radius:999px;padding:8px 15px;background:#fff;cursor:pointer;box-shadow:3px 3px 0 var(--ink);transition:.15s;color:var(--ink)}
+  .m-opt:hover:not(:disabled){transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--ink)}
+  .m-opt:disabled{cursor:default}
+  .m-opt.good{background:var(--teal);color:#fff}
+  .m-opt.bad{background:var(--pink2)}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+  .m-opt.shake{animation:shake .3s}
+  .m-why{margin-top:12px;background:var(--butter);border:2.5px solid var(--ink);border-radius:12px;padding:10px 14px;font-size:13px;font-weight:600;line-height:1.5;display:flex;gap:9px}
+  .m-why svg{width:17px;height:17px;flex:0 0 17px;margin-top:1px}
+  .m-score{margin-top:22px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;background:var(--ink);color:#fff;border-radius:16px;padding:14px 24px;max-width:640px;box-shadow:var(--shadow)}
+  .m-score b{font-family:'Fredoka';font-size:20px;color:var(--sun)}
+
+  /* ===== QUIZ ===== */
+  .quiz-shell{max-width:780px;margin:0 auto}
+  .q-meta{display:flex;justify-content:space-between;align-items:center;margin:0 0 16px}
+  .q-badge{font-family:'Fredoka';font-weight:700;background:var(--coral);color:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:7px 18px;box-shadow:3px 3px 0 var(--ink);font-size:14px}
+  .q-score{font-family:'Fredoka';font-weight:700;background:var(--sun);border:2.5px solid var(--ink);border-radius:999px;padding:7px 18px;box-shadow:3px 3px 0 var(--ink);font-size:14px;display:flex;align-items:center;gap:7px}
+  .q-score svg{width:16px;height:16px}
+  .q-card{padding:28px 32px;margin-top:20px}
+  .q-q{font-size:clamp(19px,1.8vw,25px);font-weight:600;line-height:1.4;margin-bottom:20px}
+  .q-opts{display:flex;flex-direction:column;gap:12px}
+  .opt{display:flex;align-items:center;gap:16px;text-align:left;background:#fff;border:3px solid var(--ink);border-radius:14px;padding:13px 18px;font-family:'Plus Jakarta Sans';font-weight:600;font-size:16px;cursor:pointer;transition:.15s;color:var(--ink);box-shadow:4px 4px 0 var(--ink)}
+  .opt:hover:not(:disabled){transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .opt:disabled{cursor:default}
+  .opt .letter{flex:0 0 36px;height:36px;border-radius:10px;border:2.5px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;background:var(--lav2)}
+  .opt.good{background:var(--mint2)} .opt.good .letter{background:var(--teal);color:#fff}
+  .opt.bad{background:var(--pink2);opacity:.9} .opt.bad .letter{background:var(--coral);color:#fff}
+  .q-foot{margin-top:18px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+  .q-why{display:flex;gap:12px;align-items:flex-start;background:var(--butter);border:2.5px solid var(--ink);border-radius:14px;padding:14px 18px;font-size:14.5px;font-weight:600;line-height:1.5;flex:1}
+  .q-why svg{width:20px;height:20px;flex:0 0 20px;margin-top:2px}
+  .q-done{text-align:center;padding:38px 30px}
+  .q-done .tro{width:96px;height:96px;border-radius:50%;background:var(--sun);border:3px solid var(--ink);display:grid;place-items:center;margin:0 auto 18px;box-shadow:5px 5px 0 var(--ink)}
+  .q-done .tro svg{width:48px;height:48px}
+  .q-done h3{font-size:30px;margin-bottom:8px}
+  .q-done .big{font-family:'Fredoka';font-size:56px;font-weight:700;color:var(--coral);margin:6px 0 10px}
+  .q-done p{font-weight:600;color:var(--ink-soft);margin-bottom:22px}
+
+  /* ===== MISI ===== */
+  .s-misi .wrap{display:grid;grid-template-columns:1.12fr .88fr;gap:38px;align-items:start}
+  .steps{margin-top:24px;display:flex;flex-direction:column;gap:14px}
+  .step{display:flex;gap:18px;align-items:flex-start;background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:var(--shadow);padding:15px 20px}
+  .step:nth-child(even){margin-left:44px}
+  .snum{flex:0 0 46px;height:46px;border-radius:50%;border:3px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:19px}
+  .st1{background:var(--coral);color:#fff}.st2{background:var(--sun)}.st3{background:var(--mint2)}.st4{background:var(--pink2)}
+  .step h3{font-size:16.5px;font-weight:600}
+  .step p{font-size:13.5px;color:var(--ink-soft);font-weight:500;margin-top:2px;line-height:1.5}
+  .blank-card{padding:18px 22px;background:#fff;border:3px dashed var(--ink);border-radius:16px}
+  .blank-card h4{font-family:'Fredoka';font-size:15.5px;margin-bottom:10px;display:flex;gap:8px;align-items:center}
+  .blank-card h4 svg{width:17px;height:17px}
+  .bl{display:flex;gap:8px;font-size:13px;font-weight:600;padding:5px 0}
+  .bl b{flex:0 0 96px}
+  .bl span{flex:1;border-bottom:2px dotted var(--ink-soft);min-height:18px}
+  .sentence{margin-top:12px;background:var(--butter);border:2.5px solid var(--ink);border-radius:12px;padding:10px 14px;font-size:13.5px;font-weight:600;line-height:1.7}
+  .mini-rubrik{margin-top:18px;padding:18px 22px;background:#fff}
+  .rubrik-row{display:flex;justify-content:space-between;gap:12px;font-size:13.5px;font-weight:700;padding:6px 0;border-top:2px dashed rgba(69,58,78,.25)}
+  .rubrik-row:first-of-type{border-top:none}
+  .rubrik-row span:last-child{color:var(--coral);font-family:'Fredoka';white-space:nowrap}
+
+  /* ===== PENUTUP ===== */
+  .s-end .wrap{display:grid;grid-template-columns:1fr .85fr;gap:44px;align-items:center}
+  .refl{margin-top:24px;display:flex;flex-direction:column;gap:14px;max-width:600px}
+  .refl-item{display:flex;gap:16px;align-items:center;background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:var(--shadow);padding:14px 20px}
+  .rnum{flex:0 0 44px;height:44px;border-radius:50%;border:2.5px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:18px}
+  .r1{background:var(--coral);color:#fff}.r2{background:var(--mint2)}.r3{background:var(--pink2)}
+  .refl-item p{font-size:15.5px;font-weight:600}
+  .end-art{position:relative;display:grid;place-items:center;min-height:420px}
+  .quote{position:relative;background:var(--sun);border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);padding:30px 34px;text-align:center;max-width:380px;transform:rotate(-2deg)}
+  .quote h3{font-size:25px;line-height:1.3;margin-bottom:10px}
+  .quote p{font-weight:600;font-size:14.5px}
+  .end-btn{margin-top:26px;display:flex;gap:14px;flex-wrap:wrap}
+
+  #confetti{position:fixed;inset:0;z-index:100;pointer-events:none}
+
+  @media (max-width:960px){
+    .s-hero .wrap,.s-def .wrap,.s-misi .wrap,.s-end .wrap{grid-template-columns:1fr}
+    .wu-shell,.lab,.swap{grid-template-columns:1fr}
+    .fgrid{grid-template-columns:1fr 1fr}
+    .vs2{grid-template-columns:1fr}
+    .vs2-mid{margin:14px 0}
+    .match-list{grid-template-columns:1fr}
+    .goal:nth-child(odd),.goal:nth-child(even){margin:0}
+    .step:nth-child(even){margin-left:0}
+    .art-stage,.end-art{min-height:340px}
+    .picks{flex-direction:row;flex-wrap:wrap}
+    .slide{padding:40px 20px 110px}
+  }
+
+  /* ===== MOBILE ===== */
+  @media (max-width:640px){
+    .slide{padding:22px 16px 104px}
+    .slide::before{width:70vw;height:70vw;top:-30vw;right:-30vw}
+    .slide::after{width:60vw;height:60vw;bottom:-28vw;left:-26vw}
+    .kicker{font-size:11px;letter-spacing:.1em;padding:6px 12px;box-shadow:3px 3px 0 var(--ink)}
+    h2.title{font-size:27px;margin:14px 0 6px}
+    p.lead{font-size:15px}
+    .card,.goal,.step,.m-card,.refl-item,.tq,.vs2-col,.prod,.poster,.diff{box-shadow:4px 4px 0 var(--ink)}
+    .deco{display:none}
+    .dots{display:none}
+    .navbar-bg{display:block}
+    .pagenum{left:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));font-size:13px;padding:6px 14px;box-shadow:3px 3px 0 var(--ink)}
+    .navbtns{right:16px;bottom:calc(12px + env(safe-area-inset-bottom,0px))}
+    .nav{width:48px;height:48px;box-shadow:3px 3px 0 var(--ink)}
+    .s-hero .wrap{gap:12px}
+    .art-stage{min-height:300px}
+    .art-stage>svg{width:min(260px,76%)}
+    .fchip{transform:scale(.7)}
+    .badge{font-size:13px;padding:6px 12px}
+    .goal{gap:14px;padding:12px 16px}
+    .gnum{flex:0 0 44px;height:44px;font-size:20px}
+    .goal h3{font-size:16.5px}
+    .goal p{font-size:13.5px}
+    .prod-media{height:150px}
+    .define{padding:16px 18px}
+    .fgrid{grid-template-columns:1fr}
+    .fcard{min-height:200px}
+    .picks{flex-wrap:nowrap;overflow-x:auto;margin-right:-16px;padding:2px 4px 8px 2px;scrollbar-width:none}
+    .picks::-webkit-scrollbar{display:none}
+    .pk{flex:0 0 auto;white-space:nowrap}
+    .pk:hover{transform:none}
+    .tmap{grid-template-columns:1fr}
+    .poster{min-height:340px}
+    .diff th{width:96px}
+    .q-card{padding:18px 16px}
+    .q-q{font-size:18px}
+    .opt{font-size:14.5px;padding:10px 14px;gap:12px}
+    .q-foot{flex-direction:column;align-items:stretch}
+    .q-done .big{font-size:44px}
+    .quote{padding:22px}
+    .quote h3{font-size:21px}
+    .end-art{min-height:300px}
+  }
+
+  /* ===================== KHUSUS PERTEMUAN INI ===================== */
+  .s-tall{padding-top:40px;padding-bottom:92px}
+  .s-tall h2.title{margin:12px 0 6px}
+
+  /* ===== PEMANASAN : TEGAK ATAU MENDATAR ===== */
+  .ori{margin-top:22px;display:grid;grid-template-columns:1fr 400px;gap:34px;align-items:start}
+  .ori-lab{font-family:'Fredoka';font-weight:600;font-size:14px;color:var(--ink-soft);margin:0 0 8px}
+  .ori .toggle{margin-bottom:18px}
+  .ori-stage{height:400px;display:grid;place-items:center;background:#fff;border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);position:relative}
+  .scr{background:var(--ink);border:4px solid var(--ink);border-radius:22px;display:flex;align-items:center;justify-content:center;overflow:hidden;transition:width .45s,height .45s;position:relative}
+  .vid{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:var(--butter2);transition:width .45s,height .45s;text-align:center}
+  .vid .ic{width:54px;height:54px;border-radius:50%;background:#fff;border:3px solid var(--ink);display:grid;place-items:center}
+  .vid .ic svg{width:26px;height:26px}
+  .vid b{font-family:'Fredoka';font-size:14px;background:#fff;border:2px solid var(--ink);border-radius:9px;padding:2px 9px}
+  .scr-tag{position:absolute;top:12px;left:12px;display:inline-flex;gap:7px;align-items:center;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:5px 12px;font-family:'Fredoka';font-weight:700;font-size:12.5px;box-shadow:3px 3px 0 var(--ink)}
+  .scr-tag svg{width:15px;height:15px}
+  .ori-fb{margin-top:16px;display:flex;gap:12px;align-items:flex-start;border:2.5px solid var(--ink);border-radius:14px;padding:13px 16px;font-size:14.5px;font-weight:600;line-height:1.55;background:var(--butter)}
+  .ori-fb.good{background:var(--mint2)} .ori-fb.bad{background:var(--pink2)}
+  .ori-fb svg{width:20px;height:20px;flex:0 0 20px;margin-top:2px}
+
+  /* ===== JURUS REKAM ===== */
+  .tips{margin-top:24px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .tip{background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:16px 18px;display:flex;gap:14px;align-items:flex-start}
+  .tip .fic{flex:0 0 48px;margin:0;width:48px;height:48px}
+  .tip h3{font-size:17px;margin-bottom:3px}
+  .tip p{font-size:13.5px;font-weight:600;color:var(--ink-soft);line-height:1.5}
+
+  /* ===== APLIKASI ===== */
+  .apps{margin-top:22px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .app{background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:16px 18px}
+  .app h3{font-size:19px;display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .app h3 .fic{margin:0;width:42px;height:42px;border-radius:12px}
+  .app p{font-size:13.5px;font-weight:600;color:var(--ink-soft);line-height:1.5}
+  .tools{margin-top:18px;display:flex;gap:12px;flex-wrap:wrap}
+  .tool{display:inline-flex;align-items:center;gap:9px;background:#fff;border:2.5px solid var(--ink);border-radius:14px;padding:9px 14px;box-shadow:3px 3px 0 var(--ink);font-weight:700;font-size:14px}
+  .tool svg{width:18px;height:18px}
+  .tool small{font-weight:600;color:var(--ink-soft);font-size:12.5px}
+
+  /* ===== SIMULASI POTONG ===== */
+  .tl-wrap{margin-top:18px;background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:14px 18px}
+  .tl-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px;font-weight:700;font-size:14px}
+  .tl-top b{font-family:'Fredoka';font-size:22px}
+  .tl{position:relative;height:44px;border:2.5px solid var(--ink);border-radius:12px;background:var(--cream);display:flex;overflow:hidden}
+  .tl span{height:100%;border-right:2px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:12px;transition:width .35s;overflow:hidden;white-space:nowrap}
+  .tl .zone{position:absolute;top:0;bottom:0;border-left:3px dashed var(--teal);border-right:3px dashed var(--teal);background:rgba(63,191,143,.12);pointer-events:none}
+  .tl-scale{display:flex;justify-content:space-between;font-size:11.5px;font-weight:700;color:var(--ink-soft);margin-top:4px}
+  .tl-checks{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+  .chk{display:inline-flex;gap:7px;align-items:center;font-size:13px;font-weight:700;border:2.5px solid var(--ink);border-radius:999px;padding:5px 12px;background:var(--pink)}
+  .chk.on{background:var(--mint2)}
+  .chk svg{width:15px;height:15px}
+  .clips{margin-top:16px;display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+  .clip{background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:4px 4px 0 var(--ink);padding:10px;display:flex;flex-direction:column;gap:7px;transition:opacity .3s,background .3s}
+  .clip.del{opacity:.45;background:var(--cream)}
+  .clip.del .cl-media{filter:grayscale(1)}
+  .cl-media{height:62px;border:2.5px solid var(--ink);border-radius:10px;display:grid;place-items:center;position:relative}
+  .cl-media svg{width:26px;height:26px}
+  .cl-media .n{position:absolute;top:4px;left:5px;font-family:'Fredoka';font-weight:700;font-size:11px;background:#fff;border:2px solid var(--ink);border-radius:999px;padding:0 6px}
+  .clip h4{font-family:'Fredoka';font-size:13.5px;line-height:1.2}
+  .clip .dur{font-size:12px;font-weight:700;color:var(--ink-soft)}
+  .cl-btns{display:flex;gap:6px;margin-top:auto}
+  .cl-btn{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:4px;font-family:'Fredoka';font-weight:600;font-size:12px;border:2.5px solid var(--ink);border-radius:10px;padding:6px 4px;background:var(--butter2);cursor:pointer;color:var(--ink)}
+  .cl-btn svg{width:14px;height:14px}
+  .cl-btn.on{background:var(--ink);color:#fff}
+  .cl-btn.del-b{background:var(--pink2)}
+  .cl-btn.del-b.on{background:var(--coral);color:#fff}
+  .cl-btn:disabled{opacity:.4;cursor:default}
+
+  /* ===== GAME MUSIK ===== */
+  .match-list.three{grid-template-columns:repeat(3,1fr);gap:16px;margin-top:20px}
+  .match-list.three .m-card{padding:14px 16px}
+  .match-list.three .m-card h3{font-size:14px;margin-bottom:10px}
+  .m-card h3 .mi{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:8px;border:2px solid var(--ink);background:var(--lav2);vertical-align:middle;margin-right:6px}
+  .m-card h3 .mi svg{width:15px;height:15px}
+
+  /* ===== CHECKLIST ===== */
+  .cl3{margin-top:22px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .cl-col{background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:16px 18px}
+  .cl-col h3{font-size:21px;display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .cl-col h3 .fic{margin:0;width:42px;height:42px;border-radius:12px}
+  .ck{width:100%;display:flex;gap:10px;align-items:flex-start;text-align:left;background:var(--cream);border:2.5px solid var(--ink);border-radius:12px;padding:9px 12px;margin-top:9px;font-family:'Plus Jakarta Sans';font-weight:600;font-size:13.5px;line-height:1.4;cursor:pointer;color:var(--ink);transition:background .2s}
+  .ck .box{flex:0 0 22px;height:22px;border:2.5px solid var(--ink);border-radius:7px;background:#fff;display:grid;place-items:center}
+  .ck .box svg{width:14px;height:14px;opacity:0}
+  .ck.on{background:var(--mint2)}
+  .ck.on .box{background:var(--teal);color:#fff}
+  .ck.on .box svg{opacity:1}
+  .ck-meter{margin-top:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:var(--ink);color:#fff;border-radius:16px;padding:12px 20px;box-shadow:var(--shadow)}
+  .ck-meter .vt-bar{flex:1;min-width:160px;height:18px;border:2.5px solid #fff;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.15)}
+  .ck-meter .vt-bar i{display:block;height:100%;width:0;background:var(--sun);transition:width .3s}
+  .ck-meter b{font-family:'Fredoka';font-size:20px;color:var(--sun)}
+  .ck-meter span.msg{font-weight:600;font-size:14px;color:var(--butter2)}
+
+  @media (max-width:960px){
+    .ori{grid-template-columns:1fr}
+    .tips,.apps,.cl3,.match-list.three{grid-template-columns:1fr 1fr}
+    .clips{grid-template-columns:repeat(3,1fr)}
+  }
+  @media (max-width:640px){
+    .s-tall{padding-top:22px;padding-bottom:104px}
+    .ori-stage{height:330px}
+    .tips,.apps,.cl3,.match-list.three{grid-template-columns:1fr}
+    .clips{grid-template-columns:1fr 1fr;gap:10px}
+    .tip,.app,.cl-col,.tl-wrap,.ori-stage,.clip{box-shadow:4px 4px 0 var(--ink)}
+    .tl span{font-size:10px}
+    .tg{font-size:14px;padding:8px 12px}
+  }
+</style>
+</head>
+<body>
+
+<div id="bar"></div>
+
+<!-- ============ SLIDE 1 : JUDUL ============ -->
+<section class="slide active" data-theme="peach">
+  <div class="deco bob" style="top:14%;left:5%;width:26px;height:26px">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 2v20M2 12h20"/></svg>
+  </div>
+  <div class="deco bob" style="bottom:18%;left:12%;width:34px;height:34px;animation-delay:1.2s">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/></svg>
+  </div>
+  <div class="s-hero wrap" style="display:contents"><div class="wrap">
+    <div>
+      <span class="kicker anim" style="--d:0"><i data-lucide="video"></i> Digital Marketing · Pertemuan 9 · SMP Kelas 7</span>
+      <h1 class="anim" style="--d:1;font-size:clamp(38px,4.6vw,62px);font-weight:700;line-height:1.08;margin:20px 0 14px">
+        Video Pendek II:<br><span class="hl">Rekam &amp; Edit di HP</span>
+      </h1>
+      <p class="lead anim" style="--d:2">Storyboard sudah jadi, saatnya beraksi! Hari ini kita merekam dengan HP,
+      lalu <b>memotong, menambah teks, dan memberi musik</b> sampai jadi video promosi <b>15–30 detik</b>.</p>
+      <div class="badge-row anim" style="--d:3">
+        <span class="badge b1"><i data-lucide="smartphone"></i> Tegak atau Mendatar</span>
+        <span class="badge b3"><i data-lucide="scissors"></i> Simulasi Potong Klip</span>
+        <span class="badge b2"><i data-lucide="music"></i> Musik Aman</span>
+      </div>
+    </div>
+    <div class="art-stage anim" style="--d:2">
+      <svg viewBox="0 0 380 420" aria-hidden="true">
+        <ellipse cx="190" cy="210" rx="170" ry="190" fill="#BFEAD2"/>
+        <rect x="118" y="36" width="144" height="268" rx="26" fill="#453A4E"/>
+        <rect x="128" y="48" width="124" height="244" rx="18" fill="#FFCBB5"/>
+        <rect x="166" y="56" width="48" height="8" rx="4" fill="#453A4E"/>
+        <circle cx="190" cy="150" r="34" fill="#fff" stroke="#453A4E" stroke-width="5"/>
+        <circle cx="190" cy="150" r="14" fill="#FF7E67" stroke="#453A4E" stroke-width="4"/>
+        <rect x="146" y="214" width="88" height="20" rx="10" fill="#fff" stroke="#453A4E" stroke-width="3"/>
+        <text x="190" y="229" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="12" fill="#453A4E">REC 00:15</text>
+        <!-- timeline klip -->
+        <rect x="30" y="330" width="320" height="44" rx="12" fill="#fff" stroke="#453A4E" stroke-width="4"/>
+        <rect x="40" y="338" width="70" height="28" rx="7" fill="#FF7E67" stroke="#453A4E" stroke-width="3"/>
+        <rect x="118" y="338" width="110" height="28" rx="7" fill="#FFE39A" stroke="#453A4E" stroke-width="3"/>
+        <rect x="236" y="338" width="104" height="28" rx="7" fill="#DCD2F7" stroke="#453A4E" stroke-width="3"/>
+        <line x1="172" y1="318" x2="172" y2="388" stroke="#453A4E" stroke-width="4" stroke-linecap="round"/>
+        <path d="M160 392 h24 l-12 14 z" fill="#FFC531" stroke="#453A4E" stroke-width="3" stroke-linejoin="round"/>
+      </svg>
+      <span class="fchip fc1 bob"><i data-lucide="scissors"></i></span>
+      <span class="fchip fc2 bob" style="animation-delay:.8s"><i data-lucide="type"></i></span>
+      <span class="fchip fc3 bob" style="animation-delay:1.6s"><i data-lucide="music"></i></span>
+      <span class="fchip fc4 bob" style="animation-delay:.4s"><i data-lucide="smartphone"></i></span>
+      <span class="fchip fc5 bob" style="animation-delay:2s"><i data-lucide="sparkles"></i></span>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============ SLIDE 2 : TUJUAN ============ -->
+<section class="slide" data-theme="cream">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="map"></i> Rencana Belajar Hari Ini</span>
+    <h2 class="title anim" style="--d:1">Hari ini kita akan...</h2>
+    <div class="goal-list">
+      <div class="goal anim" style="--d:2">
+        <div class="gnum g1">1</div>
+        <div><h3>Memegang HP dengan Benar</h3><p>Tegak atau mendatar, sesuai platform tempat video diputar.</p></div>
+      </div>
+      <div class="goal anim" style="--d:3">
+        <div class="gnum g2">2</div>
+        <div><h3>Merekam Klip yang Rapi</h3><p>Stabil, terang, dan pendek-pendek supaya mudah diedit.</p></div>
+      </div>
+      <div class="goal anim" style="--d:4">
+        <div class="gnum g3">3</div>
+        <div><h3>Memotong, Memberi Teks, dan Musik</h3><p>Memakai aplikasi edit di HP dan musik yang aman dipakai.</p></div>
+      </div>
+      <div class="goal anim" style="--d:5">
+        <div class="gnum g4">4</div>
+        <div><h3>Mengecek Video Sebelum Jadi</h3><p>Misi akhir: video promosi 15–30 detik yang jelas, singkat, dan ada ajakan.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 3 : PEMANASAN : TEGAK ATAU MENDATAR ============ -->
+<section class="slide s-tall" data-theme="butter">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="hand"></i> Pemanasan · Putar HP-nya!</span>
+    <h2 class="title anim" style="--d:1">Rekam <span class="hl p">tegak atau mendatar?</span></h2>
+    <p class="lead anim" style="--d:1.5">Pilih tempat videonya diputar, lalu pilih cara memegang HP. Lihat apakah videonya memenuhi layar!</p>
+    <div class="ori anim" style="--d:2">
+      <div>
+        <div class="ori-lab">1. Videonya akan diputar di...</div>
+        <div class="toggle" id="oriPlat"></div>
+        <div class="ori-lab">2. Saat merekam, HP dipegang...</div>
+        <div class="toggle" id="oriWay">
+          <button class="tg" data-o="t"><i data-lucide="smartphone"></i> Tegak (9:16)</button>
+          <button class="tg" data-o="l"><i data-lucide="tablet-smartphone"></i> Mendatar (16:9)</button>
+        </div>
+        <div class="ori-fb" id="oriFb"><i data-lucide="info"></i><span>Pilih platform dan cara memegang HP.</span></div>
+        <div class="lab-seen" style="margin-top:14px"><i data-lucide="check"></i> Platform yang sudah pas: <span id="oriN">0</span> / 4</div>
+      </div>
+      <div class="ori-stage noswipe" id="oriStage">
+        <span class="scr-tag" id="oriTag"></span>
+        <div class="scr" id="oriScr"><div class="vid" id="oriVid"><span class="ic"><i data-lucide="cup-soda"></i></span><b>Es Teh Bu Sri</b></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 4 : JURUS REKAM ============ -->
+<section class="slide" data-theme="mint">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="video"></i> Konsep · 6 Jurus Merekam</span>
+    <h2 class="title anim" style="--d:1">Rekam <span class="hl m">pendek-pendek</span>, nanti digabung saat edit</h2>
+    <p class="lead anim" style="--d:1.5">Jangan merekam satu video panjang sekaligus. Rekam tiap kotak storyboard sebagai <b>klip 3–8 detik</b>, ulangi kalau kurang bagus.</p>
+    <div class="tips">
+      <div class="tip anim" style="--d:2"><span class="fic" style="background:var(--peach2)"><i data-lucide="hand"></i></span>
+        <div><h3>Pegang yang stabil</h3><p>Pakai dua tangan, tempelkan siku ke badan, atau sandarkan HP ke tumpukan buku.</p></div></div>
+      <div class="tip anim" style="--d:2.3"><span class="fic" style="background:var(--butter2)"><i data-lucide="sun"></i></span>
+        <div><h3>Cari cahaya jendela</h3><p>Rekam di dekat jendela siang hari. Jangan membelakangi cahaya.</p></div></div>
+      <div class="tip anim" style="--d:2.6"><span class="fic" style="background:var(--sky2)"><i data-lucide="sparkles"></i></span>
+        <div><h3>Lap lensanya</h3><p>Lensa berminyak membuat video buram. Lap pelan dengan kain bersih.</p></div></div>
+      <div class="tip anim" style="--d:2.9"><span class="fic" style="background:var(--mint2)"><i data-lucide="footprints"></i></span>
+        <div><h3>Dekati, jangan zoom</h3><p>Melangkah mendekat ke produk. Zoom di HP membuat gambar pecah.</p></div></div>
+      <div class="tip anim" style="--d:3.2"><span class="fic" style="background:var(--lav2)"><i data-lucide="volume-x"></i></span>
+        <div><h3>Pilih tempat tenang</h3><p>Suara bising kelas ikut terekam. Atau matikan suara asli dan pakai musik nanti.</p></div></div>
+      <div class="tip anim" style="--d:3.5"><span class="fic" style="background:var(--pink2)"><i data-lucide="shield-check"></i></span>
+        <div><h3>Tangan &amp; produk saja</h3><p>Wajah tidak wajib. Jangan merekam teman, seragam bernama, atau alamat rumah tanpa izin.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 5 : APLIKASI EDIT ============ -->
+<section class="slide" data-theme="lav">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="smartphone"></i> Alat Kita</span>
+    <h2 class="title anim" style="--d:1">Mengedit cukup <span class="hl l">pakai HP</span></h2>
+    <p class="lead anim" style="--d:1.5">Pilih satu aplikasi yang ada di HP sekolah atau HP keluarga (dengan izin). Tampilan tiap aplikasi bisa berbeda, tapi alat dasarnya mirip.</p>
+    <div class="apps">
+      <div class="app anim" style="--d:2">
+        <h3><span class="fic" style="background:var(--mint2)"><i data-lucide="image"></i></span> Editor bawaan HP</h3>
+        <p>Ada di aplikasi Galeri atau Foto. Cukup untuk memotong klip dan menggabungkannya. Tanpa pasang aplikasi baru.</p>
+      </div>
+      <div class="app anim" style="--d:2.4">
+        <h3><span class="fic" style="background:var(--butter2)"><i data-lucide="clapperboard"></i></span> CapCut</h3>
+        <p>Banyak pilihan teks, transisi, dan pustaka musik. Bisa dipakai tanpa masuk akun: langsung buat proyek baru.</p>
+      </div>
+      <div class="app anim" style="--d:2.8">
+        <h3><span class="fic" style="background:var(--pink2)"><i data-lucide="film"></i></span> InShot</h3>
+        <p>Sederhana untuk potong, teks, dan mengatur ukuran 9:16. Juga bisa dipakai tanpa masuk akun.</p>
+      </div>
+    </div>
+    <div class="tools anim" style="--d:3.2">
+      <span class="tool"><i data-lucide="scissors"></i> Potong <small>buang bagian jelek</small></span>
+      <span class="tool"><i data-lucide="layers"></i> Urutkan <small>sesuai storyboard</small></span>
+      <span class="tool"><i data-lucide="type"></i> Teks <small>besar &amp; singkat</small></span>
+      <span class="tool"><i data-lucide="music"></i> Musik <small>yang aman</small></span>
+      <span class="tool"><i data-lucide="download"></i> Simpan <small>ke galeri</small></span>
+    </div>
+    <div class="vs-note anim" style="--d:3.6">
+      <b>Tidak perlu login atau membuat akun.</b> Simpan hasilnya di galeri HP, lalu serahkan ke pembina. Pembina yang mengunggah lewat akun usaha kelompok.
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 6 : SIMULASI POTONG ============ -->
+<section class="slide s-tall" data-theme="sky">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="scissors"></i> Coba Langsung · Meja Edit</span>
+    <h2 class="title anim" style="--d:1">Potong klipnya sampai <span class="hl">15–30 detik!</span></h2>
+    <p class="lead anim" style="--d:1.5">Ini hasil rekaman mentah video es teh. <b>Potong</b> klip yang kepanjangan dan <b>hapus</b> klip yang jelek.</p>
+    <div class="tl-wrap anim" style="--d:2">
+      <div class="tl-top"><span>Durasi video: <b id="tlDur">0 dtk</b></span><span id="tlMsg"></span></div>
+      <div class="tl" id="tl"></div>
+      <div class="tl-scale"><span>0</span><span>15</span><span>30</span><span>45</span><span>60 dtk</span></div>
+      <div class="tl-checks" id="tlChecks"></div>
+    </div>
+    <div class="clips anim" style="--d:2.5" id="clips"></div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 7 : GAME MUSIK ============ -->
+<section class="slide s-tall" data-theme="mint">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="puzzle"></i> Ayo Main · Musik Boleh atau Jangan?</span>
+    <h2 class="title anim" style="--d:1">Musik ini <span class="hl m">boleh dipakai</span> di video promosi?</h2>
+    <p class="lead anim" style="--d:1.5">Lagu punya <b>hak cipta</b>: pemiliknya berhak menentukan siapa yang boleh memakainya. Video bisa dihapus atau dibisukan kalau melanggar.</p>
+    <div class="match-list three">
+      <div class="m-card anim" style="--d:2">
+        <h3><span class="mi"><i data-lucide="download"></i></span>Lagu artis terkenal yang di-download dari internet.</h3>
+        <div class="m-opts"><button class="m-opt" data-ok="0">Boleh</button><button class="m-opt" data-ok="1">Jangan</button></div>
+        <div class="m-why hidden"><i data-lucide="circle-check"></i><span>Betul! Lagu artis punya hak cipta. Memakainya untuk promosi tanpa izin itu melanggar.</span></div>
+      </div>
+      <div class="m-card anim" style="--d:2.3">
+        <h3><span class="mi"><i data-lucide="library"></i></span>Musik dari pustaka "bebas hak cipta" di aplikasi edit, dipakai sesuai aturannya.</h3>
+        <div class="m-opts"><button class="m-opt" data-ok="1">Boleh</button><button class="m-opt" data-ok="0">Jangan</button></div>
+        <div class="m-why hidden"><i data-lucide="circle-check"></i><span>Tepat! Musik ini memang disediakan untuk dipakai. Tetap baca keterangannya, ya.</span></div>
+      </div>
+      <div class="m-card anim" style="--d:2.6">
+        <h3><span class="mi"><i data-lucide="volume-2"></i></span>Suara asli saat merekam: es batu dituang, "kriuk" keripik.</h3>
+        <div class="m-opts"><button class="m-opt" data-ok="1">Boleh</button><button class="m-opt" data-ok="0">Jangan</button></div>
+        <div class="m-why hidden"><i data-lucide="circle-check"></i><span>Betul! Suara itu milikmu sendiri, dan sering justru paling menarik.</span></div>
+      </div>
+      <div class="m-card anim" style="--d:2.9">
+        <h3><span class="mi"><i data-lucide="speaker"></i></span>Lagu viral yang direkam dari speaker HP teman.</h3>
+        <div class="m-opts"><button class="m-opt" data-ok="0">Boleh</button><button class="m-opt" data-ok="1">Jangan</button></div>
+        <div class="m-why hidden"><i data-lucide="circle-check"></i><span>Benar! Merekam ulang dari speaker tidak menghapus hak cipta lagunya.</span></div>
+      </div>
+      <div class="m-card anim" style="--d:3.2">
+        <h3><span class="mi"><i data-lucide="drum"></i></span>Irama ketukan meja dan tepuk tangan buatan kelompokmu sendiri.</h3>
+        <div class="m-opts"><button class="m-opt" data-ok="1">Boleh</button><button class="m-opt" data-ok="0">Jangan</button></div>
+        <div class="m-why hidden"><i data-lucide="circle-check"></i><span>Keren! Musik buatan sendiri aman dan bikin video terasa unik.</span></div>
+      </div>
+      <div class="m-card anim" style="--d:3.5">
+        <h3><span class="mi"><i data-lucide="tv"></i></span>Lagu film kartun terkenal, "kan cuma 5 detik".</h3>
+        <div class="m-opts"><button class="m-opt" data-ok="0">Boleh</button><button class="m-opt" data-ok="1">Jangan</button></div>
+        <div class="m-why hidden"><i data-lucide="circle-check"></i><span>Betul! Sependek apa pun, lagu itu tetap punya hak cipta.</span></div>
+      </div>
+    </div>
+    <div class="m-score anim" style="--d:3.8">
+      <span>Musik yang berhasil ditebak:</span><b><span id="mDone">0</span> / 6</b>
+      <span id="mMsg" style="font-weight:600;font-size:14px;color:var(--butter2)"></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 8 : CHECKLIST ============ -->
+<section class="slide" data-theme="pink">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="list-checks"></i> Cek Sebelum Jadi</span>
+    <h2 class="title anim" style="--d:1">Videomu sudah <span class="hl p">jelas, singkat, ada ajakan?</span></h2>
+    <p class="lead anim" style="--d:1.5">Putar videomu sekali dari awal. Centang yang sudah benar. Yang belum, perbaiki dulu di aplikasi edit.</p>
+    <div class="cl3" id="cl3"></div>
+    <div class="ck-meter anim" style="--d:3">
+      <span>Siap:</span><b><span id="ckN">0</span> / 9</b>
+      <span class="vt-bar"><i id="ckFill"></i></span>
+      <span class="msg" id="ckMsg">Ayo cek satu per satu!</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 9 : KUIS ============ -->
+<section class="slide" data-theme="lav">
+  <div class="wrap quiz-shell">
+    <div style="text-align:center">
+      <span class="kicker anim" style="--d:0"><i data-lucide="trophy"></i> Kuis Seru</span>
+      <h2 class="title anim" style="--d:1">Uji Pemahaman Rekam &amp; Edit-mu!</h2>
+    </div>
+    <div id="quizArea" class="anim" style="--d:2"></div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 10 : MISI ============ -->
+<section class="slide" data-theme="peach">
+  <div class="s-misi wrap" style="display:contents"><div class="wrap">
+    <div>
+      <span class="kicker anim" style="--d:0"><i data-lucide="flag"></i> Giliranmu!</span>
+      <h2 class="title anim" style="--d:1">Misi: <span class="hl p">Video promosi</span> 15–30 detik</h2>
+      <p class="lead anim" style="--d:2">Pakai storyboard 4 kotak dari pertemuan lalu. Bagi tugas: perekam, pemegang produk, dan editor.</p>
+      <div class="steps">
+        <div class="step anim" style="--d:3"><div class="snum st1">1</div>
+          <div><h3>Rekam tiap kotak</h3><p>Satu klip 3–8 detik per kotak. HP tegak untuk TikTok, Reels, atau status WhatsApp.</p></div></div>
+        <div class="step anim" style="--d:4"><div class="snum st2">2</div>
+          <div><h3>Potong &amp; urutkan</h3><p>Buang bagian goyang atau buram. Hook harus di paling depan.</p></div></div>
+        <div class="step anim" style="--d:5"><div class="snum st3">3</div>
+          <div><h3>Tambah teks &amp; musik aman</h3><p>Teks besar dan singkat. Musik dari pustaka bebas hak cipta atau suara asli.</p></div></div>
+        <div class="step anim" style="--d:6"><div class="snum st4">4</div>
+          <div><h3>Cek, simpan, serahkan</h3><p>Pakai checklist 9 poin. Simpan ke galeri dan serahkan ke pembina untuk diunggah.</p></div></div>
+      </div>
+    </div>
+    <div>
+      <div class="blank-card anim" style="--d:4">
+        <h4><i data-lucide="clipboard-list"></i> Catatan produksi: salin di kertas</h4>
+        <div class="bl"><b>Produk:</b><span></span></div>
+        <div class="bl"><b>Platform:</b><span></span></div>
+        <div class="bl"><b>Perekam:</b><span></span></div>
+        <div class="bl"><b>Editor:</b><span></span></div>
+        <div class="bl"><b>Musik dari:</b><span></span></div>
+        <div class="sentence">"Video kami berdurasi <b>___</b> detik, dibuka dengan <b>___</b>, dan diakhiri ajakan <b>___</b>."</div>
+      </div>
+      <div class="mini-rubrik card anim" style="--d:5">
+        <h3 style="font-family:'Fredoka';font-size:17px;margin-bottom:8px;display:flex;align-items:center;gap:9px"><i data-lucide="clipboard-check" style="width:19px;height:19px"></i> Cara Penilaian</h3>
+        <div class="rubrik-row"><span>Gambar jelas, stabil, arah HP sesuai platform</span><span>30 poin</span></div>
+        <div class="rubrik-row"><span>Durasi 15–30 dtk, hook di awal, ada ajakan</span><span>40 poin</span></div>
+        <div class="rubrik-row"><span>Teks terbaca dan musik aman</span><span>30 poin</span></div>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============ SLIDE 11 : PENUTUP ============ -->
+<section class="slide" data-theme="peach">
+  <div class="deco bob" style="top:16%;right:8%;width:30px;height:30px">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 2v20M2 12h20"/></svg>
+  </div>
+  <div class="s-end wrap" style="display:contents"><div class="wrap">
+    <div>
+      <span class="kicker anim" style="--d:0"><i data-lucide="message-circle-heart"></i> Refleksi &amp; Penutup</span>
+      <h2 class="title anim" style="--d:1">Sebelum pulang, <span class="hl p">ayo curhat dikit!</span></h2>
+      <div class="refl">
+        <div class="refl-item anim" style="--d:2"><div class="rnum r1">1</div>
+          <p>Kapan kita merekam tegak, dan kapan mendatar?</p></div>
+        <div class="refl-item anim" style="--d:3"><div class="rnum r2">2</div>
+          <p>Bagian mana dari videomu yang paling banyak dipotong? Kenapa?</p></div>
+        <div class="refl-item anim" style="--d:4"><div class="rnum r3">3</div>
+          <p>Sebutkan dua sumber musik atau suara yang aman dipakai!</p></div>
+      </div>
+      <div class="end-btn anim" style="--d:5">
+        <button class="btn sun" id="partyBtn"><i data-lucide="party-popper"></i> Rayakan Hari Ini!</button>
+        <a class="btn ghost" href="silabus.html"><i data-lucide="book-open"></i> Lihat Silabus</a>
+        <a class="btn ghost" href="kanal-promosi.html"><i data-lucide="arrow-right"></i> Pertemuan berikutnya</a>
+      </div>
+    </div>
+    <div class="end-art anim" style="--d:3">
+      <div class="quote">
+        <h3>Video bagus bukan yang paling panjang, tapi yang paling jelas.</h3>
+        <p>Pertemuan berikutnya: <b>Memilih Kanal Promosi</b>. Di mana video kalian paling cocok diunggah?</p>
+      </div>
+      <span class="fchip fc1 bob"><i data-lucide="scissors"></i></span>
+      <span class="fchip fc2 bob" style="animation-delay:.7s"><i data-lucide="video"></i></span>
+      <span class="fchip fc4 bob" style="animation-delay:1.4s"><i data-lucide="music"></i></span>
+      <span class="fchip fc5 bob" style="animation-delay:2s"><i data-lucide="sparkles"></i></span>
+    </div>
+  </div></div>
+</section>
+
+<!-- NAV -->
+<div class="navbar-bg"></div>
+<div class="pagenum"><span id="cur">01</span> / <span id="tot">12</span></div>
+<div class="dots" id="dots"></div>
+<div class="navbtns">
+  <button class="nav" id="prev" aria-label="Sebelumnya"><i data-lucide="chevron-left"></i></button>
+  <button class="nav" id="next" aria-label="Berikutnya"><i data-lucide="chevron-right"></i></button>
+</div>
+<canvas id="confetti"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.454.0/dist/umd/lucide.min.js"></script>
+<script>
+/* ================= NAVIGASI ================= */
+const slides=[...document.querySelectorAll('.slide')];
+const dotsBox=document.getElementById('dots');
+let cur=0;
+slides.forEach((_,i)=>{
+  const d=document.createElement('button');
+  d.className='dot'+(i===0?' on':'');d.title='Slide '+(i+1);
+  d.onclick=()=>go(i);dotsBox.appendChild(d);
+});
+const dots=[...dotsBox.children];
+document.getElementById('tot').textContent=String(slides.length).padStart(2,'0');
+function go(i){
+  cur=Math.max(0,Math.min(slides.length-1,i));
+  slides.forEach((s,k)=>s.classList.toggle('active',k===cur));
+  slides[cur].scrollTop=0;
+  dots.forEach((d,k)=>d.classList.toggle('on',k===cur));
+  document.getElementById('cur').textContent=String(cur+1).padStart(2,'0');
+  document.getElementById('bar').style.width=((cur+1)/slides.length*100)+'%';
+  document.getElementById('prev').disabled=cur===0;
+  document.getElementById('next').disabled=cur===slides.length-1;
+}
+document.getElementById('prev').onclick=()=>go(cur-1);
+document.getElementById('next').onclick=()=>go(cur+1);
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();go(cur+1)}
+  if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(cur-1)}
+});
+let tx=0,ty=0,txSkip=false;
+addEventListener('touchstart',e=>{
+  tx=e.touches[0].clientX;ty=e.touches[0].clientY;
+  txSkip=!!e.target.closest('.picks,.noswipe');
+},{passive:true});
+addEventListener('touchend',e=>{
+  if(txSkip)return;
+  const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;
+  // hanya geser mendatar yang jelas, supaya scroll ke bawah tidak ikut pindah slide
+  if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5) dx<0?go(cur+1):go(cur-1);
+},{passive:true});
+go(+location.hash.slice(1)||0);
+
+const LET=['A','B','C'];
+
+/* ================= PEMANASAN : TEGAK ATAU MENDATAR ================= */
+const PLAT={
+  tiktok:{icon:'music-2',name:'TikTok',shape:'t',why:'TikTok diputar dengan HP tegak dan memenuhi seluruh layar.'},
+  reels:{icon:'camera',name:'Reels / Story IG',shape:'t',why:'Reels dan Story Instagram berbentuk tegak 9:16.'},
+  status:{icon:'message-circle',name:'Status WhatsApp',shape:'t',why:'Status WhatsApp dilihat sambil memegang HP tegak.'},
+  youtube:{icon:'monitor-play',name:'YouTube (video biasa)',shape:'l',why:'Video YouTube biasa sering ditonton mendatar, di HP miring, laptop, atau TV.'}
+};
+let oriP='tiktok',oriO='l';
+const oriOk=new Set();
+document.getElementById('oriPlat').innerHTML=Object.entries(PLAT).map(([k,p])=>
+  `<button class="tg" data-p="${k}"><i data-lucide="${p.icon}"></i> ${p.name}</button>`).join('');
+function renderOri(){
+  const p=PLAT[oriP];
+  document.querySelectorAll('[data-p]').forEach(b=>b.classList.toggle('on',b.dataset.p===oriP));
+  document.querySelectorAll('[data-o]').forEach(b=>b.classList.toggle('on',b.dataset.o===oriO));
+  const stage=document.getElementById('oriStage');
+  const maxW=Math.min(340,stage.clientWidth-40),maxH=Math.min(330,stage.clientHeight-60);
+  // ukuran layar platform
+  let sw,sh;
+  if(p.shape==='t'){sh=maxH;sw=Math.round(sh*9/16)}else{sw=maxW;sh=Math.round(sw*9/16)}
+  // ukuran video di dalam layar (contain)
+  const r=oriO==='t'?9/16:16/9;
+  let vw=sw-8,vh=Math.round(vw/r);
+  if(vh>sh-8){vh=sh-8;vw=Math.round(vh*r)}
+  const scr=document.getElementById('oriScr');scr.style.width=sw+'px';scr.style.height=sh+'px';
+  const vid=document.getElementById('oriVid');vid.style.width=vw+'px';vid.style.height=vh+'px';
+  document.getElementById('oriTag').innerHTML=`<i data-lucide="${p.icon}"></i><span>${p.name}</span>`;
+  const ok=p.shape===oriO,fb=document.getElementById('oriFb');
+  fb.className='ori-fb '+(ok?'good':'bad');
+  fb.innerHTML=ok
+    ?`<i data-lucide="circle-check"></i><span><b>Pas!</b> Videonya memenuhi layar. ${p.why}</span>`
+    :`<i data-lucide="circle-alert"></i><span><b>Kurang pas.</b> Ada pinggiran hitam besar dan produknya jadi kecil. ${p.why}</span>`;
+  if(ok&&!oriOk.has(oriP)){
+    oriOk.add(oriP);document.getElementById('oriN').textContent=oriOk.size;
+    celebrate(oriOk.size===4?200:50);
+  }
+  window.lucide&&lucide.createIcons();
+}
+document.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{oriP=b.dataset.p;renderOri()});
+document.querySelectorAll('[data-o]').forEach(b=>b.onclick=()=>{oriO=b.dataset.o;renderOri()});
+addEventListener('resize',renderOri);
+renderOri();
+
+/* ================= SIMULASI POTONG KLIP ================= */
+const CLIPS=[
+  {name:'Teh telang dituang (hook)',icon:'sparkles',bg:'var(--pink2)',raw:10,cut:3,good:1,role:'hook'},
+  {name:'Kamera goyang &amp; buram',icon:'move',bg:'var(--lav2)',raw:8,cut:4,good:0},
+  {name:'Jeruk nipis, warna jadi ungu',icon:'cup-soda',bg:'var(--butter2)',raw:20,cut:8,good:1},
+  {name:'Kucing lewat di meja',icon:'cat',bg:'var(--sky2)',raw:6,cut:3,good:0},
+  {name:'Close-up gelas jumbo',icon:'snowflake',bg:'var(--mint2)',raw:9,cut:5,good:1},
+  {name:'Harga &amp; tempat (ajakan)',icon:'map-pin',bg:'var(--peach2)',raw:7,cut:4,good:1,role:'cta'}
+];
+const clipSt=CLIPS.map(()=>({cut:false,del:false}));
+let tlCheered=false;
+function clipDur(i){return clipSt[i].del?0:(clipSt[i].cut?CLIPS[i].cut:CLIPS[i].raw)}
+function renderClips(){
+  document.getElementById('clips').innerHTML=CLIPS.map((c,i)=>{
+    const s=clipSt[i];
+    return `<div class="clip${s.del?' del':''}">
+      <div class="cl-media" style="background:${c.bg}"><span class="n">${i+1}</span><i data-lucide="${c.icon}"></i></div>
+      <h4>${c.name}</h4>
+      <div class="dur">${s.del?'dihapus':(s.cut?`dipotong: ${c.cut} dtk`:`mentah: ${c.raw} dtk`)}</div>
+      <div class="cl-btns">
+        <button class="cl-btn${s.cut?' on':''}" data-cut="${i}" ${s.del?'disabled':''}><i data-lucide="scissors"></i> ${s.cut?'Batal':'Potong'}</button>
+        <button class="cl-btn del-b${s.del?' on':''}" data-del="${i}"><i data-lucide="${s.del?'undo-2':'trash-2'}"></i> ${s.del?'Pulihkan':'Hapus'}</button>
+      </div>
+    </div>`;
+  }).join('');
+  const total=CLIPS.reduce((n,_,i)=>n+clipDur(i),0);
+  document.getElementById('tl').innerHTML=CLIPS.map((c,i)=>clipDur(i)?`<span style="width:${clipDur(i)/60*100}%;background:${c.bg}">${clipDur(i)>=3?i+1:''}</span>`:'').join('')
+    +`<span class="zone" style="left:25%;width:25%"></span>`;
+  document.getElementById('tlDur').textContent=total+' dtk';
+  const badGone=CLIPS.every((c,i)=>c.good||clipSt[i].del);
+  const keyKept=!clipSt[0].del&&!clipSt[5].del;
+  const inRange=total>=15&&total<=30;
+  const checks=[[inRange,'Durasi 15–30 detik'],[badGone,'Klip jelek sudah dihapus'],[keyKept,'Hook di awal & ajakan di akhir tetap ada']];
+  document.getElementById('tlChecks').innerHTML=checks.map(([ok,t])=>`<span class="chk${ok?' on':''}"><i data-lucide="${ok?'circle-check':'circle'}"></i>${t}</span>`).join('');
+  const all=checks.every(c=>c[0]);
+  const msg=document.getElementById('tlMsg');
+  msg.textContent=all?'Video siap diberi teks dan musik!':(total>30?'Masih kepanjangan. Potong lagi!':total<15?'Terlalu pendek. Pulihkan klip yang bagus.':'Hampir! Cek daftar di bawah.');
+  msg.style.color=all?'var(--teal)':'var(--coral)';
+  if(all&&!tlCheered){tlCheered=true;celebrate(200)}
+  if(!all)tlCheered=false;
+  document.querySelectorAll('[data-cut]').forEach(b=>b.onclick=()=>{const i=+b.dataset.cut;clipSt[i].cut=!clipSt[i].cut;renderClips()});
+  document.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{const i=+b.dataset.del;clipSt[i].del=!clipSt[i].del;renderClips()});
+  window.lucide&&lucide.createIcons();
+}
+renderClips();
+
+/* ================= GAME MUSIK ================= */
+let mDone=0;
+const M_TOTAL=document.querySelectorAll('.m-card').length;
+document.querySelectorAll('.m-card').forEach(card=>{
+  card.querySelectorAll('.m-opt').forEach(btn=>{
+    btn.onclick=()=>{
+      if(card.classList.contains('solved'))return;
+      if(btn.dataset.ok==="1"){
+        btn.classList.add('good');
+        card.querySelectorAll('.m-opt').forEach(b=>b.disabled=true);
+        card.classList.add('solved');
+        card.querySelector('.m-why').classList.remove('hidden');
+        mDone++;
+        document.getElementById('mDone').textContent=mDone;
+        celebrate(70);
+        if(mDone===M_TOTAL){
+          document.getElementById('mMsg').textContent="Hebat! Kamu tahu musik yang aman dipakai!";
+          celebrate(220);
+        }
+      }else{
+        btn.classList.add('bad','shake');
+        btn.disabled=true;
+        setTimeout(()=>btn.classList.remove('shake'),350);
+      }
+    };
+  });
+});
+
+/* ================= CHECKLIST ================= */
+const CK=[
+  {t:'Jelas',icon:'eye',bg:'var(--sky2)',items:['Gambar terang dan tidak goyang','Produk terlihat besar dan asli','Teks besar dan mudah dibaca']},
+  {t:'Singkat',icon:'timer',bg:'var(--butter2)',items:['Durasi 15–30 detik','Hook langsung di 3 detik pertama','Tidak ada bagian yang membosankan']},
+  {t:'Ada Ajakan',icon:'megaphone',bg:'var(--mint2)',items:['Ada harga atau cara pesan','Ada tempat atau waktu membeli','Musik aman dan info jujur']}
+];
+const ckOn=new Set();
+document.getElementById('cl3').innerHTML=CK.map((c,i)=>`<div class="cl-col anim" style="--d:${2+i*.4}">
+  <h3><span class="fic" style="background:${c.bg}"><i data-lucide="${c.icon}"></i></span>${c.t}</h3>
+  ${c.items.map((it,j)=>`<button class="ck" data-ck="${i}-${j}"><span class="box"><i data-lucide="check"></i></span>${it}</button>`).join('')}
+</div>`).join('');
+document.querySelectorAll('[data-ck]').forEach(b=>b.onclick=()=>{
+  const k=b.dataset.ck;
+  ckOn.has(k)?ckOn.delete(k):ckOn.add(k);
+  b.classList.toggle('on',ckOn.has(k));
+  const n=ckOn.size;
+  document.getElementById('ckN').textContent=n;
+  document.getElementById('ckFill').style.width=(n/9*100)+'%';
+  document.getElementById('ckMsg').textContent=n===9?'Siap diserahkan ke pembina!':n>=6?'Sedikit lagi!':'Ayo cek satu per satu!';
+  if(n===9)celebrate(220);
+});
+
+/* ================= KUIS ================= */
+const quizData=[
+  {q:"Video promosi untuk TikTok atau status WhatsApp sebaiknya direkam dengan HP...", opts:[
+    "Tegak (9:16), supaya memenuhi layar",
+    "Mendatar (16:9), supaya lebar",
+    "Terbalik, supaya unik"],a:0,
+    why:"Betul! TikTok, Reels, dan status WhatsApp ditonton dengan HP tegak."},
+  {q:"Produk terlihat kecil di layar. Apa yang sebaiknya dilakukan?", opts:[
+    "Zoom sebesar-besarnya",
+    "Melangkah mendekat ke produk",
+    "Biarkan saja"],a:1,
+    why:"Tepat! Zoom di HP membuat gambar pecah. Lebih baik kamera didekatkan."},
+  {q:"Video mentahmu 60 detik, padahal targetnya 15–30 detik. Langkah yang tepat adalah...", opts:[
+    "Mempercepat seluruh video 4 kali",
+    "Memotong bagian yang terlalu panjang dan menghapus klip yang jelek",
+    "Mengunggah apa adanya"],a:1,
+    why:"Iya! Potong yang kepanjangan, hapus yang goyang atau tidak berhubungan."},
+  {q:"Musik mana yang aman dipakai di video promosi?", opts:[
+    "Lagu artis terkenal hasil download",
+    "Lagu viral yang direkam dari speaker",
+    "Musik dari pustaka bebas hak cipta atau suara asli saat merekam"],a:2,
+    why:"Betul! Pustaka musik bebas hak cipta dan suara asli aman dipakai."},
+  {q:"Videomu sudah jadi. Bagaimana cara mengunggahnya?", opts:[
+    "Unggah dari akun pribadiku sendiri",
+    "Simpan di galeri, lalu serahkan ke pembina untuk diunggah lewat akun usaha",
+    "Kirim ke semua grup WhatsApp"],a:1,
+    why:"Tepat sekali! Akun usaha kelompok dipegang pembina, jadi kamu tetap aman."}
+];
+
+const quizArea=document.getElementById('quizArea');
+let qi=0,score=0;
+function renderQuiz(){
+  if(qi>=quizData.length){renderDone();return}
+  const d=quizData[qi];
+  quizArea.innerHTML=`
+    <div class="q-card card">
+      <div class="q-meta">
+        <span class="q-badge">Soal ${qi+1} dari ${quizData.length}</span>
+        <span class="q-score"><i data-lucide="star"></i> Skor: ${score}</span>
+      </div>
+      <h3 class="q-q">${d.q}</h3>
+      <div class="q-opts">
+        ${d.opts.map((o,i)=>`<button class="opt" data-i="${i}"><span class="letter">${LET[i]}</span>${o}</button>`).join('')}
+      </div>
+      <div class="q-foot hidden" id="qFoot">
+        <div class="q-why" id="qWhy"></div>
+        <button class="btn mint" id="qNext">${qi===quizData.length-1?'Lihat Hasil':'Lanjut'} <i data-lucide="chevron-right"></i></button>
+      </div>
+    </div>`;
+  window.lucide&&lucide.createIcons();
+  quizArea.querySelectorAll('.opt').forEach(btn=>{
+    btn.onclick=()=>{
+      const pick=+btn.dataset.i;
+      quizArea.querySelectorAll('.opt').forEach(b=>b.disabled=true);
+      quizArea.querySelector(`.opt[data-i="${d.a}"]`).classList.add('good');
+      if(pick===d.a){score++;celebrate(60)}
+      else btn.classList.add('bad');
+      document.getElementById('qWhy').innerHTML=`<i data-lucide="${pick===d.a?'circle-check':'info'}"></i><span>${d.why}</span>`;
+      document.getElementById('qFoot').classList.remove('hidden');
+      window.lucide&&lucide.createIcons();
+      document.getElementById('qNext').onclick=()=>{qi++;renderQuiz()};
+    };
+  });
+}
+function renderDone(){
+  let msg;
+  if(score===5)msg="Sempurna! Kamu siap merekam dan mengedit video promosi!";
+  else if(score===4)msg="Hebat! Sedikit lagi menuju sempurna!";
+  else if(score===3)msg="Bagus! Ayo bahas lagi soal yang keliru bareng teman sebangku.";
+  else msg="Tidak apa-apa — belajar memang proses. Coba ulangi, ya!";
+  quizArea.innerHTML=`
+    <div class="q-card card q-done">
+      <div class="tro"><i data-lucide="trophy"></i></div>
+      <h3>Kuis Selesai!</h3>
+      <div class="big">${score} / 5</div>
+      <p>${msg}</p>
+      <button class="btn" id="qRetry"><i data-lucide="rotate-ccw"></i> Ulangi Kuis</button>
+    </div>`;
+  window.lucide&&lucide.createIcons();
+  celebrate(180);
+  document.getElementById('qRetry').onclick=()=>{qi=0;score=0;renderQuiz()};
+}
+renderQuiz();
+
+/* ================= KONFETI ================= */
+const cvs=document.getElementById('confetti'),ctx=cvs.getContext('2d');
+const COLORS=['#FF7E67','#FFC531','#3FBF8F','#FFA8C5','#B9A7F2','#7FD8A6'];
+let parts=[],raf=null;
+function sizeC(){cvs.width=innerWidth;cvs.height=innerHeight}
+sizeC();addEventListener('resize',sizeC);
+function celebrate(n=140){
+  for(let i=0;i<n;i++){
+    parts.push({
+      x:Math.random()*cvs.width,y:-30-Math.random()*cvs.height*.35,
+      vx:-1.6+Math.random()*3.2,vy:2.2+Math.random()*3.4,
+      w:9+Math.random()*9,h:5+Math.random()*6,
+      rot:Math.random()*Math.PI,vr:-.16+Math.random()*.32,
+      ph:Math.random()*Math.PI*2,
+      c:COLORS[Math.floor(Math.random()*COLORS.length)],
+      shape:Math.floor(Math.random()*3)
+    });
+  }
+  if(!raf)tick();
+}
+function tick(){
+  ctx.clearRect(0,0,cvs.width,cvs.height);
+  parts.forEach(p=>{
+    p.x+=p.vx;p.y+=p.vy;p.rot+=p.vr;p.ph+=.1;p.vy+=.015;
+    ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);
+    ctx.scale(1,Math.abs(Math.sin(p.ph))*.85+.15);
+    ctx.fillStyle=p.c;
+    if(p.shape===0){ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h)}
+    else if(p.shape===1){ctx.beginPath();ctx.arc(0,0,p.h,0,7);ctx.fill()}
+    else{ctx.beginPath();ctx.moveTo(0,-p.h);ctx.lineTo(p.w/2,p.h/2);ctx.lineTo(-p.w/2,p.h/2);ctx.closePath();ctx.fill()}
+    ctx.restore();
+  });
+  parts=parts.filter(p=>p.y<cvs.height+40);
+  if(parts.length)raf=requestAnimationFrame(tick);
+  else{raf=null;ctx.clearRect(0,0,cvs.width,cvs.height)}
+}
+document.getElementById('partyBtn').onclick=()=>{celebrate(260);setTimeout(()=>celebrate(160),700)};
+
+window.lucide&&lucide.createIcons();
+</script>
+</body>
+</html>

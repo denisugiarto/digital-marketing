@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Rancang Kampanye Mini — Projek · SMP Kelas 7</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#453A4E; --ink-soft:#6B5F75; --cream:#FDF7EF;
+    --peach:#FFF1E8; --peach2:#FFCBB5;
+    --mint:#EAF7F0;  --mint2:#BFEAD2;
+    --butter:#FFF6DF;--butter2:#FFE39A;
+    --lav:#F3F0FC;   --lav2:#DCD2F7;
+    --pink:#FFF0F5;  --pink2:#FFC9DC;
+    --sky:#E9F1FB;   --sky2:#C5DCF2;
+    --coral:#FF7E67; --teal:#3FBF8F; --sun:#FFC531;
+    --shadow:6px 6px 0 var(--ink);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--ink);background:var(--cream);overflow:hidden}
+  h1,h2,h3,.disp{font-family:'Fredoka',sans-serif}
+
+  /* ===== CHROME ===== */
+  #bar{position:fixed;top:0;left:0;height:6px;background:var(--coral);width:0;z-index:60;transition:width .4s ease;border-radius:0 4px 4px 0}
+  .pagenum{position:fixed;left:26px;bottom:22px;z-index:60;font-family:'Fredoka';font-weight:600;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:7px 16px;box-shadow:4px 4px 0 var(--ink);font-size:14px;letter-spacing:.06em}
+  .dots{position:fixed;left:50%;transform:translateX(-50%);bottom:24px;z-index:60;display:flex;gap:9px}
+  .dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--ink);background:#fff;cursor:pointer;transition:.25s;padding:0}
+  .dot.on{background:var(--sun);transform:scale(1.35)}
+  .navbtns{position:fixed;right:26px;bottom:18px;z-index:60;display:flex;gap:10px}
+  .nav{width:52px;height:52px;border-radius:50%;background:#fff;border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink);cursor:pointer;display:grid;place-items:center;transition:.15s;color:var(--ink)}
+  .nav:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .nav:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+  .nav:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:4px 4px 0 var(--ink)}
+  .navbar-bg{display:none;position:fixed;left:0;right:0;bottom:0;height:calc(76px + env(safe-area-inset-bottom,0px));z-index:55;background:rgba(253,247,239,.94);border-top:3px solid var(--ink);backdrop-filter:blur(6px)}
+
+  /* ===== SLIDES ===== */
+  .slide{position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;opacity:0;visibility:hidden;transform:translateX(46px);transition:opacity .5s ease,transform .55s cubic-bezier(.22,.9,.32,1),visibility .5s;overflow:auto;padding:56px 40px 100px}
+  .slide.active{opacity:1;visibility:visible;transform:none;z-index:5}
+  .slide::before,.slide::after{content:'';position:absolute;border-radius:50%;z-index:0}
+  .slide::before{width:44vw;height:44vw;top:-20vw;right:-14vw;background:var(--bA);opacity:.75}
+  .slide::after{width:34vw;height:34vw;bottom:-16vw;left:-12vw;background:var(--bB);opacity:.7}
+  [data-theme="peach"] {background:var(--peach);--bA:var(--peach2);--bB:var(--butter2)}
+  [data-theme="cream"] {background:var(--cream);--bA:var(--mint2);--bB:var(--pink2)}
+  [data-theme="butter"]{background:var(--butter);--bA:var(--butter2);--bB:var(--mint2)}
+  [data-theme="mint"]  {background:var(--mint);--bA:var(--mint2);--bB:var(--peach2)}
+  [data-theme="lav"]   {background:var(--lav);--bA:var(--lav2);--bB:var(--peach2)}
+  [data-theme="pink"]  {background:var(--pink);--bA:var(--pink2);--bB:var(--sky2)}
+  [data-theme="sky"]   {background:var(--sky);--bA:var(--sky2);--bB:var(--butter2)}
+
+  .wrap{position:relative;z-index:2;width:100%}
+  .slide .wrap{margin-top:auto;margin-bottom:auto}
+  .anim{opacity:0}
+  .slide.active .anim{animation:rise .7s cubic-bezier(.22,.9,.32,1) forwards;animation-delay:calc(var(--d,0)*.09s)}
+  @keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+
+  .kicker{display:inline-flex;align-items:center;gap:8px;font-family:'Fredoka';font-weight:600;font-size:13px;letter-spacing:.14em;text-transform:uppercase;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:8px 18px;box-shadow:4px 4px 0 var(--ink)}
+  .kicker svg{width:16px;height:16px}
+  h2.title{font-size:clamp(30px,3.6vw,48px);font-weight:700;margin:18px 0 8px;line-height:1.12}
+  p.lead{font-size:clamp(15px,1.3vw,19px);color:var(--ink-soft);max-width:680px;font-weight:500}
+  .hl{background:linear-gradient(transparent 62%,var(--butter2) 62%);padding:0 3px;border-radius:3px}
+  .hl.m{background:linear-gradient(transparent 62%,var(--mint2) 62%)}
+  .hl.p{background:linear-gradient(transparent 62%,var(--pink2) 62%)}
+  .hl.l{background:linear-gradient(transparent 62%,var(--lav2) 62%)}
+  .card{background:#fff;border:3px solid var(--ink);border-radius:20px;box-shadow:var(--shadow)}
+  .btn{display:inline-flex;align-items:center;gap:10px;font-family:'Fredoka';font-weight:600;font-size:17px;color:var(--ink);background:var(--coral);border:3px solid var(--ink);border-radius:14px;padding:13px 26px;box-shadow:5px 5px 0 var(--ink);cursor:pointer;transition:.15s;text-decoration:none}
+  .btn svg{width:20px;height:20px}
+  .btn:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+  .btn.sun{background:var(--sun)} .btn.mint{background:var(--mint2)} .btn.ghost{background:#fff}
+  .hidden{display:none !important}
+  .deco{position:absolute;z-index:1;pointer-events:none;color:var(--ink);opacity:.55}
+  .deco svg{width:100%;height:100%}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}50%{transform:translateY(-14px) rotate(var(--r,0deg))}}
+  .bob{animation:bob 4.5s ease-in-out infinite}
+
+  /* ===== HERO ===== */
+  .s-hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center}
+  .badge-row{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap}
+  .badge{display:inline-flex;align-items:center;gap:8px;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:8px 16px;font-weight:700;font-size:14px;box-shadow:3px 3px 0 var(--ink)}
+  .badge svg{width:17px;height:17px}
+  .b1{background:var(--mint2)} .b2{background:var(--pink2)} .b3{background:var(--butter2)}
+  .art-stage{position:relative;display:grid;place-items:center;min-height:460px}
+  .art-stage>svg{width:min(400px,90%);filter:drop-shadow(8px 10px 0 rgba(69,58,78,.18))}
+  .fchip{position:absolute;display:grid;place-items:center;border:3px solid var(--ink);border-radius:50%;box-shadow:4px 4px 0 var(--ink)}
+  .fchip svg{width:52%;height:52%}
+  .fc1{width:74px;height:74px;background:var(--coral);color:#fff;top:36px;left:34px;--r:-8deg}
+  .fc2{width:64px;height:64px;background:var(--sun);top:118px;right:26px;--r:10deg}
+  .fc3{width:70px;height:70px;background:var(--teal);color:#fff;bottom:92px;left:14px;--r:6deg}
+  .fc4{width:60px;height:60px;background:var(--lav2);bottom:34px;right:48px;--r:-10deg}
+  .fc5{width:52px;height:52px;background:var(--pink2);top:8px;right:130px;--r:14deg}
+
+  /* ===== GOALS ===== */
+  .goal-list{margin-top:30px;display:flex;flex-direction:column;gap:16px;max-width:880px}
+  .goal{display:flex;align-items:center;gap:22px;background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:16px 24px}
+  .goal:nth-child(odd){margin-right:56px}.goal:nth-child(even){margin-left:56px}
+  .gnum{flex:0 0 56px;height:56px;border-radius:50%;border:3px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:24px}
+  .g1{background:var(--coral);color:#fff}.g2{background:var(--sun)}.g3{background:var(--mint2)}.g4{background:var(--pink2)}
+  .goal h3{font-size:19px;font-weight:600;margin-bottom:3px}
+  .goal p{font-size:14.5px;color:var(--ink-soft);font-weight:500}
+
+  /* ===== PEMANASAN : TEBAK PEMBELI ===== */
+  .wu-shell{margin-top:26px;display:grid;grid-template-columns:330px 1fr;gap:32px;align-items:start}
+  .prod{border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);overflow:hidden;background:#fff}
+  .prod-media{height:200px;display:grid;place-items:center;border-bottom:2.5px solid var(--ink)}
+  .prod-media .ic{width:110px;height:110px;border-radius:50%;background:#fff;border:3px solid var(--ink);display:grid;place-items:center;box-shadow:5px 5px 0 var(--ink)}
+  .prod-media .ic svg{width:54px;height:54px}
+  .prod-cap{padding:14px 18px}
+  .prod-cap h4{font-family:'Fredoka';font-size:21px;line-height:1.15}
+  .prod-cap .sub{font-size:13.5px;font-weight:600;margin-top:4px;color:var(--ink-soft)}
+  .prod-cap .price{display:inline-block;margin-top:8px;font-family:'Fredoka';font-weight:700;font-size:14px;border:2.5px solid var(--ink);border-radius:10px;padding:4px 10px;background:var(--butter2)}
+  .wu-round{font-family:'Fredoka';font-weight:600;font-size:14px;color:var(--ink-soft)}
+  .wu-q{font-family:'Fredoka';font-weight:600;font-size:clamp(19px,1.8vw,23px);margin:6px 0 14px}
+  .wu-opts{display:flex;flex-direction:column;gap:12px;max-width:430px}
+  .wu-opt{display:flex;align-items:center;gap:13px;text-align:left;background:#fff;border:3px solid var(--ink);border-radius:14px;padding:12px 18px;font-family:'Plus Jakarta Sans';font-weight:600;font-size:15.5px;cursor:pointer;transition:.15s;color:var(--ink);box-shadow:4px 4px 0 var(--ink)}
+  .wu-opt:hover:not(:disabled){transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .wu-opt:disabled{cursor:default}
+  .wu-opt .letter{flex:0 0 34px;height:34px;border-radius:10px;border:2.5px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;background:var(--butter2)}
+  .wu-opt.good{background:var(--mint2)} .wu-opt.good .letter{background:var(--teal);color:#fff}
+  .wu-opt.bad{background:var(--pink2)} .wu-opt.bad .letter{background:var(--coral);color:#fff}
+  .wu-fb{margin-top:16px;display:flex;gap:12px;align-items:flex-start;background:var(--butter);border:2.5px solid var(--ink);border-radius:14px;padding:14px 18px;font-size:14.5px;font-weight:600;line-height:1.55;max-width:430px}
+  .wu-fb svg{width:20px;height:20px;flex:0 0 20px;margin-top:2px}
+  .wu-next{margin-top:14px}
+  .wu-done{background:#fff;border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);padding:30px 34px;max-width:640px;text-align:center}
+  .wu-done .tro{width:84px;height:84px;border-radius:50%;background:var(--sun);border:3px solid var(--ink);display:grid;place-items:center;margin:0 auto 14px;box-shadow:4px 4px 0 var(--ink)}
+  .wu-done .tro svg{width:40px;height:40px}
+  .wu-done h3{font-size:26px;margin-bottom:8px}
+  .wu-done p{font-weight:600;color:var(--ink-soft);line-height:1.6}
+  .wu-done .sc{font-family:'Fredoka';font-weight:700;font-size:19px;color:var(--teal);margin-top:10px}
+
+  /* ===== DEFINISI ===== */
+  .s-def .wrap{display:grid;grid-template-columns:1.08fr .92fr;gap:40px;align-items:center}
+  .define{margin-top:24px;background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:22px 26px;font-size:clamp(16px,1.45vw,20px);font-weight:600;line-height:1.6}
+  .define .q{color:var(--coral);font-family:'Fredoka'}
+  .analog{margin-top:18px;display:flex;gap:16px;align-items:flex-start;background:var(--lav);border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:18px 22px}
+  .analog .ic{flex:0 0 46px;height:46px;border-radius:50%;background:var(--lav2);display:grid;place-items:center;border:2.5px solid var(--ink)}
+  .analog .ic svg{width:24px;height:24px}
+  .analog p{font-size:15.5px;font-weight:500;line-height:1.55}
+  .target-art{display:grid;place-items:center}
+  .target-art svg{width:min(380px,100%);height:auto;filter:drop-shadow(8px 10px 0 rgba(69,58,78,.18))}
+  /* ===== FLIP 4 PERTANYAAN ===== */
+  .fgrid{margin-top:26px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+  .fcard{perspective:1100px;min-height:250px;cursor:pointer}
+  .finner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.3,.8,.3,1)}
+  .fcard.flipped .finner{transform:rotateY(180deg)}
+  .fface{position:absolute;inset:0;backface-visibility:hidden;border:3px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 var(--ink);padding:18px 20px;display:flex;flex-direction:column}
+  .ffront{background:#fff}
+  .fback{background:var(--mint2);transform:rotateY(180deg)}
+  .fic{width:52px;height:52px;border-radius:15px;border:2.5px solid var(--ink);display:grid;place-items:center;margin-bottom:12px}
+  .fic svg{width:24px;height:24px}
+  .ffront h3{font-size:22px;line-height:1.15}
+  .ffront .tease{font-size:13.5px;font-weight:600;color:var(--ink-soft);line-height:1.45;margin-top:6px}
+  .ffront .hint{margin-top:auto;display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;color:var(--ink-soft)}
+  .ffront .hint svg{width:15px;height:15px}
+  .fback .tag{font-family:'Fredoka';font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;background:var(--ink);color:#fff;border-radius:999px;padding:4px 12px;align-self:flex-start;margin-bottom:10px}
+  .fback p{font-size:13.8px;font-weight:600;line-height:1.55;flex:1}
+  .fback .eg{font-size:12.5px;font-weight:700;opacity:.8;margin-top:8px;border-top:2px dashed rgba(69,58,78,.4);padding-top:8px;flex:0 0 auto}
+  /* ===== GAME ===== */
+  .match-list{margin-top:26px;display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .m-card{background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:18px 20px}
+  .m-card.solved{background:var(--mint)}
+  .m-card h3{font-size:14.5px;font-weight:600;line-height:1.5;margin-bottom:12px;font-family:'Plus Jakarta Sans'}
+  .m-card h3 b{font-family:'Fredoka'}
+  .m-opts{display:flex;gap:9px;flex-wrap:wrap}
+  .m-opt{display:inline-flex;align-items:center;gap:7px;font-family:'Fredoka';font-weight:600;font-size:13.5px;border:2.5px solid var(--ink);border-radius:999px;padding:8px 15px;background:#fff;cursor:pointer;box-shadow:3px 3px 0 var(--ink);transition:.15s;color:var(--ink)}
+  .m-opt:hover:not(:disabled){transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--ink)}
+  .m-opt:disabled{cursor:default}
+  .m-opt.good{background:var(--teal);color:#fff}
+  .m-opt.bad{background:var(--pink2)}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+  .m-opt.shake{animation:shake .3s}
+  .m-why{margin-top:12px;background:var(--butter);border:2.5px solid var(--ink);border-radius:12px;padding:10px 14px;font-size:13px;font-weight:600;line-height:1.5;display:flex;gap:9px}
+  .m-why svg{width:17px;height:17px;flex:0 0 17px;margin-top:1px}
+  .m-score{margin-top:22px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;background:var(--ink);color:#fff;border-radius:16px;padding:14px 24px;max-width:640px;box-shadow:var(--shadow)}
+  .m-score b{font-family:'Fredoka';font-size:20px;color:var(--sun)}
+
+  /* ===== QUIZ ===== */
+  .quiz-shell{max-width:780px;margin:0 auto}
+  .q-meta{display:flex;justify-content:space-between;align-items:center;margin:0 0 16px}
+  .q-badge{font-family:'Fredoka';font-weight:700;background:var(--coral);color:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:7px 18px;box-shadow:3px 3px 0 var(--ink);font-size:14px}
+  .q-score{font-family:'Fredoka';font-weight:700;background:var(--sun);border:2.5px solid var(--ink);border-radius:999px;padding:7px 18px;box-shadow:3px 3px 0 var(--ink);font-size:14px;display:flex;align-items:center;gap:7px}
+  .q-score svg{width:16px;height:16px}
+  .q-card{padding:28px 32px;margin-top:20px}
+  .q-q{font-size:clamp(19px,1.8vw,25px);font-weight:600;line-height:1.4;margin-bottom:20px}
+  .q-opts{display:flex;flex-direction:column;gap:12px}
+  .opt{display:flex;align-items:center;gap:16px;text-align:left;background:#fff;border:3px solid var(--ink);border-radius:14px;padding:13px 18px;font-family:'Plus Jakarta Sans';font-weight:600;font-size:16px;cursor:pointer;transition:.15s;color:var(--ink);box-shadow:4px 4px 0 var(--ink)}
+  .opt:hover:not(:disabled){transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .opt:disabled{cursor:default}
+  .opt .letter{flex:0 0 36px;height:36px;border-radius:10px;border:2.5px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;background:var(--lav2)}
+  .opt.good{background:var(--mint2)} .opt.good .letter{background:var(--teal);color:#fff}
+  .opt.bad{background:var(--pink2);opacity:.9} .opt.bad .letter{background:var(--coral);color:#fff}
+  .q-foot{margin-top:18px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+  .q-why{display:flex;gap:12px;align-items:flex-start;background:var(--butter);border:2.5px solid var(--ink);border-radius:14px;padding:14px 18px;font-size:14.5px;font-weight:600;line-height:1.5;flex:1}
+  .q-why svg{width:20px;height:20px;flex:0 0 20px;margin-top:2px}
+  .q-done{text-align:center;padding:38px 30px}
+  .q-done .tro{width:96px;height:96px;border-radius:50%;background:var(--sun);border:3px solid var(--ink);display:grid;place-items:center;margin:0 auto 18px;box-shadow:5px 5px 0 var(--ink)}
+  .q-done .tro svg{width:48px;height:48px}
+  .q-done h3{font-size:30px;margin-bottom:8px}
+  .q-done .big{font-family:'Fredoka';font-size:56px;font-weight:700;color:var(--coral);margin:6px 0 10px}
+  .q-done p{font-weight:600;color:var(--ink-soft);margin-bottom:22px}
+
+  /* ===== MISI ===== */
+  .s-misi .wrap{display:grid;grid-template-columns:1.12fr .88fr;gap:38px;align-items:start}
+  .steps{margin-top:24px;display:flex;flex-direction:column;gap:14px}
+  .step{display:flex;gap:18px;align-items:flex-start;background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:var(--shadow);padding:15px 20px}
+  .step:nth-child(even){margin-left:44px}
+  .snum{flex:0 0 46px;height:46px;border-radius:50%;border:3px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:19px}
+  .st1{background:var(--coral);color:#fff}.st2{background:var(--sun)}.st3{background:var(--mint2)}.st4{background:var(--pink2)}
+  .step h3{font-size:16.5px;font-weight:600}
+  .step p{font-size:13.5px;color:var(--ink-soft);font-weight:500;margin-top:2px;line-height:1.5}
+  .blank-card{padding:18px 22px;background:#fff;border:3px dashed var(--ink);border-radius:16px}
+  .blank-card h4{font-family:'Fredoka';font-size:15.5px;margin-bottom:10px;display:flex;gap:8px;align-items:center}
+  .blank-card h4 svg{width:17px;height:17px}
+  .bl{display:flex;gap:8px;font-size:13px;font-weight:600;padding:5px 0}
+  .bl b{flex:0 0 96px}
+  .bl span{flex:1;border-bottom:2px dotted var(--ink-soft);min-height:18px}
+  .sentence{margin-top:12px;background:var(--butter);border:2.5px solid var(--ink);border-radius:12px;padding:10px 14px;font-size:13.5px;font-weight:600;line-height:1.7}
+  .mini-rubrik{margin-top:18px;padding:18px 22px;background:#fff}
+  .rubrik-row{display:flex;justify-content:space-between;gap:12px;font-size:13.5px;font-weight:700;padding:6px 0;border-top:2px dashed rgba(69,58,78,.25)}
+  .rubrik-row:first-of-type{border-top:none}
+  .rubrik-row span:last-child{color:var(--coral);font-family:'Fredoka';white-space:nowrap}
+
+  /* ===== PENUTUP ===== */
+  .s-end .wrap{display:grid;grid-template-columns:1fr .85fr;gap:44px;align-items:center}
+  .refl{margin-top:24px;display:flex;flex-direction:column;gap:14px;max-width:600px}
+  .refl-item{display:flex;gap:16px;align-items:center;background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:var(--shadow);padding:14px 20px}
+  .rnum{flex:0 0 44px;height:44px;border-radius:50%;border:2.5px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:18px}
+  .r1{background:var(--coral);color:#fff}.r2{background:var(--mint2)}.r3{background:var(--pink2)}
+  .refl-item p{font-size:15.5px;font-weight:600}
+  .end-art{position:relative;display:grid;place-items:center;min-height:420px}
+  .quote{position:relative;background:var(--sun);border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);padding:30px 34px;text-align:center;max-width:380px;transform:rotate(-2deg)}
+  .quote h3{font-size:25px;line-height:1.3;margin-bottom:10px}
+  .quote p{font-weight:600;font-size:14.5px}
+  .end-btn{margin-top:26px;display:flex;gap:14px;flex-wrap:wrap}
+  .s-tall{padding-top:40px;padding-bottom:88px}
+  .s-tall h2.title{margin-top:12px}
+
+  /* ===== JALAN KAMPANYE ===== */
+  .road{display:flex;flex-direction:column;gap:12px;width:min(360px,100%);position:relative}
+  .road::before{content:'';position:absolute;left:30px;top:24px;bottom:24px;border-left:4px dashed var(--ink);opacity:.45}
+  .rstep{position:relative;display:grid;grid-template-columns:60px 1fr;grid-template-rows:auto auto;column-gap:14px;align-items:center;background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 var(--ink);padding:10px 16px 10px 10px}
+  .rstep:nth-child(even){margin-left:26px}
+  .rstep span{grid-row:1/3;width:48px;height:48px;border-radius:50%;background:var(--c);border:3px solid var(--ink);display:grid;place-items:center}
+  .target-art .rstep svg{filter:none;width:22px;height:22px}
+  .rstep b{font-family:'Fredoka';font-size:18px;line-height:1.1}
+  .rstep small{font-size:12.5px;font-weight:700;color:var(--ink-soft)}
+
+  /* ===== PILIH TUJUAN ===== */
+  .goalpick{margin-top:22px;display:flex;gap:14px;flex-wrap:wrap}
+  .gp{display:flex;align-items:center;gap:12px;text-align:left;background:#fff;border:3px solid var(--ink);border-radius:16px;padding:12px 20px;cursor:pointer;box-shadow:4px 4px 0 var(--ink);font-family:'Fredoka';font-weight:600;font-size:18px;color:var(--ink);transition:.15s}
+  .gp svg{width:24px;height:24px}
+  .gp small{display:block;font-family:'Plus Jakarta Sans';font-size:12.5px;font-weight:600;color:var(--ink-soft)}
+  .gp:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .gp.on{background:var(--ink);color:#fff}
+  .gp.on small{color:var(--butter2)}
+  .gview{margin-top:20px;display:grid;grid-template-columns:.9fr 1.1fr;gap:22px;align-items:stretch}
+  .gv-card{background:var(--sun);border:3px solid var(--ink);border-radius:20px;box-shadow:var(--shadow);padding:18px 22px;display:flex;flex-direction:column;gap:12px;transition:background .4s}
+  .gv-lab{align-self:flex-start;display:inline-flex;gap:7px;align-items:center;font-family:'Fredoka';font-weight:700;font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:5px 13px}
+  .gv-lab svg{width:14px;height:14px}
+  .gv-msg{font-family:'Fredoka';font-weight:600;font-size:clamp(18px,1.7vw,22px);line-height:1.35;flex:1}
+  .gv-num{display:flex;gap:10px;align-items:center;background:#fff;border:2.5px solid var(--ink);border-radius:12px;padding:9px 13px;font-size:14px;font-weight:600}
+  .gv-num svg{width:19px;height:19px;flex:0 0 19px}
+
+  /* ===== MESIN KAMPANYE ===== */
+  .mk{margin-top:20px;display:grid;grid-template-columns:330px 1fr;gap:28px;align-items:start}
+  .mk-side{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+  .mk-lab{font-family:'Fredoka';font-weight:700;font-size:15px}
+  .mk-row{display:flex;flex-wrap:wrap;gap:8px}
+  .mk-row .tg{display:inline-flex;align-items:center;gap:7px;font-family:'Fredoka';font-weight:600;font-size:14.5px;border:2.5px solid var(--ink);border-radius:12px;padding:8px 13px;background:#fff;cursor:pointer;box-shadow:3px 3px 0 var(--ink);color:var(--ink)}
+  .mk-row .tg svg{width:16px;height:16px}
+  .mk-row .tg.on{background:var(--ink);color:#fff}
+  .mk-side .btn{margin-top:6px}
+  .lab-seen{margin-top:6px;font-family:'Fredoka';font-weight:600;font-size:13px;background:var(--butter2);border:2.5px solid var(--ink);border-radius:999px;display:inline-flex;align-items:center;gap:8px;padding:6px 14px;box-shadow:3px 3px 0 var(--ink)}
+  .lab-seen svg{width:14px;height:14px}
+  .mk-sheet{background:#fff;border:3px solid var(--ink);border-radius:20px;box-shadow:var(--shadow);padding:16px 20px;display:flex;flex-direction:column;gap:10px;background-image:repeating-linear-gradient(transparent 0 33px,rgba(69,58,78,.06) 33px 35px)}
+  .mk-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-family:'Fredoka';font-weight:700;font-size:19px;border-bottom:3px solid var(--ink);padding-bottom:8px}
+  .mk-goaltag{font-size:13px;background:var(--coral);color:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:4px 12px}
+  .mk-goaltag:empty{display:none}
+  .mk-item{display:flex;gap:14px;align-items:flex-start;border:2.5px dashed rgba(69,58,78,.35);border-radius:14px;padding:10px 14px;background:#fff;transition:.3s}
+  .mk-item .mi{flex:0 0 40px;height:40px;border-radius:12px;border:2.5px solid var(--ink);display:grid;place-items:center}
+  .mk-item .mi svg{width:20px;height:20px}
+  .mk-item b{font-family:'Fredoka';font-size:15.5px}
+  .mk-item p{font-size:14px;font-weight:600;line-height:1.5;min-height:21px;color:var(--ink)}
+  .mk-item p:empty::before{content:'menunggu...';color:rgba(69,58,78,.4);font-style:italic}
+  .mk-item.fill{border:2.5px solid var(--ink);box-shadow:3px 3px 0 var(--ink);animation:pop .4s}
+  .mk-item.typing p::after{content:'|';animation:blink .6s infinite}
+  @keyframes pop{0%{transform:scale(.97)}60%{transform:scale(1.02)}100%{transform:none}}
+  @keyframes blink{50%{opacity:0}}
+
+  /* ===== LEMBAR RENCANA ===== */
+  .plan{margin-top:16px;padding:18px 22px}
+  .plan-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;border-bottom:3px solid var(--ink);padding-bottom:8px;margin-bottom:12px}
+  .plan-head h3{font-size:20px;display:flex;align-items:center;gap:9px}
+  .plan-head h3 svg{width:22px;height:22px}
+  .plan-saved{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--teal);transition:opacity .3s}
+  .plan-saved svg{width:14px;height:14px}
+  .plan-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px}
+  .pf{display:flex;flex-direction:column;gap:4px}
+  .pf>span{font-family:'Fredoka';font-weight:600;font-size:13.5px}
+  .pf-wide{grid-column:1/-1}
+  .pf input,.pf textarea,.week input{font:600 14px 'Plus Jakarta Sans',sans-serif;color:var(--ink);background:var(--cream);border:2.5px solid var(--ink);border-radius:11px;padding:7px 11px;resize:none;width:100%}
+  .pf input:focus,.pf textarea:focus,.week input:focus{outline:none;background:#fff;box-shadow:3px 3px 0 var(--sun)}
+  .pf-chips{display:flex;gap:9px;flex-wrap:wrap}
+  .pchip{display:inline-flex;align-items:center;gap:7px;font-family:'Fredoka';font-weight:600;font-size:14px;border:2.5px solid var(--ink);border-radius:999px;padding:6px 15px;background:#fff;cursor:pointer;box-shadow:3px 3px 0 var(--ink);color:var(--ink)}
+  .pchip svg{width:15px;height:15px}
+  .pchip.on{background:var(--coral);color:#fff}
+  .week{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}
+  .wday{display:flex;flex-direction:column;gap:4px}
+  .wday b{font-family:'Fredoka';font-size:12.5px;text-align:center;background:var(--lav2);border:2px solid var(--ink);border-radius:8px;padding:2px 0}
+  .week input{font-size:12.5px;padding:6px 7px}
+  .plan-sign{display:none;justify-content:space-between;margin-top:14px;font-weight:700;font-size:13px}
+  .plan-btns{margin-top:14px;display:flex;gap:12px;flex-wrap:wrap}
+  .plan-btns .btn{font-size:15px;padding:10px 18px}
+
+  /* ===== KONSULTASI ===== */
+  .konsul{margin-top:20px;display:grid;grid-template-columns:1.25fr .75fr;gap:26px;align-items:start}
+  .ck-bar{display:flex;align-items:center;gap:14px;margin-bottom:12px;font-family:'Fredoka';font-weight:700;font-size:15px}
+  .ck-track{flex:1;height:16px;background:#fff;border:2.5px solid var(--ink);border-radius:999px;overflow:hidden}
+  .ck-fill{height:100%;width:0;background:var(--teal);transition:width .35s}
+  .cklist{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .ck{display:flex;gap:11px;align-items:flex-start;text-align:left;background:#fff;border:2.5px solid var(--ink);border-radius:14px;padding:10px 13px;cursor:pointer;box-shadow:3px 3px 0 var(--ink);font:600 13.5px/1.45 'Plus Jakarta Sans',sans-serif;color:var(--ink);transition:.15s}
+  .ck .box{flex:0 0 26px;height:26px;border-radius:8px;border:2.5px solid var(--ink);display:grid;place-items:center;background:#fff}
+  .ck .box svg{width:16px;height:16px;opacity:0}
+  .ck.on{background:var(--mint)}
+  .ck.on .box{background:var(--teal);color:#fff}
+  .ck.on .box svg{opacity:1}
+  .ask{padding:16px 20px;background:var(--lav)}
+  .ask h4{font-family:'Fredoka';font-size:16px;display:flex;gap:8px;align-items:center;margin-bottom:8px}
+  .ask h4 svg{width:18px;height:18px}
+  .ask p{font-size:14px;font-weight:600;line-height:1.5;padding:7px 0;border-top:2px dashed rgba(69,58,78,.25)}
+  .ck-stamp{margin-top:16px;display:flex;gap:14px;align-items:center;background:var(--teal);color:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:14px 18px;transform:rotate(-2deg);animation:pop .5s}
+  .ck-stamp svg{width:40px;height:40px;flex:0 0 40px}
+  .ck-stamp b{display:block;font-family:'Fredoka';font-size:19px}
+  .ck-stamp span{font-size:13.5px;font-weight:600}
+
+  #confetti{position:fixed;inset:0;z-index:100;pointer-events:none}
+
+  @media (max-width:960px){
+    .s-hero .wrap,.s-def .wrap,.s-misi .wrap,.s-end .wrap{grid-template-columns:1fr}
+    .wu-shell{grid-template-columns:1fr}
+    .fgrid{grid-template-columns:1fr 1fr}
+    .match-list{grid-template-columns:1fr}
+    .goal:nth-child(odd),.goal:nth-child(even){margin:0}
+    .step:nth-child(even){margin-left:0}
+    .art-stage,.end-art{min-height:340px}
+    .slide{padding:40px 20px 110px}
+    .gview,.mk,.konsul{grid-template-columns:minmax(0,1fr)}
+    .mk-side{min-width:0}
+  }
+
+  /* ===== MOBILE ===== */
+  @media (max-width:640px){
+    .slide{padding:22px 16px 104px}
+    .slide::before{width:70vw;height:70vw;top:-30vw;right:-30vw}
+    .slide::after{width:60vw;height:60vw;bottom:-28vw;left:-26vw}
+    .kicker{font-size:11px;letter-spacing:.1em;padding:6px 12px;box-shadow:3px 3px 0 var(--ink)}
+    h2.title{font-size:27px;margin:14px 0 6px}
+    p.lead{font-size:15px}
+    .card,.goal,.step,.m-card,.refl-item,.tq,.vs2-col,.prod,.poster,.diff{box-shadow:4px 4px 0 var(--ink)}
+    .deco{display:none}
+    .dots{display:none}
+    .navbar-bg{display:block}
+    .pagenum{left:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));font-size:13px;padding:6px 14px;box-shadow:3px 3px 0 var(--ink)}
+    .navbtns{right:16px;bottom:calc(12px + env(safe-area-inset-bottom,0px))}
+    .nav{width:48px;height:48px;box-shadow:3px 3px 0 var(--ink)}
+    .s-hero .wrap{gap:12px}
+    .art-stage{min-height:300px}
+    .art-stage>svg{width:min(260px,76%)}
+    .fchip{transform:scale(.7)}
+    .badge{font-size:13px;padding:6px 12px}
+    .goal{gap:14px;padding:12px 16px}
+    .gnum{flex:0 0 44px;height:44px;font-size:20px}
+    .goal h3{font-size:16.5px}
+    .goal p{font-size:13.5px}
+    .fgrid{grid-template-columns:1fr}
+    .fcard{min-height:200px}
+    .q-card{padding:18px 16px}
+    .q-q{font-size:18px}
+    .opt{font-size:14.5px;padding:10px 14px;gap:12px}
+    .q-foot{flex-direction:column;align-items:stretch}
+    .q-done .big{font-size:44px}
+    .quote{padding:22px}
+    .quote h3{font-size:21px}
+    .end-art{min-height:300px}
+    .rstep:nth-child(even){margin-left:0}
+    .gp{flex:1 1 100%;padding:10px 16px;font-size:16px}
+    .gv-card,.mk-sheet{box-shadow:4px 4px 0 var(--ink)}
+    .diff th,.diff td{padding:9px 12px;font-size:13px}
+    .diff th{width:96px}
+    .mk-side .picks{flex-wrap:nowrap;overflow-x:auto;width:100%;margin-right:-16px;padding:2px 4px 8px 2px;scrollbar-width:none}
+    .mk-side .picks .tg{flex:0 0 auto;white-space:nowrap}
+    .plan{padding:14px}
+    .plan-grid{grid-template-columns:1fr}
+    .week{grid-template-columns:repeat(4,1fr)}
+    .cklist{grid-template-columns:1fr}
+  }
+  .diff{background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+  .diff table{width:100%;border-collapse:collapse}
+  .diff th,.diff td{text-align:left;padding:11px 16px;border-top:2px dashed rgba(69,58,78,.22);font-size:14px;vertical-align:top}
+  .diff th{font-family:'Fredoka';font-weight:600;font-size:14px;width:130px}
+  .diff tr:first-child th,.diff tr:first-child td{border-top:none}
+  .diff td{font-weight:600}
+  .same{margin-top:16px;display:flex;gap:12px;align-items:flex-start;background:#fff;border:3px solid var(--ink);border-left:14px solid var(--sun);border-radius:16px;box-shadow:5px 5px 0 var(--ink);padding:12px 16px;font-size:14px;font-weight:600;line-height:1.5}
+  .same svg{width:20px;height:20px;flex:0 0 20px;margin-top:1px}
+
+  /* ===== CETAK: hanya lembar rencana ===== */
+  @media print{
+    @page{size:A4;margin:12mm}
+    html,body{height:auto;overflow:visible;background:#fff}
+    #bar,.dots,.navbtns,.pagenum,.navbar-bg,#confetti,.no-print,.slide:not(.active){display:none !important}
+    .slide.active{position:static;display:block;overflow:visible;padding:0;background:#fff;transform:none;opacity:1}
+    .slide::before,.slide::after{display:none}
+    .slide.active .anim{animation:none;opacity:1}
+    .plan{box-shadow:none;margin:0;border-width:2px}
+    .plan-grid{grid-template-columns:1fr 1fr}
+    .pf input,.pf textarea,.week input{background:#fff}
+    .pf textarea{min-height:60px}
+    .pchip:not(.on){opacity:.45}
+    .plan-sign{display:flex}
+    .pf input::placeholder,.pf textarea::placeholder,.week input::placeholder{color:transparent}
+  }
+</style>
+</head>
+<body>
+
+<div id="bar"></div>
+
+<!-- ============ SLIDE 1 : JUDUL ============ -->
+<section class="slide active" data-theme="peach">
+  <div class="deco bob" style="top:14%;left:5%;width:26px;height:26px">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 2v20M2 12h20"/></svg>
+  </div>
+  <div class="deco bob" style="bottom:18%;left:12%;width:34px;height:34px;animation-delay:1.2s">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/></svg>
+  </div>
+  <div class="s-hero wrap" style="display:contents"><div class="wrap">
+    <div>
+      <span class="kicker anim" style="--d:0"><i data-lucide="clipboard-list"></i> Digital Marketing · Pertemuan 14 · SMP Kelas 7</span>
+      <h1 class="anim" style="--d:1;font-size:clamp(38px,4.6vw,62px);font-weight:700;line-height:1.08;margin:20px 0 14px">
+        Projek: <span class="hl">Rancang</span><br>Kampanye Mini
+      </h1>
+      <p class="lead anim" style="--d:2">Semua ilmu dari Pertemuan 1 sampai 13 kita satukan hari ini.
+      Kelompokmu akan membuat <b>rencana kampanye</b>: dari tujuan, persona, pesan, kanal, sampai jadwal.</p>
+      <div class="badge-row anim" style="--d:3">
+        <span class="badge b1"><i data-lucide="flag"></i> Pilih Tujuan</span>
+        <span class="badge b3"><i data-lucide="cog"></i> Mesin Kampanye</span>
+        <span class="badge b2"><i data-lucide="printer"></i> Lembar Rencana</span>
+      </div>
+    </div>
+    <div class="art-stage anim" style="--d:2">
+      <svg viewBox="0 0 380 420" aria-hidden="true">
+        <ellipse cx="190" cy="215" rx="170" ry="190" fill="#FFCBB5"/>
+        <rect x="88" y="62" width="204" height="296" rx="22" fill="#fff" stroke="#453A4E" stroke-width="5"/>
+        <rect x="140" y="44" width="100" height="38" rx="12" fill="#FFC531" stroke="#453A4E" stroke-width="5"/>
+        <text x="190" y="120" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="20" fill="#453A4E">Rencana Kampanye</text>
+        <g stroke="#453A4E" stroke-width="4">
+          <circle cx="122" cy="160" r="15" fill="#FF7E67"/><circle cx="122" cy="210" r="15" fill="#FFE39A"/>
+          <circle cx="122" cy="260" r="15" fill="#BFEAD2"/><circle cx="122" cy="310" r="15" fill="#DCD2F7"/>
+        </g>
+        <g stroke="#453A4E" stroke-width="7" stroke-linecap="round">
+          <line x1="150" y1="160" x2="262" y2="160"/><line x1="150" y1="210" x2="240" y2="210"/>
+          <line x1="150" y1="260" x2="254" y2="260"/><line x1="150" y1="310" x2="226" y2="310"/>
+        </g>
+        <g fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M115 160 l5 5 9-10"/><path d="M115 210 l5 5 9-10"/>
+        </g>
+        <path d="M290 330 l40 -40 m-40 40 l-10 18 18 -10 z" fill="#FFC531" stroke="#453A4E" stroke-width="5" stroke-linejoin="round"/>
+      </svg>
+      <span class="fchip fc1 bob"><i data-lucide="flag"></i></span>
+      <span class="fchip fc2 bob" style="animation-delay:.8s"><i data-lucide="user-round"></i></span>
+      <span class="fchip fc3 bob" style="animation-delay:1.6s"><i data-lucide="megaphone"></i></span>
+      <span class="fchip fc4 bob" style="animation-delay:.4s"><i data-lucide="calendar-days"></i></span>
+      <span class="fchip fc5 bob" style="animation-delay:2s"><i data-lucide="message-square"></i></span>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============ SLIDE 2 : TUJUAN ============ -->
+<section class="slide" data-theme="cream">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="map"></i> Rencana Belajar Hari Ini</span>
+    <h2 class="title anim" style="--d:1">Hari ini kita akan...</h2>
+    <div class="goal-list">
+      <div class="goal anim" style="--d:2">
+        <div class="gnum g1">1</div>
+        <div><h3>Pahami Apa Itu Kampanye</h3><p>Beda kampanye dengan "sekadar posting": ada tujuan, rencana, dan waktunya.</p></div>
+      </div>
+      <div class="goal anim" style="--d:3">
+        <div class="gnum g2">2</div>
+        <div><h3>Pilih Satu Tujuan</h3><p>Mau produk kita dikenal, dikunjungi, atau dibeli? Tujuan menentukan semuanya.</p></div>
+      </div>
+      <div class="goal anim" style="--d:4">
+        <div class="gnum g3">3</div>
+        <div><h3>Isi Lembar Rencana Kampanye</h3><p>Persona, pesan, kanal, dan jadwal dalam satu lembar yang bisa dicetak.</p></div>
+      </div>
+      <div class="goal anim" style="--d:5">
+        <div class="gnum g4">4</div>
+        <div><h3>Konsultasi dengan Pembina</h3><p>Cek rencana bersama pembina sebelum mulai produksi minggu depan.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 3 : PEMANASAN ============ -->
+<section class="slide" data-theme="butter">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="hand"></i> Pemanasan · Kampanye atau Bukan?</span>
+    <h2 class="title anim" style="--d:1">Ini <span class="hl p">kampanye</span> atau cuma <span class="hl">posting biasa?</span></h2>
+    <p class="lead anim" style="--d:1.5">Baca cerita tiap usaha. Angkat tangan kanan untuk "Kampanye", tangan kiri untuk "Posting biasa"!</p>
+    <div class="wu-shell anim" style="--d:2" id="wuShell">
+      <div class="prod">
+        <div class="prod-media" id="wuMedia"><span class="ic" id="wuIc"></span></div>
+        <div class="prod-cap"><h4 id="wuName"></h4><div class="sub" id="wuSub"></div></div>
+      </div>
+      <div>
+        <div class="wu-round" id="wuRound"></div>
+        <div class="wu-q">Menurutmu, ini...</div>
+        <div class="wu-opts" id="wuOpts"></div>
+        <div class="wu-fb hidden" id="wuFb"><i data-lucide="circle-check"></i><span></span></div>
+        <button class="btn mint wu-next hidden" id="wuNext"><i data-lucide="arrow-right"></i> <span>Cerita Berikutnya</span></button>
+      </div>
+    </div>
+    <div class="wu-done hidden anim" id="wuDone" style="--d:0">
+      <div class="tro"><i data-lucide="trophy"></i></div>
+      <h3>Kamu bisa membedakannya!</h3>
+      <p>Kampanye selalu punya <b>tujuan yang jelas</b>, <b>untuk siapa</b>, <b>di mana</b>, dan <b>kapan</b>.
+      Posting biasa hanya muncul sekali tanpa rencana.</p>
+      <div class="sc">Tebakan tepat: <span id="wuScore">0</span> dari 4</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 4 : APA ITU KAMPANYE ============ -->
+<section class="slide" data-theme="mint">
+  <div class="s-def wrap" style="display:contents"><div class="wrap">
+    <div>
+      <span class="kicker anim" style="--d:0"><i data-lucide="search"></i> Konsep Utama</span>
+      <h2 class="title anim" style="--d:1">Apa itu <span class="hl m">kampanye mini?</span></h2>
+      <div class="define anim" style="--d:2">
+        <span class="q">Catat baik-baik, ya!</span><br>
+        Kampanye adalah <span class="hl">rangkaian promosi</span> dengan <span class="hl">satu tujuan</span>,
+        untuk <span class="hl">orang tertentu</span>, dalam <span class="hl">waktu tertentu</span>.
+      </div>
+      <div class="analog anim" style="--d:3">
+        <div class="ic"><i data-lucide="tent"></i></div>
+        <p><b>Seperti merencanakan kemah:</b> kita tentukan dulu tujuannya, siapa yang ikut, barang apa yang dibawa,
+        lewat jalan mana, dan berangkat jam berapa. Kalau langsung berangkat tanpa rencana, bisa tersesat!</p>
+      </div>
+    </div>
+    <div class="target-art anim" style="--d:3">
+      <div class="road">
+        <div class="rstep" style="--c:var(--coral)"><span><i data-lucide="flag"></i></span><b>Tujuan</b><small>mau apa?</small></div>
+        <div class="rstep" style="--c:var(--butter2)"><span><i data-lucide="user-round"></i></span><b>Persona</b><small>untuk siapa? (P4)</small></div>
+        <div class="rstep" style="--c:var(--pink2)"><span><i data-lucide="message-square"></i></span><b>Pesan</b><small>bilang apa? (P6–P9)</small></div>
+        <div class="rstep" style="--c:var(--sky2)"><span><i data-lucide="megaphone"></i></span><b>Kanal</b><small>di mana? (P10)</small></div>
+        <div class="rstep" style="--c:var(--mint2)"><span><i data-lucide="calendar-days"></i></span><b>Jadwal</b><small>kapan? (P11)</small></div>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============ SLIDE 5 : PILIH TUJUAN ============ -->
+<section class="slide" data-theme="lav">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="flag"></i> Langkah 1 · Pilih Tujuan</span>
+    <h2 class="title anim" style="--d:1">Tujuannya beda, <span class="hl l">rencananya ikut berubah</span></h2>
+    <p class="lead anim" style="--d:1.5">Contoh: <b>Es Teh Bu Sri</b> di depan sekolah. Klik tiap tujuan dan lihat apa saja yang berubah!</p>
+    <div class="goalpick anim" style="--d:2">
+      <button class="gp on" data-k="kenal"><i data-lucide="eye"></i><span>Dikenal<small>"Orang tahu kita ada"</small></span></button>
+      <button class="gp" data-k="kunjung"><i data-lucide="map-pin"></i><span>Dikunjungi<small>"Orang datang / chat"</small></span></button>
+      <button class="gp" data-k="beli"><i data-lucide="shopping-bag"></i><span>Dibeli<small>"Orang jadi membeli"</small></span></button>
+    </div>
+    <div class="gview anim" style="--d:3">
+      <div class="gv-card" id="gvMain">
+        <span class="gv-lab"><i data-lucide="quote"></i> Contoh pesan</span>
+        <div class="gv-msg" id="gvMsg"></div>
+        <div class="gv-num"><i data-lucide="bar-chart-3"></i><span>Tanda berhasil: <b id="gvNum"></b></span></div>
+      </div>
+      <div class="diff">
+        <table><tbody>
+          <tr><th>Jenis konten</th><td id="gvKonten"></td></tr>
+          <tr><th>Ajakan</th><td id="gvCta"></td></tr>
+          <tr><th>Kanal utama</th><td id="gvKanal"></td></tr>
+          <tr><th>Waktu posting</th><td id="gvWaktu"></td></tr>
+        </tbody></table>
+      </div>
+    </div>
+    <div class="same anim" style="--d:4;max-width:860px"><i data-lucide="lightbulb"></i><span>Pilih <b>satu</b> tujuan utama saja. Kalau semuanya ingin dikejar sekaligus, pesannya jadi berantakan.</span></div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 6 : 4 BAGIAN RENCANA ============ -->
+<section class="slide" data-theme="pink">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="layers"></i> 4 Bagian Rencana</span>
+    <h2 class="title anim" style="--d:1">Setelah tujuan, isi <span class="hl p">4 bagian ini</span></h2>
+    <p class="lead anim" style="--d:1.5">Semua bagian ini sudah pernah kamu pelajari. Klik kartunya untuk mengingat lagi!</p>
+    <div class="fgrid">
+      <div class="fcard anim" style="--d:2" onclick="this.classList.toggle('flipped')">
+        <div class="finner">
+          <div class="fface ffront">
+            <span class="fic" style="background:var(--butter2)"><i data-lucide="user-round"></i></span>
+            <h3>1. Persona</h3><p class="tease">Satu orang khayalan yang mewakili pembeli kita.</p>
+            <span class="hint"><i data-lucide="mouse-pointer-click"></i> klik untuk contoh</span>
+          </div>
+          <div class="fface fback">
+            <span class="tag">Ingat P2 &amp; P4</span>
+            <p><b>Dimas, 13 tahun</b>, siswa kelas 7. Pulang sekolah jam 2 siang, kepanasan, uang jajan Rp15.000.</p>
+            <p class="eg">Ambil dari kartu persona kelompokmu.</p>
+          </div>
+        </div>
+      </div>
+      <div class="fcard anim" style="--d:2.4" onclick="this.classList.toggle('flipped')">
+        <div class="finner">
+          <div class="fface ffront">
+            <span class="fic" style="background:var(--pink2)"><i data-lucide="message-square"></i></span>
+            <h3>2. Pesan</h3><p class="tease">Satu kalimat utama yang ingin diingat pembeli.</p>
+            <span class="hint"><i data-lucide="mouse-pointer-click"></i> klik untuk contoh</span>
+          </div>
+          <div class="fface fback">
+            <span class="tag">Ingat P6–P9</span>
+            <p>"Haus habis olahraga? <b>Es teh jumbo Rp3.000</b> di depan gerbang!"</p>
+            <p class="eg">Pakai Rumus 3K: Kait, Kasih Nilai, Kasih Ajakan.</p>
+          </div>
+        </div>
+      </div>
+      <div class="fcard anim" style="--d:2.8" onclick="this.classList.toggle('flipped')">
+        <div class="finner">
+          <div class="fface ffront">
+            <span class="fic" style="background:var(--sky2)"><i data-lucide="megaphone"></i></span>
+            <h3>3. Kanal</h3><p class="tease">Tempat promosi yang sering dilihat persona.</p>
+            <span class="hint"><i data-lucide="mouse-pointer-click"></i> klik untuk contoh</span>
+          </div>
+          <div class="fface fback">
+            <span class="tag">Ingat P10</span>
+            <p><b>Poster di mading</b> dan <b>status WhatsApp</b> akun pembina atau orang tua.</p>
+            <p class="eg">Cukup 2 kanal utama. Ingat: kita belum boleh pakai akun pribadi!</p>
+          </div>
+        </div>
+      </div>
+      <div class="fcard anim" style="--d:3.2" onclick="this.classList.toggle('flipped')">
+        <div class="finner">
+          <div class="fface ffront">
+            <span class="fic" style="background:var(--mint2)"><i data-lucide="calendar-days"></i></span>
+            <h3>4. Jadwal</h3><p class="tease">Kapan tiap konten muncul selama 1 minggu.</p>
+            <span class="hint"><i data-lucide="mouse-pointer-click"></i> klik untuk contoh</span>
+          </div>
+          <div class="fface fback">
+            <span class="tag">Ingat P11</span>
+            <p><b>Senin</b> info, <b>Rabu</b> video, <b>Jumat</b> promo. Diposting jam 13.30 sebelum bel pulang.</p>
+            <p class="eg">Campur konten info, hiburan, dan promo.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 7 : MESIN KAMPANYE ============ -->
+<section class="slide s-tall" data-theme="sky">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="cog"></i> Coba Langsung · Mesin Kampanye</span>
+    <h2 class="title anim" style="--d:1">Pilih produk &amp; tujuan, <span class="hl">rencananya terisi sendiri!</span></h2>
+    <p class="lead anim" style="--d:1.5">Perhatikan: setiap bagian rencana selalu <b>mengikuti persona dan tujuan</b>. Coba semua 9 kombinasinya!</p>
+    <div class="mk anim" style="--d:2">
+      <div class="mk-side">
+        <div class="mk-lab">1. Pilih produk</div>
+        <div class="mk-row picks" id="mkProd"></div>
+        <div class="mk-lab">2. Pilih tujuan</div>
+        <div class="mk-row" id="mkGoal"></div>
+        <button class="btn sun" id="mkGo"><i data-lucide="wand-sparkles"></i> Susun Rencana</button>
+        <span class="lab-seen"><i data-lucide="eye"></i> Kombinasi dicoba: <span id="mkSeen">0</span> / 9</span>
+      </div>
+      <div class="mk-sheet" id="mkSheet">
+        <div class="mk-head"><span id="mkTitle">Rencana Kampanye</span><span class="mk-goaltag" id="mkTag"></span></div>
+        <div class="mk-item" data-s="0"><span class="mi" style="background:var(--butter2)"><i data-lucide="user-round"></i></span><div><b>Persona</b><p id="mk0"></p></div></div>
+        <div class="mk-item" data-s="1"><span class="mi" style="background:var(--pink2)"><i data-lucide="message-square"></i></span><div><b>Pesan</b><p id="mk1"></p></div></div>
+        <div class="mk-item" data-s="2"><span class="mi" style="background:var(--sky2)"><i data-lucide="megaphone"></i></span><div><b>Kanal</b><p id="mk2"></p></div></div>
+        <div class="mk-item" data-s="3"><span class="mi" style="background:var(--mint2)"><i data-lucide="calendar-days"></i></span><div><b>Jadwal</b><p id="mk3"></p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 8 : GAME ============ -->
+<section class="slide s-tall" data-theme="mint">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="puzzle"></i> Ayo Main · Detektif Rencana</span>
+    <h2 class="title anim" style="--d:1">Bagian mana yang <span class="hl m">tidak nyambung?</span></h2>
+    <p class="lead anim" style="--d:1.5">Setiap rencana punya <b>satu bagian</b> yang tidak cocok dengan bagian lainnya. Temukan!</p>
+    <div class="match-list">
+      <div class="m-card anim" style="--d:2">
+        <h3><b>Keripik pedas</b> untuk remaja SMP. Pesan: "Tantang temanmu!" Kanal: <b>koran cetak</b>. Jadwal: tiap pulang sekolah.</h3>
+        <div class="m-opts">
+          <button class="m-opt" data-ok="0">Persona</button><button class="m-opt" data-ok="0">Pesan</button>
+          <button class="m-opt" data-ok="1">Kanal</button><button class="m-opt" data-ok="0">Jadwal</button>
+        </div>
+        <div class="m-why hidden"><i data-lucide="circle-check"></i><span>Betul! Remaja SMP jarang membaca koran. Lebih cocok poster kantin atau video di akun sekolah.</span></div>
+      </div>
+      <div class="m-card anim" style="--d:2.4">
+        <h3><b>Katering sehat</b> untuk ibu bekerja. Pesan: "Makan sehat tanpa repot". Kanal: grup WA RT. Jadwal: <b>jam 11 malam</b>.</h3>
+        <div class="m-opts">
+          <button class="m-opt" data-ok="0">Persona</button><button class="m-opt" data-ok="0">Pesan</button>
+          <button class="m-opt" data-ok="0">Kanal</button><button class="m-opt" data-ok="1">Jadwal</button>
+        </div>
+        <div class="m-why hidden"><i data-lucide="circle-check"></i><span>Tepat! Jam 11 malam ibu-ibu sudah tidur. Lebih baik pagi sebelum berangkat kerja atau saat istirahat siang.</span></div>
+      </div>
+      <div class="m-card anim" style="--d:2.8">
+        <h3><b>Kue ulang tahun</b>, tujuan: dibeli. Persona: orang tua. Pesan: "<b>Halo, kami ada di sini!</b>" Kanal: status WA.</h3>
+        <div class="m-opts">
+          <button class="m-opt" data-ok="0">Persona</button><button class="m-opt" data-ok="1">Pesan</button>
+          <button class="m-opt" data-ok="0">Kanal</button><button class="m-opt" data-ok="0">Jadwal</button>
+        </div>
+        <div class="m-why hidden"><i data-lucide="circle-check"></i><span>Betul! Tujuannya dibeli, jadi pesannya harus ada ajakan jelas: "Pesan H-2 lewat WA, bisa tulis nama!"</span></div>
+      </div>
+      <div class="m-card anim" style="--d:3.2">
+        <h3><b>Boba Kelas 7</b> untuk siswa. Persona: <b>kakek usia 70 tahun</b>. Pesan: "Boba kekinian Rp5.000!" Kanal: mading sekolah.</h3>
+        <div class="m-opts">
+          <button class="m-opt" data-ok="1">Persona</button><button class="m-opt" data-ok="0">Pesan</button>
+          <button class="m-opt" data-ok="0">Kanal</button><button class="m-opt" data-ok="0">Jadwal</button>
+        </div>
+        <div class="m-why hidden"><i data-lucide="circle-check"></i><span>Tepat! Pesan dan kanalnya untuk siswa, tapi personanya kakek. Semua bagian harus untuk orang yang sama.</span></div>
+      </div>
+    </div>
+    <div class="m-score anim" style="--d:3.6">
+      <span>Rencana yang berhasil dibetulkan:</span><b><span id="mDone">0</span> / 4</b>
+      <span id="mMsg" style="font-weight:600;font-size:14px;color:var(--butter2)"></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 9 : LEMBAR RENCANA ============ -->
+<section class="slide s-tall" data-theme="butter">
+  <div class="wrap">
+    <div class="no-print">
+      <span class="kicker anim" style="--d:0"><i data-lucide="file-pen-line"></i> Lembar Rencana Kampanye</span>
+      <h2 class="title anim" style="--d:1">Isi rencana kelompokmu, <span class="hl p">lalu cetak!</span></h2>
+    </div>
+    <div class="plan card anim noswipe" style="--d:2" id="planSheet">
+      <div class="plan-head">
+        <h3><i data-lucide="clipboard-list"></i> Rencana Kampanye Mini</h3>
+        <span class="plan-saved no-print" id="planSaved"><i data-lucide="save"></i> Tersimpan otomatis</span>
+      </div>
+      <div class="plan-grid">
+        <label class="pf"><span>Nama kelompok</span><input data-f="kelompok" placeholder="contoh: Tim Kriuk"></label>
+        <label class="pf"><span>Produk</span><input data-f="produk" placeholder="contoh: Keripik singkong balado"></label>
+        <div class="pf"><span>Tujuan kampanye (pilih satu)</span>
+          <div class="pf-chips" id="planGoal">
+            <button type="button" class="pchip" data-v="Dikenal"><i data-lucide="eye"></i> Dikenal</button>
+            <button type="button" class="pchip" data-v="Dikunjungi"><i data-lucide="map-pin"></i> Dikunjungi</button>
+            <button type="button" class="pchip" data-v="Dibeli"><i data-lucide="shopping-bag"></i> Dibeli</button>
+          </div>
+        </div>
+        <label class="pf"><span>Tanda berhasil (angka yang akan kita lihat)</span><input data-f="ukur" placeholder="contoh: 30 bungkus terjual dalam 1 minggu"></label>
+        <label class="pf"><span>Persona: siapa, umur, kebiasaan</span><textarea data-f="persona" rows="2" placeholder="Dimas, 13 tahun, suka jajan pedas sepulang sekolah"></textarea></label>
+        <label class="pf"><span>Pesan utama (Kait + Nilai + Ajakan)</span><textarea data-f="pesan" rows="2" placeholder="Berani coba level 5? Kriuk renyah Rp2.000. Cari di kantin!"></textarea></label>
+        <label class="pf"><span>Kanal 1 &amp; 2 (beserta alasan)</span><textarea data-f="kanal" rows="2" placeholder="Poster kantin, karena Dimas jajan di sana. Status WA pembina."></textarea></label>
+        <label class="pf"><span>Konten yang dibuat</span><textarea data-f="konten" rows="2" placeholder="1 foto produk, 1 poster, 2 caption, 1 video 20 detik"></textarea></label>
+        <div class="pf pf-wide"><span>Jadwal 1 minggu (tulis konten di hari yang dipakai)</span>
+          <div class="week" id="planWeek"></div>
+        </div>
+      </div>
+      <div class="plan-sign">
+        <span>Paraf pembina: ..................</span><span>Tanggal: ..................</span>
+      </div>
+      <div class="plan-btns no-print">
+        <button class="btn sun" id="planPrint"><i data-lucide="printer"></i> Cetak Lembar</button>
+        <button class="btn mint" id="planDemo"><i data-lucide="sparkles"></i> Isi Contoh</button>
+        <button class="btn ghost" id="planClear"><i data-lucide="eraser"></i> Kosongkan</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 10 : KONSULTASI PEMBINA ============ -->
+<section class="slide s-tall" data-theme="peach">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="messages-square"></i> Konsultasi dengan Pembina</span>
+    <h2 class="title anim" style="--d:1">Sebelum produksi, <span class="hl">cek bareng pembina</span></h2>
+    <div class="konsul">
+      <div class="anim" style="--d:2">
+        <div class="ck-bar"><span id="ckTxt">0 / 8 siap</span><div class="ck-track"><div class="ck-fill" id="ckFill"></div></div></div>
+        <div class="cklist" id="ckList"></div>
+        <button class="btn ghost" id="ckReset" style="margin-top:14px;font-size:15px;padding:9px 18px"><i data-lucide="rotate-ccw"></i> Ulangi Ceklis</button>
+      </div>
+      <div class="anim" style="--d:3">
+        <div class="ask card">
+          <h4><i data-lucide="circle-help"></i> Pertanyaan untuk pembina</h4>
+          <p>"Bu/Pak, apakah tujuan kami <b>masuk akal</b> untuk 1 minggu?"</p>
+          <p>"Kanal mana yang <b>boleh kami pakai</b> lewat akun sekolah?"</p>
+          <p>"Bagian mana yang <b>paling perlu diperbaiki</b>?"</p>
+        </div>
+        <div class="ck-stamp hidden" id="ckStamp"><i data-lucide="badge-check"></i><div><b>Siap konsultasi!</b><span>Bawa lembar rencana ke meja pembina.</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 11 : KUIS ============ -->
+<section class="slide" data-theme="lav">
+  <div class="wrap quiz-shell">
+    <div style="text-align:center">
+      <span class="kicker anim" style="--d:0"><i data-lucide="trophy"></i> Kuis Seru</span>
+      <h2 class="title anim" style="--d:1">Uji Pemahaman Kampanye-mu!</h2>
+    </div>
+    <div id="quizArea" class="anim" style="--d:2"></div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 12 : MISI ============ -->
+<section class="slide" data-theme="pink">
+  <div class="s-misi wrap" style="display:contents"><div class="wrap">
+    <div>
+      <span class="kicker anim" style="--d:0"><i data-lucide="flag"></i> Giliranmu!</span>
+      <h2 class="title anim" style="--d:1">Misi: <span class="hl p">Lembar Rencana Kampanye</span></h2>
+      <p class="lead anim" style="--d:2">Kerjakan berkelompok dengan produk yang sama sejak Pertemuan 1. Rencana ini jadi peta untuk produksi minggu depan!</p>
+      <div class="steps">
+        <div class="step anim" style="--d:3"><div class="snum st1">1</div>
+          <div><h3>Pilih satu tujuan</h3><p>Dikenal, dikunjungi, atau dibeli. Tulis tanda berhasilnya dalam angka.</p></div></div>
+        <div class="step anim" style="--d:4"><div class="snum st2">2</div>
+          <div><h3>Isi persona, pesan, kanal</h3><p>Pakai kartu persona, caption, dan peta kanal yang sudah kalian buat.</p></div></div>
+        <div class="step anim" style="--d:5"><div class="snum st3">3</div>
+          <div><h3>Susun jadwal 1 minggu</h3><p>Tentukan hari dan jenis konten. Tulis siapa yang membuat.</p></div></div>
+        <div class="step anim" style="--d:6"><div class="snum st4">4</div>
+          <div><h3>Konsultasi &amp; minta paraf</h3><p>Ceritakan rencana ke pembina dalam 2 menit, lalu perbaiki sesuai saran.</p></div></div>
+      </div>
+    </div>
+    <div>
+      <div class="blank-card anim" style="--d:4">
+        <h4><i data-lucide="package"></i> Bawa minggu depan</h4>
+        <div class="bl"><b>Produk asli:</b><span></span></div>
+        <div class="bl"><b>Alat:</b><span></span></div>
+        <div class="bl"><b>File lama:</b><span></span></div>
+        <div class="sentence">"Kampanye kami ingin produk <b>___</b> lebih <b>dikenal / dikunjungi / dibeli</b> oleh <b>___</b> lewat <b>___</b> selama <b>___</b>."</div>
+      </div>
+      <div class="mini-rubrik card anim" style="--d:5">
+        <h3 style="font-family:'Fredoka';font-size:17px;margin-bottom:8px;display:flex;align-items:center;gap:9px"><i data-lucide="clipboard-check" style="width:19px;height:19px"></i> Cara Penilaian</h3>
+        <div class="rubrik-row"><span>Tujuan jelas dan ada angka berhasil</span><span>25 poin</span></div>
+        <div class="rubrik-row"><span>Persona, pesan, kanal saling nyambung</span><span>35 poin</span></div>
+        <div class="rubrik-row"><span>Jadwal 1 minggu bervariasi</span><span>20 poin</span></div>
+        <div class="rubrik-row"><span>Sudah konsultasi &amp; diperbaiki</span><span>20 poin</span></div>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============ SLIDE 13 : PENUTUP ============ -->
+<section class="slide" data-theme="peach">
+  <div class="deco bob" style="top:16%;right:8%;width:30px;height:30px">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 2v20M2 12h20"/></svg>
+  </div>
+  <div class="s-end wrap" style="display:contents"><div class="wrap">
+    <div>
+      <span class="kicker anim" style="--d:0"><i data-lucide="message-circle-heart"></i> Refleksi &amp; Penutup</span>
+      <h2 class="title anim" style="--d:1">Sebelum pulang, <span class="hl p">ayo curhat dikit!</span></h2>
+      <div class="refl">
+        <div class="refl-item anim" style="--d:2"><div class="rnum r1">1</div>
+          <p>Apa tujuan kampanye kelompokmu, dan kenapa memilih itu?</p></div>
+        <div class="refl-item anim" style="--d:3"><div class="rnum r2">2</div>
+          <p>Bagian rencana mana yang paling lama diputuskan kelompokmu?</p></div>
+        <div class="refl-item anim" style="--d:4"><div class="rnum r3">3</div>
+          <p>Saran apa dari pembina yang paling berguna?</p></div>
+      </div>
+      <div class="end-btn anim" style="--d:5">
+        <button class="btn sun" id="partyBtn"><i data-lucide="party-popper"></i> Rayakan Hari Ini!</button>
+        <a class="btn ghost" href="silabus.html"><i data-lucide="book-open"></i> Lihat Silabus</a>
+        <a class="btn ghost" href="projek-produksi.html"><i data-lucide="arrow-right"></i> Pertemuan berikutnya</a>
+      </div>
+    </div>
+    <div class="end-art anim" style="--d:3">
+      <div class="quote">
+        <h3>Rencana yang jelas membuat kerja tim jadi ringan.</h3>
+        <p>Pertemuan berikutnya: <b>Projek: Produksi Konten</b>. Bawa lembar rencana dan produk asli kelompokmu, ya!</p>
+      </div>
+      <span class="fchip fc1 bob"><i data-lucide="flag"></i></span>
+      <span class="fchip fc2 bob" style="animation-delay:.7s"><i data-lucide="clipboard-list"></i></span>
+      <span class="fchip fc4 bob" style="animation-delay:1.4s"><i data-lucide="heart"></i></span>
+      <span class="fchip fc5 bob" style="animation-delay:2s"><i data-lucide="sparkles"></i></span>
+    </div>
+  </div></div>
+</section>
+
+<!-- NAV -->
+<div class="navbar-bg"></div>
+<div class="pagenum"><span id="cur">01</span> / <span id="tot">13</span></div>
+<div class="dots" id="dots"></div>
+<div class="navbtns">
+  <button class="nav" id="prev" aria-label="Sebelumnya"><i data-lucide="chevron-left"></i></button>
+  <button class="nav" id="next" aria-label="Berikutnya"><i data-lucide="chevron-right"></i></button>
+</div>
+<canvas id="confetti"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.454.0/dist/umd/lucide.min.js"></script>
+<script>
+/* ================= NAVIGASI ================= */
+const slides=[...document.querySelectorAll('.slide')];
+const dotsBox=document.getElementById('dots');
+let cur=0;
+slides.forEach((_,i)=>{
+  const d=document.createElement('button');
+  d.className='dot'+(i===0?' on':'');d.title='Slide '+(i+1);
+  d.onclick=()=>go(i);dotsBox.appendChild(d);
+});
+const dots=[...dotsBox.children];
+document.getElementById('tot').textContent=String(slides.length).padStart(2,'0');
+function go(i){
+  cur=Math.max(0,Math.min(slides.length-1,i));
+  slides.forEach((s,k)=>s.classList.toggle('active',k===cur));
+  slides[cur].scrollTop=0;
+  dots.forEach((d,k)=>d.classList.toggle('on',k===cur));
+  document.getElementById('cur').textContent=String(cur+1).padStart(2,'0');
+  document.getElementById('bar').style.width=((cur+1)/slides.length*100)+'%';
+  document.getElementById('prev').disabled=cur===0;
+  document.getElementById('next').disabled=cur===slides.length-1;
+}
+document.getElementById('prev').onclick=()=>go(cur-1);
+document.getElementById('next').onclick=()=>go(cur+1);
+addEventListener('keydown',e=>{
+  if(e.target.closest&&e.target.closest('input,textarea,select'))return;
+  if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();go(cur+1)}
+  if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(cur-1)}
+});
+let tx=0,ty=0,txSkip=false;
+addEventListener('touchstart',e=>{
+  tx=e.touches[0].clientX;ty=e.touches[0].clientY;
+  txSkip=!!e.target.closest('.picks,.noswipe,input,textarea,select');
+},{passive:true});
+addEventListener('touchend',e=>{
+  if(txSkip)return;
+  const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;
+  // hanya geser mendatar yang jelas, supaya scroll ke bawah tidak ikut pindah slide
+  if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5) dx<0?go(cur+1):go(cur-1);
+},{passive:true});
+go(+location.hash.slice(1)||0);
+const LET=['A','B','C'];
+
+/* ================= SIMPAN (localStorage, aman) ================= */
+const store={
+  get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+};
+
+/* ================= PEMANASAN : KAMPANYE ATAU BUKAN ================= */
+const WU=[
+  {icon:'cup-soda',bg:'var(--butter2)',name:'Es Teh Bu Sri',sub:'Bu Sri memotret es teh, lalu posting sekali di status WA tanpa keterangan apa-apa.',
+   opts:['Kampanye','Posting biasa'],a:1,
+   why:'Hanya sekali, tanpa tujuan dan tanpa jadwal. Itu posting biasa.'},
+  {icon:'cookie',bg:'var(--peach2)',name:'Keripik Kriuk',sub:'Tujuan: 30 bungkus terjual. Untuk siswa SMP. Poster di kantin + 3 video selama 1 minggu.',
+   opts:['Kampanye','Posting biasa'],a:0,
+   why:'Ada tujuan, ada target pembeli, ada kanal, dan ada waktunya. Ini kampanye!'},
+  {icon:'cake-slice',bg:'var(--pink2)',name:'Kue Bu Ani',sub:'Selama bulan puasa, tiap sore jam 15.00 Bu Ani membagikan menu takjil untuk ibu-ibu kompleks.',
+   opts:['Kampanye','Posting biasa'],a:0,
+   why:'Ada waktu tertentu (bulan puasa), jadwal rutin, dan pembeli yang jelas. Kampanye!'},
+  {icon:'store',bg:'var(--mint2)',name:'Warung Pak Jo',sub:'Pak Jo iseng memasang foto warungnya di grup keluarga karena sedang bosan.',
+   opts:['Kampanye','Posting biasa'],a:1,
+   why:'Iseng tanpa tujuan dan tanpa rencana. Ini posting biasa.'}
+];
+let wuI=0,wuScore=0;
+function renderWu(){
+  const w=WU[wuI];
+  document.getElementById('wuMedia').style.background=w.bg;
+  document.getElementById('wuIc').innerHTML=`<i data-lucide="${w.icon}"></i>`;
+  document.getElementById('wuName').textContent=w.name;
+  document.getElementById('wuSub').textContent=w.sub;
+  document.getElementById('wuRound').textContent=`Cerita ${wuI+1} dari ${WU.length}`;
+  document.getElementById('wuFb').classList.add('hidden');
+  document.getElementById('wuNext').classList.add('hidden');
+  const box=document.getElementById('wuOpts');
+  box.innerHTML=w.opts.map((o,i)=>`<button class="wu-opt" data-i="${i}"><span class="letter">${LET[i]}</span>${o}</button>`).join('');
+  box.querySelectorAll('.wu-opt').forEach(b=>b.onclick=()=>{
+    const pick=+b.dataset.i;
+    box.querySelectorAll('.wu-opt').forEach(x=>{x.disabled=true;if(+x.dataset.i===w.a)x.classList.add('good')});
+    if(pick===w.a){wuScore++;celebrate(60)}else b.classList.add('bad');
+    const fb=document.getElementById('wuFb');
+    fb.querySelector('span').textContent=(pick===w.a?'Tepat! ':'Belum tepat. ')+w.why;
+    fb.classList.remove('hidden');
+    const nx=document.getElementById('wuNext');
+    nx.querySelector('span').textContent=wuI===WU.length-1?'Lihat Hasil':'Cerita Berikutnya';
+    nx.classList.remove('hidden');
+  });
+  window.lucide&&lucide.createIcons();
+}
+document.getElementById('wuNext').onclick=()=>{
+  wuI++;
+  if(wuI<WU.length){renderWu();return}
+  document.getElementById('wuShell').classList.add('hidden');
+  document.getElementById('wuScore').textContent=wuScore;
+  document.getElementById('wuDone').classList.remove('hidden');
+  celebrate(200);
+};
+renderWu();
+
+/* ================= PILIH TUJUAN ================= */
+const GOALS={
+  kenal:{bg:'var(--sun)',msg:'"Kenalan yuk! Ini Es Teh Bu Sri, teman setia pulang sekolah sejak 2015."',
+    num:'banyak yang melihat & ingat namanya (views)',
+    konten:'Cerita di balik usaha, video "kenalan sama Bu Sri".',cta:'"Ikuti dan bagikan ke temanmu!"',
+    kanal:'Video di akun sekolah dan poster mading.',waktu:'Rutin 3 kali seminggu, supaya sering terlihat.'},
+  kunjung:{bg:'var(--mint2)',msg:'"Mampir ke depan gerbang jam 14.00, ada es teh dingin menunggumu!"',
+    num:'berapa orang yang datang atau chat',
+    konten:'Peta lokasi, foto warung, jam buka yang jelas.',cta:'"Mampir pulang sekolah, ya!"',
+    kanal:'Google Maps dan status WA orang tua.',waktu:'Siang hari, menjelang bel pulang.'},
+  beli:{bg:'var(--pink2)',msg:'"Khusus Jumat: es teh jumbo Rp3.000, beli 2 gratis 1. Stok terbatas!"',
+    num:'berapa gelas yang terjual',
+    konten:'Poster promo dengan harga & batas waktu.',cta:'"Beli sekarang sebelum habis!"',
+    kanal:'Poster kantin dan grup WA kelas (lewat pembina).',waktu:'Pagi hari promo diumumkan, diingatkan lagi siang.'}
+};
+function pickGoal(k){
+  const g=GOALS[k];
+  document.getElementById('gvMain').style.background=g.bg;
+  document.getElementById('gvMsg').textContent=g.msg;
+  document.getElementById('gvNum').textContent=g.num;
+  document.getElementById('gvKonten').textContent=g.konten;
+  document.getElementById('gvCta').textContent=g.cta;
+  document.getElementById('gvKanal').textContent=g.kanal;
+  document.getElementById('gvWaktu').textContent=g.waktu;
+  document.querySelectorAll('.gp').forEach(b=>b.classList.toggle('on',b.dataset.k===k));
+}
+document.querySelectorAll('.gp').forEach(b=>b.onclick=()=>pickGoal(b.dataset.k));
+pickGoal('kenal');
+
+/* ================= MESIN KAMPANYE ================= */
+const MK_PROD={
+  keripik:{icon:'cookie',name:'Keripik Kriuk',persona:'Dimas, 13 tahun, siswa SMP. Suka jajan pedas bareng teman di kantin.',
+    hook:'Berani coba level 5?',benefit:'renyah, pedasnya nendang, cuma Rp2.000',
+    kanal:['Poster di kantin sekolah','Video pendek di akun sekolah (lewat pembina)']},
+  kue:{icon:'cake-slice',name:'Kue Bolu Bu Ani',persona:'Bu Rina, 38 tahun, ibu bekerja. Sering cari kue untuk arisan dan ulang tahun anak.',
+    hook:'Arisan besok belum ada kue?',benefit:'bolu lembut buatan rumah, bisa pesan H-1',
+    kanal:['Status WhatsApp orang tua','Grup WA RT (izin pengurus)']},
+  boba:{icon:'cup-soda',name:'Boba Kelas 7',persona:'Salsa, 12 tahun. Suka minuman kekinian dan foto-foto bareng teman.',
+    hook:'Boba kekinian, harga uang jajan!',benefit:'gula aren asli, cuma Rp5.000',
+    kanal:['Mading & poster dekat gerbang','Video di akun ekskul (dikelola pembina)']}
+};
+const MK_GOAL={
+  kenal:{icon:'eye',lab:'Dikenal',cta:'Kenalan dulu, yuk!',
+    jadwal:'Sen: cerita pembuatan · Rab: video kenalan · Jum: foto produk. Ukur: jumlah yang melihat.'},
+  kunjung:{icon:'map-pin',lab:'Dikunjungi',cta:'Mampir ke tempat kami, ya!',
+    jadwal:'Sen: info lokasi · Rab: foto tempat jualan · Jum: "ketemu di sini jam 14.00". Ukur: jumlah yang datang/chat.'},
+  beli:{icon:'shopping-bag',lab:'Dibeli',cta:'Pesan sekarang, stok terbatas!',
+    jadwal:'Sen: teaser · Rab: testimoni asli teman · Jum: promo hari ini. Ukur: jumlah yang terjual.'}
+};
+let mkP='keripik',mkG='kenal',mkTimers=[];
+const mkSeen=new Set();
+document.getElementById('mkProd').innerHTML=Object.entries(MK_PROD).map(([k,p])=>`<button class="tg${k===mkP?' on':''}" data-k="${k}"><i data-lucide="${p.icon}"></i> ${p.name}</button>`).join('');
+document.getElementById('mkGoal').innerHTML=Object.entries(MK_GOAL).map(([k,g])=>`<button class="tg${k===mkG?' on':''}" data-k="${k}"><i data-lucide="${g.icon}"></i> ${g.lab}</button>`).join('');
+function mkSel(boxId,k){document.querySelectorAll('#'+boxId+' .tg').forEach(b=>b.classList.toggle('on',b.dataset.k===k))}
+document.querySelectorAll('#mkProd .tg').forEach(b=>b.onclick=()=>{mkP=b.dataset.k;mkSel('mkProd',mkP);mkRun()});
+document.querySelectorAll('#mkGoal .tg').forEach(b=>b.onclick=()=>{mkG=b.dataset.k;mkSel('mkGoal',mkG);mkRun()});
+function mkType(el,text,done){
+  let i=0;el.textContent='';
+  const t=setInterval(()=>{i+=2;el.textContent=text.slice(0,i);if(i>=text.length){clearInterval(t);done&&done()}},16);
+  mkTimers.push(t);
+}
+function mkRun(){
+  mkTimers.forEach(clearInterval);mkTimers=[];
+  const p=MK_PROD[mkP],g=MK_GOAL[mkG];
+  document.getElementById('mkTitle').textContent='Rencana: '+p.name;
+  document.getElementById('mkTag').textContent='Tujuan: '+g.lab;
+  const texts=[p.persona,`"${p.hook} ${p.benefit[0].toUpperCase()+p.benefit.slice(1)}. ${g.cta}"`,
+    `1) ${p.kanal[0]}  2) ${p.kanal[1]}`,g.jadwal];
+  const items=[...document.querySelectorAll('.mk-item')];
+  items.forEach((it,i)=>{it.classList.remove('fill','typing');document.getElementById('mk'+i).textContent=''});
+  const step=i=>{
+    if(i>=items.length){
+      mkSeen.add(mkP+mkG);document.getElementById('mkSeen').textContent=mkSeen.size;
+      if(mkSeen.size===9&&!mkRun.cheered){mkRun.cheered=true;celebrate(220)}
+      return;
+    }
+    items[i].classList.add('fill','typing');
+    mkType(document.getElementById('mk'+i),texts[i],()=>{items[i].classList.remove('typing');step(i+1)});
+  };
+  step(0);
+}
+document.getElementById('mkGo').onclick=mkRun;
+
+/* ================= GAME ================= */
+let mDone=0;
+document.querySelectorAll('.m-card').forEach(card=>{
+  card.querySelectorAll('.m-opt').forEach(btn=>{
+    btn.onclick=()=>{
+      if(card.classList.contains('solved'))return;
+      if(btn.dataset.ok==="1"){
+        btn.classList.add('good');
+        card.querySelectorAll('.m-opt').forEach(b=>b.disabled=true);
+        card.classList.add('solved');
+        card.querySelector('.m-why').classList.remove('hidden');
+        mDone++;
+        document.getElementById('mDone').textContent=mDone;
+        celebrate(70);
+        if(mDone===4){
+          document.getElementById('mMsg').textContent="Hebat! Matamu jeli seperti detektif!";
+          celebrate(220);
+        }
+      }else{
+        btn.classList.add('bad','shake');
+        btn.disabled=true;
+        setTimeout(()=>btn.classList.remove('shake'),350);
+      }
+    };
+  });
+});
+
+/* ================= LEMBAR RENCANA ================= */
+const PLAN_KEY='dm-p14-rencana';
+const DAYS=['Sen','Sel','Rab','Kam','Jum','Sab','Min'];
+document.getElementById('planWeek').innerHTML=DAYS.map((d,i)=>`<div class="wday"><b>${d}</b><input data-f="hari${i}" placeholder="-"></div>`).join('');
+let plan=store.get(PLAN_KEY,{});
+const planFields=[...document.querySelectorAll('#planSheet [data-f]')];
+const savedTag=document.getElementById('planSaved');
+function planPaint(){
+  planFields.forEach(el=>el.value=plan[el.dataset.f]||'');
+  document.querySelectorAll('#planGoal .pchip').forEach(b=>b.classList.toggle('on',b.dataset.v===plan.tujuan));
+}
+function planSave(){store.set(PLAN_KEY,plan);savedTag.style.opacity=1;clearTimeout(planSave.t);planSave.t=setTimeout(()=>savedTag.style.opacity=.55,900)}
+planFields.forEach(el=>el.addEventListener('input',()=>{plan[el.dataset.f]=el.value;planSave()}));
+document.querySelectorAll('#planGoal .pchip').forEach(b=>b.onclick=()=>{plan.tujuan=plan.tujuan===b.dataset.v?'':b.dataset.v;planPaint();planSave()});
+document.getElementById('planPrint').onclick=()=>window.print();
+document.getElementById('planClear').onclick=()=>{
+  if(!confirm('Kosongkan semua isian lembar rencana?'))return;
+  plan={};planPaint();planSave();
+};
+document.getElementById('planDemo').onclick=()=>{
+  plan={kelompok:'Tim Kriuk',produk:'Keripik singkong pedas level 5',tujuan:'Dibeli',
+    persona:'Dimas, 13 tahun, siswa kelas 7. Suka jajan pedas bareng teman di kantin.',
+    pesan:'Berani coba level 5? Renyah, pedas, cuma Rp2.000. Beli di kantin hari Jumat!',
+    kanal:'1) Poster kantin, karena Dimas jajan di sana. 2) Video di akun ekskul lewat pembina.',
+    konten:'2 foto produk, 1 poster, 3 caption, 1 video 20 detik',
+    hari0:'Poster',hari2:'Video',hari4:'Promo',ukur:'30 bungkus terjual dalam 1 minggu'};
+  planPaint();planSave();celebrate(60);
+};
+planPaint();savedTag.style.opacity=.55;
+
+/* ================= KONSULTASI PEMBINA ================= */
+const CK_KEY='dm-p14-konsul';
+const CK=['Tujuan kampanye sudah dipilih (hanya satu)','Ada angka tanda berhasil','Persona ditulis lengkap: nama, umur, kebiasaan',
+  'Pesan utama pakai Rumus 3K','Kanal cocok dengan kebiasaan persona','Jadwal 1 minggu sudah terisi',
+  'Promosi lewat akun sekolah/pembina, bukan akun pribadi','Semua janji di pesan itu jujur dan bisa ditepati'];
+let ck=store.get(CK_KEY,[]);
+function ckPaint(){
+  document.getElementById('ckList').innerHTML=CK.map((t,i)=>`<button class="ck${ck.includes(i)?' on':''}" data-i="${i}"><span class="box"><i data-lucide="check"></i></span><span>${t}</span></button>`).join('');
+  document.getElementById('ckTxt').textContent=ck.length+' / '+CK.length+' siap';
+  document.getElementById('ckFill').style.width=(ck.length/CK.length*100)+'%';
+  document.getElementById('ckStamp').classList.toggle('hidden',ck.length<CK.length);
+  document.querySelectorAll('#ckList .ck').forEach(b=>b.onclick=()=>{
+    const i=+b.dataset.i;
+    ck=ck.includes(i)?ck.filter(x=>x!==i):[...ck,i];
+    store.set(CK_KEY,ck);ckPaint();
+    if(ck.length===CK.length)celebrate(200);
+  });
+  window.lucide&&lucide.createIcons();
+}
+document.getElementById('ckReset').onclick=()=>{ck=[];store.set(CK_KEY,ck);ckPaint()};
+ckPaint();
+
+/* ================= DATA KUIS ================= */
+const quizData=[
+  {q:"Apa bedanya kampanye dengan posting biasa?", opts:[
+    "Kampanye harus memakai iklan berbayar",
+    "Kampanye punya tujuan, target pembeli, dan waktu yang direncanakan",
+    "Tidak ada bedanya"],a:1,
+    why:"Betul! Kampanye adalah rangkaian promosi yang direncanakan: ada tujuan, untuk siapa, dan kapan."},
+  {q:"Kelompok ingin warungnya didatangi lebih banyak orang. Tujuan kampanyenya adalah...", opts:[
+    "Dikunjungi","Dikenal","Tidak perlu tujuan"],a:0,
+    why:"Tepat! Kalau ingin orang datang atau chat, tujuannya \"dikunjungi\". Ukurannya: berapa orang yang datang."},
+  {q:"Urutan menyusun rencana kampanye yang benar adalah...", opts:[
+    "Jadwal → Kanal → Tujuan → Persona",
+    "Pesan → Jadwal → Persona → Tujuan",
+    "Tujuan → Persona → Pesan → Kanal → Jadwal"],a:2,
+    why:"Iya! Mulai dari tujuan dan untuk siapa, baru tentukan pesan, tempat, dan waktunya."},
+  {q:"Persona: siswa SMP. Kanal mana yang paling cocok untuk kampanye kelompok kita?", opts:[
+    "Akun TikTok pribadi milik kita sendiri",
+    "Poster kantin dan akun sekolah yang dikelola pembina",
+    "Koran cetak harian"],a:1,
+    why:"Betul! Kanal harus dilihat persona, dan kita masih 13 tahun, jadi pakai akun sekolah atau pembina."},
+  {q:"Kenapa rencana perlu dikonsultasikan dengan pembina?", opts:[
+    "Supaya dapat saran, dicek keamanannya, dan mendapat izin kanal",
+    "Supaya pembina yang mengerjakan",
+    "Karena rencana tidak boleh diubah"],a:0,
+    why:"Tepat sekali! Pembina membantu memperbaiki rencana dan memastikan kampanye aman dan jujur."}
+];
+
+/* ================= KUIS ================= */
+const quizArea=document.getElementById('quizArea');
+let qi=0,score=0;
+function renderQuiz(){
+  if(qi>=quizData.length){renderDone();return}
+  const d=quizData[qi];
+  quizArea.innerHTML=`
+    <div class="q-card card">
+      <div class="q-meta">
+        <span class="q-badge">Soal ${qi+1} dari ${quizData.length}</span>
+        <span class="q-score"><i data-lucide="star"></i> Skor: ${score}</span>
+      </div>
+      <h3 class="q-q">${d.q}</h3>
+      <div class="q-opts">
+        ${d.opts.map((o,i)=>`<button class="opt" data-i="${i}"><span class="letter">${LET[i]}</span>${o}</button>`).join('')}
+      </div>
+      <div class="q-foot hidden" id="qFoot">
+        <div class="q-why" id="qWhy"></div>
+        <button class="btn mint" id="qNext">${qi===quizData.length-1?'Lihat Hasil':'Lanjut'} <i data-lucide="chevron-right"></i></button>
+      </div>
+    </div>`;
+  window.lucide&&lucide.createIcons();
+  quizArea.querySelectorAll('.opt').forEach(btn=>{
+    btn.onclick=()=>{
+      const pick=+btn.dataset.i;
+      quizArea.querySelectorAll('.opt').forEach(b=>b.disabled=true);
+      quizArea.querySelector(`.opt[data-i="${d.a}"]`).classList.add('good');
+      if(pick===d.a){score++;celebrate(60)}
+      else btn.classList.add('bad');
+      document.getElementById('qWhy').innerHTML=`<i data-lucide="${pick===d.a?'circle-check':'info'}"></i><span>${d.why}</span>`;
+      document.getElementById('qFoot').classList.remove('hidden');
+      window.lucide&&lucide.createIcons();
+      document.getElementById('qNext').onclick=()=>{qi++;renderQuiz()};
+    };
+  });
+}
+function renderDone(){
+  let msg;
+  if(score===5)msg="Sempurna! Kamu siap merancang kampanye sendiri!";
+  else if(score===4)msg="Hebat! Sedikit lagi menuju sempurna!";
+  else if(score===3)msg="Bagus! Ayo bahas lagi soal yang keliru bareng teman sebangku.";
+  else msg="Tidak apa-apa — belajar memang proses. Coba ulangi, ya!";
+  quizArea.innerHTML=`
+    <div class="q-card card q-done">
+      <div class="tro"><i data-lucide="trophy"></i></div>
+      <h3>Kuis Selesai!</h3>
+      <div class="big">${score} / 5</div>
+      <p>${msg}</p>
+      <button class="btn" id="qRetry"><i data-lucide="rotate-ccw"></i> Ulangi Kuis</button>
+    </div>`;
+  window.lucide&&lucide.createIcons();
+  celebrate(180);
+  document.getElementById('qRetry').onclick=()=>{qi=0;score=0;renderQuiz()};
+}
+renderQuiz();
+
+/* ================= KONFETI ================= */
+const cvs=document.getElementById('confetti'),ctx=cvs.getContext('2d');
+const COLORS=['#FF7E67','#FFC531','#3FBF8F','#FFA8C5','#B9A7F2','#7FD8A6'];
+let parts=[],raf=null;
+function sizeC(){cvs.width=innerWidth;cvs.height=innerHeight}
+sizeC();addEventListener('resize',sizeC);
+function celebrate(n=140){
+  for(let i=0;i<n;i++){
+    parts.push({
+      x:Math.random()*cvs.width,y:-30-Math.random()*cvs.height*.35,
+      vx:-1.6+Math.random()*3.2,vy:2.2+Math.random()*3.4,
+      w:9+Math.random()*9,h:5+Math.random()*6,
+      rot:Math.random()*Math.PI,vr:-.16+Math.random()*.32,
+      ph:Math.random()*Math.PI*2,
+      c:COLORS[Math.floor(Math.random()*COLORS.length)],
+      shape:Math.floor(Math.random()*3)
+    });
+  }
+  if(!raf)tick();
+}
+function tick(){
+  ctx.clearRect(0,0,cvs.width,cvs.height);
+  parts.forEach(p=>{
+    p.x+=p.vx;p.y+=p.vy;p.rot+=p.vr;p.ph+=.1;p.vy+=.015;
+    ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);
+    ctx.scale(1,Math.abs(Math.sin(p.ph))*.85+.15);
+    ctx.fillStyle=p.c;
+    if(p.shape===0){ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h)}
+    else if(p.shape===1){ctx.beginPath();ctx.arc(0,0,p.h,0,7);ctx.fill()}
+    else{ctx.beginPath();ctx.moveTo(0,-p.h);ctx.lineTo(p.w/2,p.h/2);ctx.lineTo(-p.w/2,p.h/2);ctx.closePath();ctx.fill()}
+    ctx.restore();
+  });
+  parts=parts.filter(p=>p.y<cvs.height+40);
+  if(parts.length)raf=requestAnimationFrame(tick);
+  else{raf=null;ctx.clearRect(0,0,cvs.width,cvs.height)}
+}
+document.getElementById('partyBtn').onclick=()=>{celebrate(260);setTimeout(()=>celebrate(160),700)};
+
+window.lucide&&lucide.createIcons();
+</script>
+</body>
+</html>

@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Memilih Kanal Promosi · SMP Kelas 7</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#453A4E; --ink-soft:#6B5F75; --cream:#FDF7EF;
+    --peach:#FFF1E8; --peach2:#FFCBB5;
+    --mint:#EAF7F0;  --mint2:#BFEAD2;
+    --butter:#FFF6DF;--butter2:#FFE39A;
+    --lav:#F3F0FC;   --lav2:#DCD2F7;
+    --pink:#FFF0F5;  --pink2:#FFC9DC;
+    --sky:#E9F1FB;   --sky2:#C5DCF2;
+    --coral:#FF7E67; --teal:#3FBF8F; --sun:#FFC531;
+    --shadow:6px 6px 0 var(--ink);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--ink);background:var(--cream);overflow:hidden}
+  h1,h2,h3,.disp{font-family:'Fredoka',sans-serif}
+
+  /* ===== CHROME ===== */
+  #bar{position:fixed;top:0;left:0;height:6px;background:var(--coral);width:0;z-index:60;transition:width .4s ease;border-radius:0 4px 4px 0}
+  .pagenum{position:fixed;left:26px;bottom:22px;z-index:60;font-family:'Fredoka';font-weight:600;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:7px 16px;box-shadow:4px 4px 0 var(--ink);font-size:14px;letter-spacing:.06em}
+  .dots{position:fixed;left:50%;transform:translateX(-50%);bottom:24px;z-index:60;display:flex;gap:9px}
+  .dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--ink);background:#fff;cursor:pointer;transition:.25s;padding:0}
+  .dot.on{background:var(--sun);transform:scale(1.35)}
+  .navbtns{position:fixed;right:26px;bottom:18px;z-index:60;display:flex;gap:10px}
+  .nav{width:52px;height:52px;border-radius:50%;background:#fff;border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink);cursor:pointer;display:grid;place-items:center;transition:.15s;color:var(--ink)}
+  .nav:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .nav:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+  .nav:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:4px 4px 0 var(--ink)}
+  .navbar-bg{display:none;position:fixed;left:0;right:0;bottom:0;height:calc(76px + env(safe-area-inset-bottom,0px));z-index:55;background:rgba(253,247,239,.94);border-top:3px solid var(--ink);backdrop-filter:blur(6px)}
+
+  /* ===== SLIDES ===== */
+  .slide{position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;opacity:0;visibility:hidden;transform:translateX(46px);transition:opacity .5s ease,transform .55s cubic-bezier(.22,.9,.32,1),visibility .5s;overflow:auto;padding:56px 40px 100px}
+  .slide.active{opacity:1;visibility:visible;transform:none;z-index:5}
+  .slide::before,.slide::after{content:'';position:absolute;border-radius:50%;z-index:0}
+  .slide::before{width:44vw;height:44vw;top:-20vw;right:-14vw;background:var(--bA);opacity:.75}
+  .slide::after{width:34vw;height:34vw;bottom:-16vw;left:-12vw;background:var(--bB);opacity:.7}
+  [data-theme="peach"] {background:var(--peach);--bA:var(--peach2);--bB:var(--butter2)}
+  [data-theme="cream"] {background:var(--cream);--bA:var(--mint2);--bB:var(--pink2)}
+  [data-theme="butter"]{background:var(--butter);--bA:var(--butter2);--bB:var(--mint2)}
+  [data-theme="mint"]  {background:var(--mint);--bA:var(--mint2);--bB:var(--peach2)}
+  [data-theme="lav"]   {background:var(--lav);--bA:var(--lav2);--bB:var(--peach2)}
+  [data-theme="pink"]  {background:var(--pink);--bA:var(--pink2);--bB:var(--sky2)}
+  [data-theme="sky"]   {background:var(--sky);--bA:var(--sky2);--bB:var(--butter2)}
+
+  .wrap{position:relative;z-index:2;width:100%}
+  .slide .wrap{margin-top:auto;margin-bottom:auto}
+  .anim{opacity:0}
+  .slide.active .anim{animation:rise .7s cubic-bezier(.22,.9,.32,1) forwards;animation-delay:calc(var(--d,0)*.09s)}
+  @keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+
+  .kicker{display:inline-flex;align-items:center;gap:8px;font-family:'Fredoka';font-weight:600;font-size:13px;letter-spacing:.14em;text-transform:uppercase;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:8px 18px;box-shadow:4px 4px 0 var(--ink)}
+  .kicker svg{width:16px;height:16px}
+  h2.title{font-size:clamp(30px,3.6vw,48px);font-weight:700;margin:18px 0 8px;line-height:1.12}
+  p.lead{font-size:clamp(15px,1.3vw,19px);color:var(--ink-soft);max-width:680px;font-weight:500}
+  .hl{background:linear-gradient(transparent 62%,var(--butter2) 62%);padding:0 3px;border-radius:3px}
+  .hl.m{background:linear-gradient(transparent 62%,var(--mint2) 62%)}
+  .hl.p{background:linear-gradient(transparent 62%,var(--pink2) 62%)}
+  .hl.l{background:linear-gradient(transparent 62%,var(--lav2) 62%)}
+  .card{background:#fff;border:3px solid var(--ink);border-radius:20px;box-shadow:var(--shadow)}
+  .btn{display:inline-flex;align-items:center;gap:10px;font-family:'Fredoka';font-weight:600;font-size:17px;color:var(--ink);background:var(--coral);border:3px solid var(--ink);border-radius:14px;padding:13px 26px;box-shadow:5px 5px 0 var(--ink);cursor:pointer;transition:.15s;text-decoration:none}
+  .btn svg{width:20px;height:20px}
+  .btn:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+  .btn.sun{background:var(--sun)} .btn.mint{background:var(--mint2)} .btn.ghost{background:#fff}
+  .hidden{display:none !important}
+  .deco{position:absolute;z-index:1;pointer-events:none;color:var(--ink);opacity:.55}
+  .deco svg{width:100%;height:100%}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}50%{transform:translateY(-14px) rotate(var(--r,0deg))}}
+  .bob{animation:bob 4.5s ease-in-out infinite}
+
+  /* ===== HERO ===== */
+  .s-hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center}
+  .badge-row{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap}
+  .badge{display:inline-flex;align-items:center;gap:8px;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:8px 16px;font-weight:700;font-size:14px;box-shadow:3px 3px 0 var(--ink)}
+  .badge svg{width:17px;height:17px}
+  .b1{background:var(--mint2)} .b2{background:var(--pink2)} .b3{background:var(--butter2)}
+  .art-stage{position:relative;display:grid;place-items:center;min-height:460px}
+  .art-stage>svg{width:min(400px,90%);filter:drop-shadow(8px 10px 0 rgba(69,58,78,.18))}
+  .fchip{position:absolute;display:grid;place-items:center;border:3px solid var(--ink);border-radius:50%;box-shadow:4px 4px 0 var(--ink)}
+  .fchip svg{width:52%;height:52%}
+  .fc1{width:74px;height:74px;background:var(--coral);color:#fff;top:36px;left:34px;--r:-8deg}
+  .fc2{width:64px;height:64px;background:var(--sun);top:118px;right:26px;--r:10deg}
+  .fc3{width:70px;height:70px;background:var(--teal);color:#fff;bottom:92px;left:14px;--r:6deg}
+  .fc4{width:60px;height:60px;background:var(--lav2);bottom:34px;right:48px;--r:-10deg}
+  .fc5{width:52px;height:52px;background:var(--pink2);top:8px;right:130px;--r:14deg}
+
+  /* ===== GOALS ===== */
+  .goal-list{margin-top:30px;display:flex;flex-direction:column;gap:16px;max-width:880px}
+  .goal{display:flex;align-items:center;gap:22px;background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:16px 24px}
+  .goal:nth-child(odd){margin-right:56px}.goal:nth-child(even){margin-left:56px}
+  .gnum{flex:0 0 56px;height:56px;border-radius:50%;border:3px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:24px}
+  .g1{background:var(--coral);color:#fff}.g2{background:var(--sun)}.g3{background:var(--mint2)}.g4{background:var(--pink2)}
+  .goal h3{font-size:19px;font-weight:600;margin-bottom:3px}
+  .goal p{font-size:14.5px;color:var(--ink-soft);font-weight:500}
+
+  /* ===== PEMANASAN : TEBAK PEMBELI ===== */
+  .wu-shell{margin-top:26px;display:grid;grid-template-columns:330px 1fr;gap:32px;align-items:start}
+  .prod{border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);overflow:hidden;background:#fff}
+  .prod-media{height:200px;display:grid;place-items:center;border-bottom:2.5px solid var(--ink)}
+  .prod-media .ic{width:110px;height:110px;border-radius:50%;background:#fff;border:3px solid var(--ink);display:grid;place-items:center;box-shadow:5px 5px 0 var(--ink)}
+  .prod-media .ic svg{width:54px;height:54px}
+  .prod-cap{padding:14px 18px}
+  .prod-cap h4{font-family:'Fredoka';font-size:21px;line-height:1.15}
+  .prod-cap .sub{font-size:13.5px;font-weight:600;margin-top:4px;color:var(--ink-soft)}
+  .prod-cap .price{display:inline-block;margin-top:8px;font-family:'Fredoka';font-weight:700;font-size:14px;border:2.5px solid var(--ink);border-radius:10px;padding:4px 10px;background:var(--butter2)}
+  .wu-round{font-family:'Fredoka';font-weight:600;font-size:14px;color:var(--ink-soft)}
+  .wu-q{font-family:'Fredoka';font-weight:600;font-size:clamp(19px,1.8vw,23px);margin:6px 0 14px}
+  .wu-opts{display:flex;flex-direction:column;gap:12px;max-width:430px}
+  .wu-opt{display:flex;align-items:center;gap:13px;text-align:left;background:#fff;border:3px solid var(--ink);border-radius:14px;padding:12px 18px;font-family:'Plus Jakarta Sans';font-weight:600;font-size:15.5px;cursor:pointer;transition:.15s;color:var(--ink);box-shadow:4px 4px 0 var(--ink)}
+  .wu-opt:hover:not(:disabled){transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .wu-opt:disabled{cursor:default}
+  .wu-opt .letter{flex:0 0 34px;height:34px;border-radius:10px;border:2.5px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;background:var(--butter2)}
+  .wu-opt.good{background:var(--mint2)} .wu-opt.good .letter{background:var(--teal);color:#fff}
+  .wu-opt.bad{background:var(--pink2)} .wu-opt.bad .letter{background:var(--coral);color:#fff}
+  .wu-fb{margin-top:16px;display:flex;gap:12px;align-items:flex-start;background:var(--butter);border:2.5px solid var(--ink);border-radius:14px;padding:14px 18px;font-size:14.5px;font-weight:600;line-height:1.55;max-width:430px}
+  .wu-fb svg{width:20px;height:20px;flex:0 0 20px;margin-top:2px}
+  .wu-next{margin-top:14px}
+  .wu-done{background:#fff;border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);padding:30px 34px;max-width:640px;text-align:center}
+  .wu-done .tro{width:84px;height:84px;border-radius:50%;background:var(--sun);border:3px solid var(--ink);display:grid;place-items:center;margin:0 auto 14px;box-shadow:4px 4px 0 var(--ink)}
+  .wu-done .tro svg{width:40px;height:40px}
+  .wu-done h3{font-size:26px;margin-bottom:8px}
+  .wu-done p{font-weight:600;color:var(--ink-soft);line-height:1.6}
+  .wu-done .sc{font-family:'Fredoka';font-weight:700;font-size:19px;color:var(--teal);margin-top:10px}
+
+  /* ===== DEFINISI ===== */
+  .s-def .wrap{display:grid;grid-template-columns:1.08fr .92fr;gap:40px;align-items:center}
+  .define{margin-top:24px;background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:22px 26px;font-size:clamp(16px,1.45vw,20px);font-weight:600;line-height:1.6}
+  .define .q{color:var(--coral);font-family:'Fredoka'}
+  .analog{margin-top:18px;display:flex;gap:16px;align-items:flex-start;background:var(--lav);border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:18px 22px}
+  .analog .ic{flex:0 0 46px;height:46px;border-radius:50%;background:var(--lav2);display:grid;place-items:center;border:2.5px solid var(--ink)}
+  .analog .ic svg{width:24px;height:24px}
+  .analog p{font-size:15.5px;font-weight:500;line-height:1.55}
+  .target-art{display:grid;place-items:center}
+  .target-art svg{width:min(380px,100%);height:auto;filter:drop-shadow(8px 10px 0 rgba(69,58,78,.18))}
+
+  /* ===== SEMUA ORANG VS TARGET ===== */
+  .vs2{margin-top:28px;display:grid;grid-template-columns:1fr 84px 1fr;align-items:stretch}
+  .vs2-col{border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);padding:22px 26px;background:#fff}
+  .vs2-col.bad{background:var(--pink)}
+  .vs2-col.good{background:var(--mint)}
+  .vs2-col .lab{font-family:'Fredoka';font-weight:700;font-size:13px;letter-spacing:.12em;text-transform:uppercase;display:inline-flex;gap:7px;align-items:center;border:2.5px solid var(--ink);border-radius:999px;padding:5px 14px;margin-bottom:14px}
+  .vs2-col .lab svg{width:15px;height:15px}
+  .bad .lab{background:var(--pink2)} .good .lab{background:var(--mint2)}
+  .vs2-col .bigline{font-family:'Fredoka';font-weight:700;font-size:clamp(20px,2vw,25px);line-height:1.25;margin-bottom:12px}
+  .vs2-col .promo{background:#fff;border:2.5px dashed var(--ink);border-radius:14px;padding:12px 16px;font-size:15px;font-weight:600;line-height:1.5;margin-bottom:12px}
+  .vs2-col p{font-size:14.5px;font-weight:500;color:var(--ink-soft);line-height:1.55}
+  .vs2-mid{display:grid;place-items:center}
+  .vs2-badge{width:60px;height:60px;border-radius:50%;background:var(--sun);border:3px solid var(--ink);display:grid;place-items:center;box-shadow:4px 4px 0 var(--ink);font-family:'Fredoka';font-weight:700;font-size:18px}
+  .vs-note{margin-top:22px;background:#fff;border:3px solid var(--ink);border-left:14px solid var(--sun);border-radius:16px;box-shadow:var(--shadow);padding:15px 22px;font-weight:600;font-size:15px;line-height:1.55;max-width:860px}
+
+  /* ===== FLIP 4 PERTANYAAN ===== */
+  .fgrid{margin-top:26px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+  .fcard{perspective:1100px;min-height:250px;cursor:pointer}
+  .finner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.3,.8,.3,1)}
+  .fcard.flipped .finner{transform:rotateY(180deg)}
+  .fface{position:absolute;inset:0;backface-visibility:hidden;border:3px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 var(--ink);padding:18px 20px;display:flex;flex-direction:column}
+  .ffront{background:#fff}
+  .fback{background:var(--mint2);transform:rotateY(180deg)}
+  .fic{width:52px;height:52px;border-radius:15px;border:2.5px solid var(--ink);display:grid;place-items:center;margin-bottom:12px}
+  .fic svg{width:24px;height:24px}
+  .ffront h3{font-size:22px;line-height:1.15}
+  .ffront .tease{font-size:13.5px;font-weight:600;color:var(--ink-soft);line-height:1.45;margin-top:6px}
+  .ffront .hint{margin-top:auto;display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;color:var(--ink-soft)}
+  .ffront .hint svg{width:15px;height:15px}
+  .fback .tag{font-family:'Fredoka';font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;background:var(--ink);color:#fff;border-radius:999px;padding:4px 12px;align-self:flex-start;margin-bottom:10px}
+  .fback p{font-size:13.8px;font-weight:600;line-height:1.55;flex:1}
+  .fback .eg{font-size:12.5px;font-weight:700;opacity:.8;margin-top:8px;border-top:2px dashed rgba(69,58,78,.4);padding-top:8px;flex:0 0 auto}
+
+  /* ===== MESIN TARGET ===== */
+  .lab{margin-top:24px;display:grid;grid-template-columns:300px 1fr;gap:28px;align-items:start}
+  .picks{display:flex;flex-direction:column;gap:10px}
+  .pk{display:flex;align-items:center;gap:12px;text-align:left;background:#fff;border:2.5px solid var(--ink);border-radius:14px;padding:10px 14px;cursor:pointer;box-shadow:3px 3px 0 var(--ink);transition:.15s;font-family:'Fredoka';font-weight:600;font-size:15px;color:var(--ink)}
+  .pk .ti{width:38px;height:38px;border-radius:11px;border:2px solid var(--ink);display:grid;place-items:center;flex:0 0 38px}
+  .pk .ti svg{width:19px;height:19px}
+  .pk small{display:block;font-family:'Plus Jakarta Sans';font-size:12px;font-weight:600;color:var(--ink-soft)}
+  .pk:hover{transform:translateX(3px)}
+  .pk.on{background:var(--ink);color:#fff}
+  .pk.on small{color:var(--butter2)}
+  .pk.on .ti{border-color:#fff}
+  .lab-seen{margin-top:6px;font-family:'Fredoka';font-weight:600;font-size:13px;background:var(--butter2);border:2.5px solid var(--ink);border-radius:999px;display:inline-flex;align-items:center;gap:8px;padding:6px 14px;box-shadow:3px 3px 0 var(--ink);align-self:flex-start}
+  .lab-seen svg{width:14px;height:14px}
+  .tmap{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .tq{background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:5px 5px 0 var(--ink);padding:14px 16px}
+  .tq h4{font-family:'Fredoka';font-size:15px;display:flex;align-items:center;gap:9px;margin-bottom:6px}
+  .tq h4 span.i{width:30px;height:30px;border-radius:9px;border:2px solid var(--ink);display:grid;place-items:center}
+  .tq h4 svg{width:16px;height:16px}
+  .tq p{font-size:14px;font-weight:600;line-height:1.5}
+  .tsum{grid-column:1/-1;background:var(--ink);color:#fff;border-radius:16px;box-shadow:5px 5px 0 var(--sun);padding:14px 18px;font-size:15px;font-weight:600;line-height:1.55}
+  .tsum b{color:var(--sun);font-family:'Fredoka'}
+  .tsum .idea{display:block;margin-top:6px;font-size:13.5px;color:var(--mint2)}
+
+  /* ===== PRODUK SAMA, TARGET BEDA ===== */
+  .swap{margin-top:24px;display:grid;grid-template-columns:340px 1fr;gap:32px;align-items:start}
+  .toggle{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+  .tg{display:inline-flex;align-items:center;gap:8px;font-family:'Fredoka';font-weight:600;font-size:15px;border:2.5px solid var(--ink);border-radius:12px;padding:9px 16px;background:#fff;cursor:pointer;box-shadow:3px 3px 0 var(--ink);color:var(--ink)}
+  .tg svg{width:17px;height:17px}
+  .tg.on{background:var(--ink);color:#fff}
+  .poster{border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);min-height:400px;padding:26px 22px;position:relative;transition:background .45s;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px}
+  .pp-plat{position:absolute;top:14px;left:14px;display:inline-flex;gap:7px;align-items:center;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:6px 13px;font-family:'Fredoka';font-weight:700;font-size:12.5px;box-shadow:3px 3px 0 var(--ink)}
+  .pp-plat svg{width:15px;height:15px}
+  .pp-ic{width:86px;height:86px;border-radius:50%;background:#fff;border:3px solid var(--ink);display:grid;place-items:center;box-shadow:4px 4px 0 var(--ink)}
+  .pp-ic svg{width:42px;height:42px}
+  .pp-title{font-family:'Fredoka';font-weight:700;font-size:28px;line-height:1.12}
+  .pp-sub{font-weight:600;font-size:14px;line-height:1.5;max-width:270px}
+  .pp-price{font-family:'Fredoka';font-weight:700;font-size:15px;border:2.5px solid var(--ink);border-radius:10px;padding:5px 12px;background:#fff;box-shadow:3px 3px 0 var(--ink)}
+  .pp-cta{display:inline-flex;gap:8px;align-items:center;font-family:'Fredoka';font-weight:700;font-size:14.5px;padding:9px 18px;border:2.5px solid var(--ink);border-radius:999px;box-shadow:3px 3px 0 var(--ink)}
+  .pp-cta svg{width:15px;height:15px}
+  .diff{background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+  .diff table{width:100%;border-collapse:collapse}
+  .diff th,.diff td{text-align:left;padding:11px 16px;border-top:2px dashed rgba(69,58,78,.22);font-size:14px;vertical-align:top}
+  .diff th{font-family:'Fredoka';font-weight:600;font-size:14px;width:130px;border-top:2px dashed rgba(69,58,78,.22)}
+  .diff tr:first-child th,.diff tr:first-child td{border-top:none}
+  .diff td{font-weight:600}
+  .same{margin-top:16px;display:flex;gap:12px;align-items:flex-start;background:var(--sun);border:3px solid var(--ink);border-radius:16px;box-shadow:5px 5px 0 var(--ink);padding:12px 16px;font-size:14px;font-weight:600;line-height:1.5}
+  .same svg{width:20px;height:20px;flex:0 0 20px;margin-top:1px}
+
+  /* ===== GAME ===== */
+  .match-list{margin-top:26px;display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .m-card{background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:18px 20px}
+  .m-card.solved{background:var(--mint)}
+  .m-card h3{font-size:14.5px;font-weight:600;line-height:1.5;margin-bottom:12px;font-family:'Plus Jakarta Sans'}
+  .m-card h3 b{font-family:'Fredoka'}
+  .m-opts{display:flex;gap:9px;flex-wrap:wrap}
+  .m-opt{display:inline-flex;align-items:center;gap:7px;font-family:'Fredoka';font-weight:600;font-size:13.5px;border:2.5px solid var(--ink);border-radius:999px;padding:8px 15px;background:#fff;cursor:pointer;box-shadow:3px 3px 0 var(--ink);transition:.15s;color:var(--ink)}
+  .m-opt:hover:not(:disabled){transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--ink)}
+  .m-opt:disabled{cursor:default}
+  .m-opt.good{background:var(--teal);color:#fff}
+  .m-opt.bad{background:var(--pink2)}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+  .m-opt.shake{animation:shake .3s}
+  .m-why{margin-top:12px;background:var(--butter);border:2.5px solid var(--ink);border-radius:12px;padding:10px 14px;font-size:13px;font-weight:600;line-height:1.5;display:flex;gap:9px}
+  .m-why svg{width:17px;height:17px;flex:0 0 17px;margin-top:1px}
+  .m-score{margin-top:22px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;background:var(--ink);color:#fff;border-radius:16px;padding:14px 24px;max-width:640px;box-shadow:var(--shadow)}
+  .m-score b{font-family:'Fredoka';font-size:20px;color:var(--sun)}
+
+  /* ===== QUIZ ===== */
+  .quiz-shell{max-width:780px;margin:0 auto}
+  .q-meta{display:flex;justify-content:space-between;align-items:center;margin:0 0 16px}
+  .q-badge{font-family:'Fredoka';font-weight:700;background:var(--coral);color:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:7px 18px;box-shadow:3px 3px 0 var(--ink);font-size:14px}
+  .q-score{font-family:'Fredoka';font-weight:700;background:var(--sun);border:2.5px solid var(--ink);border-radius:999px;padding:7px 18px;box-shadow:3px 3px 0 var(--ink);font-size:14px;display:flex;align-items:center;gap:7px}
+  .q-score svg{width:16px;height:16px}
+  .q-card{padding:28px 32px;margin-top:20px}
+  .q-q{font-size:clamp(19px,1.8vw,25px);font-weight:600;line-height:1.4;margin-bottom:20px}
+  .q-opts{display:flex;flex-direction:column;gap:12px}
+  .opt{display:flex;align-items:center;gap:16px;text-align:left;background:#fff;border:3px solid var(--ink);border-radius:14px;padding:13px 18px;font-family:'Plus Jakarta Sans';font-weight:600;font-size:16px;cursor:pointer;transition:.15s;color:var(--ink);box-shadow:4px 4px 0 var(--ink)}
+  .opt:hover:not(:disabled){transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .opt:disabled{cursor:default}
+  .opt .letter{flex:0 0 36px;height:36px;border-radius:10px;border:2.5px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;background:var(--lav2)}
+  .opt.good{background:var(--mint2)} .opt.good .letter{background:var(--teal);color:#fff}
+  .opt.bad{background:var(--pink2);opacity:.9} .opt.bad .letter{background:var(--coral);color:#fff}
+  .q-foot{margin-top:18px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+  .q-why{display:flex;gap:12px;align-items:flex-start;background:var(--butter);border:2.5px solid var(--ink);border-radius:14px;padding:14px 18px;font-size:14.5px;font-weight:600;line-height:1.5;flex:1}
+  .q-why svg{width:20px;height:20px;flex:0 0 20px;margin-top:2px}
+  .q-done{text-align:center;padding:38px 30px}
+  .q-done .tro{width:96px;height:96px;border-radius:50%;background:var(--sun);border:3px solid var(--ink);display:grid;place-items:center;margin:0 auto 18px;box-shadow:5px 5px 0 var(--ink)}
+  .q-done .tro svg{width:48px;height:48px}
+  .q-done h3{font-size:30px;margin-bottom:8px}
+  .q-done .big{font-family:'Fredoka';font-size:56px;font-weight:700;color:var(--coral);margin:6px 0 10px}
+  .q-done p{font-weight:600;color:var(--ink-soft);margin-bottom:22px}
+
+  /* ===== MISI ===== */
+  .s-misi .wrap{display:grid;grid-template-columns:1.12fr .88fr;gap:38px;align-items:start}
+  .steps{margin-top:24px;display:flex;flex-direction:column;gap:14px}
+  .step{display:flex;gap:18px;align-items:flex-start;background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:var(--shadow);padding:15px 20px}
+  .step:nth-child(even){margin-left:44px}
+  .snum{flex:0 0 46px;height:46px;border-radius:50%;border:3px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:19px}
+  .st1{background:var(--coral);color:#fff}.st2{background:var(--sun)}.st3{background:var(--mint2)}.st4{background:var(--pink2)}
+  .step h3{font-size:16.5px;font-weight:600}
+  .step p{font-size:13.5px;color:var(--ink-soft);font-weight:500;margin-top:2px;line-height:1.5}
+  .blank-card{padding:18px 22px;background:#fff;border:3px dashed var(--ink);border-radius:16px}
+  .blank-card h4{font-family:'Fredoka';font-size:15.5px;margin-bottom:10px;display:flex;gap:8px;align-items:center}
+  .blank-card h4 svg{width:17px;height:17px}
+  .bl{display:flex;gap:8px;font-size:13px;font-weight:600;padding:5px 0}
+  .bl b{flex:0 0 96px}
+  .bl span{flex:1;border-bottom:2px dotted var(--ink-soft);min-height:18px}
+  .sentence{margin-top:12px;background:var(--butter);border:2.5px solid var(--ink);border-radius:12px;padding:10px 14px;font-size:13.5px;font-weight:600;line-height:1.7}
+  .mini-rubrik{margin-top:18px;padding:18px 22px;background:#fff}
+  .rubrik-row{display:flex;justify-content:space-between;gap:12px;font-size:13.5px;font-weight:700;padding:6px 0;border-top:2px dashed rgba(69,58,78,.25)}
+  .rubrik-row:first-of-type{border-top:none}
+  .rubrik-row span:last-child{color:var(--coral);font-family:'Fredoka';white-space:nowrap}
+
+  /* ===== PENUTUP ===== */
+  .s-end .wrap{display:grid;grid-template-columns:1fr .85fr;gap:44px;align-items:center}
+  .refl{margin-top:24px;display:flex;flex-direction:column;gap:14px;max-width:600px}
+  .refl-item{display:flex;gap:16px;align-items:center;background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:var(--shadow);padding:14px 20px}
+  .rnum{flex:0 0 44px;height:44px;border-radius:50%;border:2.5px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:18px}
+  .r1{background:var(--coral);color:#fff}.r2{background:var(--mint2)}.r3{background:var(--pink2)}
+  .refl-item p{font-size:15.5px;font-weight:600}
+  .end-art{position:relative;display:grid;place-items:center;min-height:420px}
+  .quote{position:relative;background:var(--sun);border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);padding:30px 34px;text-align:center;max-width:380px;transform:rotate(-2deg)}
+  .quote h3{font-size:25px;line-height:1.3;margin-bottom:10px}
+  .quote p{font-weight:600;font-size:14.5px}
+  .end-btn{margin-top:26px;display:flex;gap:14px;flex-wrap:wrap}
+
+  #confetti{position:fixed;inset:0;z-index:100;pointer-events:none}
+
+  @media (max-width:960px){
+    .s-hero .wrap,.s-def .wrap,.s-misi .wrap,.s-end .wrap{grid-template-columns:1fr}
+    .wu-shell,.lab,.swap{grid-template-columns:1fr}
+    .fgrid{grid-template-columns:1fr 1fr}
+    .vs2{grid-template-columns:1fr}
+    .vs2-mid{margin:14px 0}
+    .match-list{grid-template-columns:1fr}
+    .goal:nth-child(odd),.goal:nth-child(even){margin:0}
+    .step:nth-child(even){margin-left:0}
+    .art-stage,.end-art{min-height:340px}
+    .picks{flex-direction:row;flex-wrap:wrap}
+    .slide{padding:40px 20px 110px}
+  }
+
+  /* ===== MOBILE ===== */
+  @media (max-width:640px){
+    .slide{padding:22px 16px 104px}
+    .slide::before{width:70vw;height:70vw;top:-30vw;right:-30vw}
+    .slide::after{width:60vw;height:60vw;bottom:-28vw;left:-26vw}
+    .kicker{font-size:11px;letter-spacing:.1em;padding:6px 12px;box-shadow:3px 3px 0 var(--ink)}
+    h2.title{font-size:27px;margin:14px 0 6px}
+    p.lead{font-size:15px}
+    .card,.goal,.step,.m-card,.refl-item,.tq,.vs2-col,.prod,.poster,.diff{box-shadow:4px 4px 0 var(--ink)}
+    .deco{display:none}
+    .dots{display:none}
+    .navbar-bg{display:block}
+    .pagenum{left:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));font-size:13px;padding:6px 14px;box-shadow:3px 3px 0 var(--ink)}
+    .navbtns{right:16px;bottom:calc(12px + env(safe-area-inset-bottom,0px))}
+    .nav{width:48px;height:48px;box-shadow:3px 3px 0 var(--ink)}
+    .s-hero .wrap{gap:12px}
+    .art-stage{min-height:300px}
+    .art-stage>svg{width:min(260px,76%)}
+    .fchip{transform:scale(.7)}
+    .badge{font-size:13px;padding:6px 12px}
+    .goal{gap:14px;padding:12px 16px}
+    .gnum{flex:0 0 44px;height:44px;font-size:20px}
+    .goal h3{font-size:16.5px}
+    .goal p{font-size:13.5px}
+    .prod-media{height:150px}
+    .define{padding:16px 18px}
+    .fgrid{grid-template-columns:1fr}
+    .fcard{min-height:200px}
+    .picks{flex-wrap:nowrap;overflow-x:auto;margin-right:-16px;padding:2px 4px 8px 2px;scrollbar-width:none}
+    .picks::-webkit-scrollbar{display:none}
+    .pk{flex:0 0 auto;white-space:nowrap}
+    .pk:hover{transform:none}
+    .tmap{grid-template-columns:1fr}
+    .poster{min-height:340px}
+    .diff th{width:96px}
+    .q-card{padding:18px 16px}
+    .q-q{font-size:18px}
+    .opt{font-size:14.5px;padding:10px 14px;gap:12px}
+    .q-foot{flex-direction:column;align-items:stretch}
+    .q-done .big{font-size:44px}
+    .quote{padding:22px}
+    .quote h3{font-size:21px}
+    .end-art{min-height:300px}
+  }
+
+  /* ===================== KHUSUS PERTEMUAN INI ===================== */
+  .s-tall{padding-top:40px;padding-bottom:92px}
+  .s-tall h2.title{margin:12px 0 6px}
+
+  /* ===== KONSEP ===== */
+  .hub-art{display:grid;place-items:center}
+  .hub-art svg{width:min(380px,100%);height:auto;filter:drop-shadow(8px 10px 0 rgba(69,58,78,.18))}
+
+  /* ===== FLIP 5 KANAL ===== */
+  .fgrid.five{grid-template-columns:repeat(5,1fr);gap:16px}
+  .fgrid.five .fcard{min-height:300px}
+  .fgrid.five .fface{padding:16px}
+  .fgrid.five .ffront h3{font-size:20px}
+  .fback .fl{font-size:12.8px;font-weight:600;line-height:1.45;margin-bottom:7px}
+  .fback .fl b{font-family:'Fredoka';display:block;font-size:13px}
+
+  /* ===== SATU PROMO BEDA KANAL ===== */
+  .chv{margin-top:20px;display:grid;grid-template-columns:360px 1fr;gap:30px;align-items:start}
+  .mock{background:#fff;border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);min-height:390px;overflow:hidden;display:flex;flex-direction:column}
+  .mk-bar{display:flex;align-items:center;gap:9px;padding:10px 14px;border-bottom:2.5px solid var(--ink);font-family:'Fredoka';font-weight:700;font-size:14px}
+  .mk-bar .av{width:30px;height:30px;border-radius:50%;border:2.5px solid var(--ink);display:grid;place-items:center;background:var(--sun)}
+  .mk-bar .av svg{width:15px;height:15px}
+  .mk-bar small{margin-left:auto;font-family:'Plus Jakarta Sans';font-size:11.5px;font-weight:700;color:var(--ink-soft)}
+  .mk-body{flex:1;padding:14px;display:flex;flex-direction:column;gap:10px}
+  .mk-img{flex:1;min-height:150px;border:2.5px solid var(--ink);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;position:relative;text-align:center;padding:10px}
+  .mk-img .ic{width:64px;height:64px;border-radius:50%;background:#fff;border:3px solid var(--ink);display:grid;place-items:center}
+  .mk-img .ic svg{width:30px;height:30px}
+  .mk-img .ov{font-family:'Fredoka';font-weight:700;font-size:16px;background:#fff;border:2px solid var(--ink);border-radius:10px;padding:3px 10px}
+  .mk-img .play{position:absolute;right:10px;bottom:10px;width:34px;height:34px;border-radius:50%;background:#fff;border:2.5px solid var(--ink);display:grid;place-items:center}
+  .mk-img .play svg{width:16px;height:16px}
+  .mk-txt{font-size:13.5px;font-weight:600;line-height:1.5}
+  .mk-row{display:flex;gap:8px;flex-wrap:wrap}
+  .mk-chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;border:2px solid var(--ink);border-radius:999px;padding:4px 10px;background:var(--cream)}
+  .mk-chip svg{width:13px;height:13px}
+  .mk-chip.cta{background:var(--teal);color:#fff}
+  .stars{color:var(--sun);display:inline-flex;gap:1px}
+  .stars svg{width:14px;height:14px;fill:var(--sun)}
+
+  /* ===== GAME PASANGKAN ===== */
+  .pair{margin-top:20px;display:grid;grid-template-columns:1.35fr 1fr;gap:26px;align-items:start}
+  .per-list{display:flex;flex-direction:column;gap:11px}
+  .per{display:flex;gap:12px;align-items:center;text-align:left;width:100%;background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:4px 4px 0 var(--ink);padding:10px 14px;cursor:pointer;color:var(--ink);font-family:'Plus Jakarta Sans';transition:.15s}
+  .per:hover:not(:disabled){transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .per .av{flex:0 0 44px;height:44px;border-radius:50%;border:2.5px solid var(--ink);display:grid;place-items:center}
+  .per .av svg{width:21px;height:21px}
+  .per b{font-family:'Fredoka';font-size:15.5px;display:block}
+  .per span.d{font-size:13px;font-weight:600;color:var(--ink-soft);line-height:1.4;display:block}
+  .per.sel{background:var(--butter2);transform:translateX(6px)}
+  .per.done{background:var(--mint);cursor:default}
+  .per .got{margin-left:auto;flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;font-family:'Fredoka';font-weight:700;font-size:12.5px;background:var(--teal);color:#fff;border:2px solid var(--ink);border-radius:999px;padding:4px 10px}
+  .per .got svg{width:13px;height:13px}
+  .per.shake{animation:shake .3s}
+  .ch-list{display:flex;flex-direction:column;gap:11px}
+  .chb{display:flex;align-items:center;gap:12px;background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:4px 4px 0 var(--ink);padding:10px 14px;cursor:pointer;font-family:'Fredoka';font-weight:600;font-size:16px;color:var(--ink);transition:.15s;text-align:left}
+  .chb .ti{width:40px;height:40px;border-radius:12px;border:2.5px solid var(--ink);display:grid;place-items:center;flex:0 0 40px}
+  .chb .ti svg{width:20px;height:20px}
+  .chb:hover:not(:disabled){transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .chb.shake{animation:shake .3s;background:var(--pink2)}
+  .pair-hint{font-family:'Fredoka';font-weight:600;font-size:14px;color:var(--ink-soft);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+  .pair-hint svg{width:16px;height:16px}
+
+  /* ===== PILIH 2 KANAL ===== */
+  .pick2{margin-top:18px;display:grid;grid-template-columns:330px 1fr;gap:28px;align-items:start}
+  .pick2>*,.pair>*,.chv>*{min-width:0}
+  .biz{display:flex;flex-direction:column;gap:10px}
+  .per-card{background:var(--lav);border:3px solid var(--ink);border-radius:16px;box-shadow:4px 4px 0 var(--ink);padding:12px 16px;font-size:13.5px;font-weight:600;line-height:1.5}
+  .per-card b{font-family:'Fredoka'}
+  .p2-ch{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+  .p2b{display:flex;flex-direction:column;align-items:center;gap:6px;background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:4px 4px 0 var(--ink);padding:10px 6px;cursor:pointer;font-family:'Fredoka';font-weight:600;font-size:13.5px;color:var(--ink);transition:.15s;text-align:center;line-height:1.2}
+  .p2b .ti{width:40px;height:40px;border-radius:12px;border:2.5px solid var(--ink);display:grid;place-items:center}
+  .p2b .ti svg{width:20px;height:20px}
+  .p2b.on{background:var(--ink);color:#fff}
+  .p2b.on .ti{border-color:#fff}
+  .p2b:disabled{opacity:.4;cursor:not-allowed}
+  .p2-slots{margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .slot{background:#fff;border:3px dashed var(--ink);border-radius:16px;padding:12px 14px;min-height:150px}
+  .slot.filled{border-style:solid;box-shadow:4px 4px 0 var(--ink)}
+  .slot h4{font-family:'Fredoka';font-size:16px;display:flex;align-items:center;gap:8px;margin-bottom:6px}
+  .slot h4 svg{width:18px;height:18px}
+  .slot .empty{font-size:13px;font-weight:600;color:var(--ink-soft)}
+  .rs{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+  .rchip{font-family:'Plus Jakarta Sans';font-size:11.5px;font-weight:700;border:2px solid var(--ink);border-radius:999px;padding:4px 9px;background:var(--cream);cursor:pointer;color:var(--ink)}
+  .rchip.on{background:var(--sun)}
+  .fit{margin-top:8px;font-size:12.5px;font-weight:600;line-height:1.45;border-radius:10px;padding:7px 10px;border:2px solid var(--ink)}
+  .fit.f2{background:var(--mint2)} .fit.f1{background:var(--butter2)} .fit.f0{background:var(--pink2)}
+  .p2-sum{margin-top:14px;background:var(--ink);color:#fff;border-radius:16px;box-shadow:5px 5px 0 var(--sun);padding:12px 18px;font-size:14.5px;font-weight:600;line-height:1.55}
+  .p2-sum b{color:var(--sun);font-family:'Fredoka'}
+
+  @media (max-width:960px){
+    .fgrid.five{grid-template-columns:1fr 1fr}
+    .chv,.pair,.pick2{grid-template-columns:1fr}
+    .p2-ch{grid-template-columns:repeat(3,1fr)}
+  }
+  @media (max-width:640px){
+    .s-tall{padding-top:22px;padding-bottom:104px}
+    .fgrid.five{grid-template-columns:1fr}
+    .fgrid.five .fcard{min-height:250px}
+    .mock{min-height:340px;box-shadow:4px 4px 0 var(--ink)}
+    .per,.chb,.p2b,.per-card{box-shadow:3px 3px 0 var(--ink)}
+    .per .got{display:none}
+    .ch-list{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+    .chb{flex-direction:column;gap:5px;padding:8px 4px;font-size:12.5px;text-align:center;box-shadow:3px 3px 0 var(--ink)}
+    .chb .ti{width:34px;height:34px;flex:0 0 34px}
+    .per{padding:9px 12px}
+    .per span.d{font-size:12.5px}
+    .p2-slots{grid-template-columns:1fr}
+    .p2-ch{grid-template-columns:repeat(3,1fr);gap:8px}
+    .p2b{font-size:12px;padding:8px 4px}
+    .slot{min-height:0}
+    .tg{font-size:14px;padding:8px 12px}
+  }
+</style>
+</head>
+<body>
+
+<div id="bar"></div>
+
+<!-- ============ SLIDE 1 : JUDUL ============ -->
+<section class="slide active" data-theme="peach">
+  <div class="deco bob" style="top:14%;left:5%;width:26px;height:26px">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 2v20M2 12h20"/></svg>
+  </div>
+  <div class="deco bob" style="bottom:18%;left:12%;width:34px;height:34px;animation-delay:1.2s">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/></svg>
+  </div>
+  <div class="s-hero wrap" style="display:contents"><div class="wrap">
+    <div>
+      <span class="kicker anim" style="--d:0"><i data-lucide="radio-tower"></i> Digital Marketing · Pertemuan 10 · SMP Kelas 7</span>
+      <h1 class="anim" style="--d:1;font-size:clamp(38px,4.6vw,62px);font-weight:700;line-height:1.08;margin:20px 0 14px">
+        Promosi di Mana,<br><span class="hl">Ya?</span>
+      </h1>
+      <p class="lead anim" style="--d:2">Konten sebagus apa pun tidak akan laku kalau dipasang di tempat yang tidak dilihat pembeli.
+      Hari ini kita memilih <b>kanal promosi</b> yang sesuai dengan <b>kebiasaan online persona</b> kita.</p>
+      <div class="badge-row anim" style="--d:3">
+        <span class="badge b1"><i data-lucide="layers"></i> 5 Kanal Promosi</span>
+        <span class="badge b3"><i data-lucide="puzzle"></i> Game Persona</span>
+        <span class="badge b2"><i data-lucide="map"></i> Peta 2 Kanal</span>
+      </div>
+    </div>
+    <div class="art-stage anim" style="--d:2">
+      <svg viewBox="0 0 380 420" aria-hidden="true">
+        <ellipse cx="190" cy="210" rx="170" ry="190" fill="#C5DCF2"/>
+        <g stroke="#453A4E" stroke-width="5" stroke-linecap="round">
+          <line x1="190" y1="210" x2="190" y2="70"/><line x1="190" y1="210" x2="322" y2="160"/>
+          <line x1="190" y1="210" x2="290" y2="340"/><line x1="190" y1="210" x2="90" y2="340"/><line x1="190" y1="210" x2="58" y2="160"/>
+        </g>
+        <circle cx="190" cy="70" r="34" fill="#BFEAD2" stroke="#453A4E" stroke-width="5"/>
+        <circle cx="322" cy="160" r="34" fill="#FFC9DC" stroke="#453A4E" stroke-width="5"/>
+        <circle cx="290" cy="340" r="34" fill="#DCD2F7" stroke="#453A4E" stroke-width="5"/>
+        <circle cx="90" cy="340" r="34" fill="#FFE39A" stroke="#453A4E" stroke-width="5"/>
+        <circle cx="58" cy="160" r="34" fill="#FFCBB5" stroke="#453A4E" stroke-width="5"/>
+        <circle cx="190" cy="210" r="56" fill="#fff" stroke="#453A4E" stroke-width="5"/>
+        <path d="M166 222 v-24 h10 l22 -14 v52 l-22 -14 z" fill="#FF7E67" stroke="#453A4E" stroke-width="4" stroke-linejoin="round"/>
+        <path d="M206 198 q10 12 0 24" fill="none" stroke="#453A4E" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+      <span class="fchip fc1 bob"><i data-lucide="message-circle"></i></span>
+      <span class="fchip fc2 bob" style="animation-delay:.8s"><i data-lucide="camera"></i></span>
+      <span class="fchip fc3 bob" style="animation-delay:1.6s"><i data-lucide="music-2"></i></span>
+      <span class="fchip fc4 bob" style="animation-delay:.4s"><i data-lucide="shopping-bag"></i></span>
+      <span class="fchip fc5 bob" style="animation-delay:2s"><i data-lucide="map-pin"></i></span>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============ SLIDE 2 : TUJUAN ============ -->
+<section class="slide" data-theme="cream">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="map"></i> Rencana Belajar Hari Ini</span>
+    <h2 class="title anim" style="--d:1">Hari ini kita akan...</h2>
+    <div class="goal-list">
+      <div class="goal anim" style="--d:2">
+        <div class="gnum g1">1</div>
+        <div><h3>Pahami Apa Itu Kanal Promosi</h3><p>Tempat pesan promosi kita bertemu dengan pembeli.</p></div>
+      </div>
+      <div class="goal anim" style="--d:3">
+        <div class="gnum g2">2</div>
+        <div><h3>Kenali 5 Kanal Populer</h3><p>WhatsApp, Instagram, TikTok, marketplace, dan Google Maps: kelebihan dan hati-hatinya.</p></div>
+      </div>
+      <div class="goal anim" style="--d:4">
+        <div class="gnum g3">3</div>
+        <div><h3>Cocokkan Persona dengan Kanal</h3><p>Setiap orang punya kebiasaan online yang berbeda.</p></div>
+      </div>
+      <div class="goal anim" style="--d:5">
+        <div class="gnum g4">4</div>
+        <div><h3>Pilih 2 Kanal Utama Kelompokmu</h3><p>Misi akhir: peta kanal promosi beserta alasannya.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 3 : PEMANASAN ============ -->
+<section class="slide" data-theme="butter">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="hand"></i> Pemanasan · Tebak Kanalnya</span>
+    <h2 class="title anim" style="--d:1">Pembelinya <span class="hl p">datang dari mana?</span></h2>
+    <p class="lead anim" style="--d:1.5">Baca ceritanya, lalu tebak kanal promosi yang dipakai. Angkat tangan sebelum jawaban dibuka!</p>
+    <div class="wu-shell anim" style="--d:2" id="wuShell">
+      <div class="prod">
+        <div class="prod-media" id="wuMedia"><span class="ic" id="wuIc"></span></div>
+        <div class="prod-cap"><h4 id="wuName"></h4><div class="sub" id="wuSub"></div><span class="price" id="wuPrice"></span></div>
+      </div>
+      <div>
+        <div class="wu-round" id="wuRound"></div>
+        <div class="wu-q">Kanal promosi apa yang dipakai?</div>
+        <div class="wu-opts" id="wuOpts"></div>
+        <div class="wu-fb hidden" id="wuFb"><i data-lucide="circle-check"></i><span></span></div>
+        <button class="btn mint wu-next hidden" id="wuNext"><i data-lucide="arrow-right"></i> <span>Cerita Berikutnya</span></button>
+      </div>
+    </div>
+    <div class="wu-done hidden anim" id="wuDone" style="--d:0">
+      <div class="tro"><i data-lucide="trophy"></i></div>
+      <h3>Kamu sudah bisa membaca jejak pembeli!</h3>
+      <p>Setiap usaha menemukan pembelinya di <b>tempat yang berbeda</b>. Tempat-tempat itulah yang disebut <b>kanal promosi</b>.</p>
+      <div class="sc">Tebakan tepat: <span id="wuScore">0</span> dari 3</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 4 : KONSEP ============ -->
+<section class="slide" data-theme="mint">
+  <div class="s-def wrap" style="display:contents"><div class="wrap">
+    <div>
+      <span class="kicker anim" style="--d:0"><i data-lucide="search"></i> Konsep Utama</span>
+      <h2 class="title anim" style="--d:1">Apa itu <span class="hl m">kanal promosi?</span></h2>
+      <div class="define anim" style="--d:2">
+        <span class="q">Catat baik-baik, ya!</span><br>
+        Kanal promosi adalah <span class="hl">tempat kita memasang promosi</span> supaya <span class="hl">dilihat oleh target market</span> kita.
+      </div>
+      <div class="analog anim" style="--d:3">
+        <div class="ic"><i data-lucide="signpost"></i></div>
+        <p><b>Seperti memasang spanduk:</b> spanduk dipasang di jalan yang dilewati banyak pembeli, bukan di gang buntu.
+        Di internet, "jalan" itu adalah aplikasi yang <b>sering dibuka persona</b> kita. Kita tidak harus ada di semua aplikasi. Cukup <b>2 kanal yang paling tepat</b>.</p>
+      </div>
+    </div>
+    <div class="hub-art anim" style="--d:3">
+      <svg viewBox="0 0 360 340" aria-hidden="true">
+        <rect x="20" y="20" width="320" height="300" rx="26" fill="#fff" stroke="#453A4E" stroke-width="4"/>
+        <path d="M40 250 Q120 240 180 170 T320 90" fill="none" stroke="#453A4E" stroke-width="18" stroke-linecap="round"/>
+        <path d="M40 250 Q120 240 180 170 T320 90" fill="none" stroke="#FFE39A" stroke-width="10" stroke-linecap="round" stroke-dasharray="14 12"/>
+        <path d="M120 120 L120 60" stroke="#453A4E" stroke-width="4"/><path d="M240 230 L240 290" stroke="#453A4E" stroke-width="4"/>
+        <rect x="70" y="40" width="100" height="42" rx="8" fill="#FF7E67" stroke="#453A4E" stroke-width="4"/>
+        <text x="120" y="67" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="15" fill="#fff">PROMO!</text>
+        <rect x="190" y="250" width="100" height="42" rx="8" fill="#BFEAD2" stroke="#453A4E" stroke-width="4"/>
+        <text x="240" y="277" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="15" fill="#453A4E">PROMO!</text>
+        <g stroke="#453A4E" stroke-width="2.5">
+          <circle cx="160" cy="196" r="10" fill="#DCD2F7"/><circle cx="196" cy="160" r="10" fill="#FFC9DC"/><circle cx="232" cy="134" r="10" fill="#C5DCF2"/><circle cx="96" cy="238" r="10" fill="#FFE39A"/>
+        </g>
+        <text x="180" y="316" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="600" font-size="13" fill="#6B5F75">Pasang di jalan yang dilewati pembeli</text>
+      </svg>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============ SLIDE 5 : 5 KANAL ============ -->
+<section class="slide s-tall" data-theme="pink">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="layers"></i> Kenalan dengan 5 Kanal</span>
+    <h2 class="title anim" style="--d:1">Tiap kanal punya <span class="hl p">kelebihan sendiri</span></h2>
+    <p class="lead anim" style="--d:1.5">Klik kartunya untuk melihat kelebihan, cocok untuk siapa, dan hal yang perlu diwaspadai.</p>
+    <div class="fgrid five" id="chFlip"></div>
+    <div class="vs-note anim" style="--d:4;margin-top:18px">
+      Banyak aplikasi punya <b>batas usia minimal</b>. Karena itu akun usaha kelompok <b>dibuat dan dipegang oleh pembina</b>. Kalian yang menyiapkan kontennya.
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 6 : SATU PROMO BEDA KANAL ============ -->
+<section class="slide s-tall" data-theme="sky">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="repeat"></i> Satu Produk, Lima Tampilan</span>
+    <h2 class="title anim" style="--d:1">Promonya sama, <span class="hl">bentuknya menyesuaikan kanal</span></h2>
+    <p class="lead anim" style="--d:1.5">Keripik Pedas Level 5 dipromosikan di 5 kanal. Klik kanalnya, lihat apa yang berubah!</p>
+    <div class="toggle anim" style="--d:2;margin-top:16px" id="chvTabs"></div>
+    <div class="chv">
+      <div class="mock anim" style="--d:2.5" id="chvMock"></div>
+      <div class="anim" style="--d:3">
+        <div class="diff">
+          <table>
+            <tbody>
+              <tr><th>Bentuk konten</th><td id="cvForm"></td></tr>
+              <tr><th>Yang melihat</th><td id="cvWho"></td></tr>
+              <tr><th>Cara membeli</th><td id="cvBuy"></td></tr>
+              <tr><th>Tips</th><td id="cvTip"></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="same"><i data-lucide="lightbulb"></i><span>Produk dan pesannya <b>tetap sama dan jujur</b>. Yang berubah hanya <b>bentuknya</b>: foto, video, daftar produk, atau titik lokasi.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 7 : GAME PERSONA → KANAL ============ -->
+<section class="slide s-tall" data-theme="mint">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="puzzle"></i> Ayo Main · Pasangkan!</span>
+    <h2 class="title anim" style="--d:1">Persona ini paling mudah ditemui <span class="hl m">di kanal mana?</span></h2>
+    <p class="lead anim" style="--d:1.5">Klik satu persona, lalu klik kanal yang paling cocok dengan kebiasaan online-nya.</p>
+    <div class="pair">
+      <div class="anim" style="--d:2">
+        <div class="pair-hint"><i data-lucide="mouse-pointer-click"></i> 1. Pilih persona</div>
+        <div class="per-list" id="perList"></div>
+      </div>
+      <div class="anim" style="--d:2.5">
+        <div class="pair-hint"><i data-lucide="mouse-pointer-click"></i> 2. Pilih kanalnya</div>
+        <div class="ch-list" id="chList"></div>
+        <div class="m-why hidden" id="pairWhy" style="margin-top:14px"><i data-lucide="circle-check"></i><span></span></div>
+      </div>
+    </div>
+    <div class="m-score anim" style="--d:3">
+      <span>Persona yang berhasil dipasangkan:</span><b><span id="pDone">0</span> / 5</b>
+      <span id="pMsg" style="font-weight:600;font-size:14px;color:var(--butter2)"></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 8 : PILIH 2 KANAL ============ -->
+<section class="slide s-tall" data-theme="lav">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="target"></i> Coba Langsung · Pilih 2 Kanal Utama</span>
+    <h2 class="title anim" style="--d:1">Cukup <span class="hl l">2 kanal</span>, asal tepat!</h2>
+    <p class="lead anim" style="--d:1.5">Pilih usahanya, baca personanya, lalu pilih 2 kanal dan alasannya. Lihat apakah pilihanmu cocok.</p>
+    <div class="pick2">
+      <div class="biz anim" style="--d:2">
+        <div class="picks" id="bizPicks"></div>
+        <div class="per-card" id="bizPer"></div>
+      </div>
+      <div class="anim" style="--d:2.5">
+        <div class="p2-ch" id="p2Ch"></div>
+        <div class="p2-slots" id="p2Slots"></div>
+        <div class="p2-sum" id="p2Sum"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 9 : KUIS ============ -->
+<section class="slide" data-theme="lav">
+  <div class="wrap quiz-shell">
+    <div style="text-align:center">
+      <span class="kicker anim" style="--d:0"><i data-lucide="trophy"></i> Kuis Seru</span>
+      <h2 class="title anim" style="--d:1">Uji Pemahaman Kanal Promosimu!</h2>
+    </div>
+    <div id="quizArea" class="anim" style="--d:2"></div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 10 : MISI ============ -->
+<section class="slide" data-theme="pink">
+  <div class="s-misi wrap" style="display:contents"><div class="wrap">
+    <div>
+      <span class="kicker anim" style="--d:0"><i data-lucide="flag"></i> Giliranmu!</span>
+      <h2 class="title anim" style="--d:1">Misi: <span class="hl p">Peta Kanal Promosi</span> kelompokmu</h2>
+      <p class="lead anim" style="--d:2">Pakai kartu persona dari Pertemuan 4 dan video dari pertemuan lalu.</p>
+      <div class="steps">
+        <div class="step anim" style="--d:3"><div class="snum st1">1</div>
+          <div><h3>Baca ulang persona</h3><p>Aplikasi apa yang paling sering ia buka? Kapan? Untuk apa?</p></div></div>
+        <div class="step anim" style="--d:4"><div class="snum st2">2</div>
+          <div><h3>Pilih 2 kanal utama</h3><p>Tulis alasannya. Jangan memilih kanal hanya karena kalian sendiri suka.</p></div></div>
+        <div class="step anim" style="--d:5"><div class="snum st3">3</div>
+          <div><h3>Tentukan kontennya</h3><p>Di tiap kanal, konten apa yang dipasang? Foto, poster, video, atau daftar produk?</p></div></div>
+        <div class="step anim" style="--d:6"><div class="snum st4">4</div>
+          <div><h3>Siapa pemegang akun?</h3><p>Tulis nama pembina atau orang tua yang mengelola akun usaha kelompok.</p></div></div>
+      </div>
+    </div>
+    <div>
+      <div class="blank-card anim" style="--d:4">
+        <h4><i data-lucide="map"></i> Peta kanal promosi: salin di kertas</h4>
+        <div class="bl"><b>Persona:</b><span></span></div>
+        <div class="bl"><b>Kanal 1:</b><span></span></div>
+        <div class="bl"><b>Alasan:</b><span></span></div>
+        <div class="bl"><b>Kanal 2:</b><span></span></div>
+        <div class="bl"><b>Alasan:</b><span></span></div>
+        <div class="bl"><b>Pemegang akun:</b><span></span></div>
+        <div class="sentence">"Kami promosi di <b>___</b> dan <b>___</b>, karena persona kami sering <b>___</b>."</div>
+      </div>
+      <div class="mini-rubrik card anim" style="--d:5">
+        <h3 style="font-family:'Fredoka';font-size:17px;margin-bottom:8px;display:flex;align-items:center;gap:9px"><i data-lucide="clipboard-check" style="width:19px;height:19px"></i> Cara Penilaian</h3>
+        <div class="rubrik-row"><span>2 kanal cocok dengan kebiasaan persona</span><span>40 poin</span></div>
+        <div class="rubrik-row"><span>Alasan jelas dan masuk akal</span><span>30 poin</span></div>
+        <div class="rubrik-row"><span>Konten tiap kanal &amp; pemegang akun jelas</span><span>30 poin</span></div>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============ SLIDE 11 : PENUTUP ============ -->
+<section class="slide" data-theme="peach">
+  <div class="deco bob" style="top:16%;right:8%;width:30px;height:30px">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 2v20M2 12h20"/></svg>
+  </div>
+  <div class="s-end wrap" style="display:contents"><div class="wrap">
+    <div>
+      <span class="kicker anim" style="--d:0"><i data-lucide="message-circle-heart"></i> Refleksi &amp; Penutup</span>
+      <h2 class="title anim" style="--d:1">Sebelum pulang, <span class="hl p">ayo curhat dikit!</span></h2>
+      <div class="refl">
+        <div class="refl-item anim" style="--d:2"><div class="rnum r1">1</div>
+          <p>Jelaskan dengan kalimatmu sendiri: apa itu kanal promosi?</p></div>
+        <div class="refl-item anim" style="--d:3"><div class="rnum r2">2</div>
+          <p>Kanal mana yang cocok untuk usaha yang punya tempat tetap? Kenapa?</p></div>
+        <div class="refl-item anim" style="--d:4"><div class="rnum r3">3</div>
+          <p>Apa 2 kanal utama kelompokmu, dan apa alasannya?</p></div>
+      </div>
+      <div class="end-btn anim" style="--d:5">
+        <button class="btn sun" id="partyBtn"><i data-lucide="party-popper"></i> Rayakan Hari Ini!</button>
+        <a class="btn ghost" href="silabus.html"><i data-lucide="book-open"></i> Lihat Silabus</a>
+        <a class="btn ghost" href="kalender-konten.html"><i data-lucide="arrow-right"></i> Pertemuan berikutnya</a>
+      </div>
+    </div>
+    <div class="end-art anim" style="--d:3">
+      <div class="quote">
+        <h3>Promosi yang tepat tempat lebih kuat daripada promosi di semua tempat.</h3>
+        <p>Pertemuan berikutnya: <b>Kalender Konten</b>. Kita susun jadwal posting satu minggu untuk 2 kanal kalian!</p>
+      </div>
+      <span class="fchip fc1 bob"><i data-lucide="message-circle"></i></span>
+      <span class="fchip fc2 bob" style="animation-delay:.7s"><i data-lucide="map-pin"></i></span>
+      <span class="fchip fc4 bob" style="animation-delay:1.4s"><i data-lucide="shopping-bag"></i></span>
+      <span class="fchip fc5 bob" style="animation-delay:2s"><i data-lucide="sparkles"></i></span>
+    </div>
+  </div></div>
+</section>
+
+<!-- NAV -->
+<div class="navbar-bg"></div>
+<div class="pagenum"><span id="cur">01</span> / <span id="tot">12</span></div>
+<div class="dots" id="dots"></div>
+<div class="navbtns">
+  <button class="nav" id="prev" aria-label="Sebelumnya"><i data-lucide="chevron-left"></i></button>
+  <button class="nav" id="next" aria-label="Berikutnya"><i data-lucide="chevron-right"></i></button>
+</div>
+<canvas id="confetti"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.454.0/dist/umd/lucide.min.js"></script>
+<script>
+/* ================= NAVIGASI ================= */
+const slides=[...document.querySelectorAll('.slide')];
+const dotsBox=document.getElementById('dots');
+let cur=0;
+slides.forEach((_,i)=>{
+  const d=document.createElement('button');
+  d.className='dot'+(i===0?' on':'');d.title='Slide '+(i+1);
+  d.onclick=()=>go(i);dotsBox.appendChild(d);
+});
+const dots=[...dotsBox.children];
+document.getElementById('tot').textContent=String(slides.length).padStart(2,'0');
+function go(i){
+  cur=Math.max(0,Math.min(slides.length-1,i));
+  slides.forEach((s,k)=>s.classList.toggle('active',k===cur));
+  slides[cur].scrollTop=0;
+  dots.forEach((d,k)=>d.classList.toggle('on',k===cur));
+  document.getElementById('cur').textContent=String(cur+1).padStart(2,'0');
+  document.getElementById('bar').style.width=((cur+1)/slides.length*100)+'%';
+  document.getElementById('prev').disabled=cur===0;
+  document.getElementById('next').disabled=cur===slides.length-1;
+}
+document.getElementById('prev').onclick=()=>go(cur-1);
+document.getElementById('next').onclick=()=>go(cur+1);
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();go(cur+1)}
+  if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(cur-1)}
+});
+let tx=0,ty=0,txSkip=false;
+addEventListener('touchstart',e=>{
+  tx=e.touches[0].clientX;ty=e.touches[0].clientY;
+  txSkip=!!e.target.closest('.picks,.noswipe');
+},{passive:true});
+addEventListener('touchend',e=>{
+  if(txSkip)return;
+  const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;
+  // hanya geser mendatar yang jelas, supaya scroll ke bawah tidak ikut pindah slide
+  if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5) dx<0?go(cur+1):go(cur-1);
+},{passive:true});
+go(+location.hash.slice(1)||0);
+
+const LET=['A','B','C'];
+
+/* ================= DATA KANAL ================= */
+const CH={
+  wa:{icon:'message-circle',bg:'var(--mint2)',name:'WhatsApp',tease:'Pesan, grup, dan status. Dibuka hampir semua orang setiap hari.',
+    plus:'Dekat dan pribadi. Pembeli bisa langsung bertanya dan memesan.',
+    fit:'Pelanggan yang sudah kenal: tetangga, keluarga, grup RT, grup sekolah.',
+    care:'Jangan spam grup. Kirim seperlunya dan hanya ke yang mau.'},
+  ig:{icon:'camera',bg:'var(--pink2)',name:'Instagram',tease:'Foto, Reels, dan Story yang cantik dan rapi.',
+    plus:'Menjadi "etalase" usaha. Foto dan video produk tampil menarik.',
+    fit:'Remaja dan dewasa muda yang suka melihat visual yang estetik.',
+    care:'Foto harus sesuai aslinya. Jangan diedit berlebihan.'},
+  tt:{icon:'music-2',bg:'var(--lav2)',name:'TikTok',tease:'Video pendek yang bisa ditonton banyak orang baru.',
+    plus:'Video bisa sampai ke orang yang belum pernah kenal usaha kita.',
+    fit:'Memperkenalkan produk ke remaja dan orang yang suka video seru.',
+    care:'Butuh video menarik dan rutin. Hasilnya tidak selalu langsung terlihat.'},
+  mp:{icon:'shopping-bag',bg:'var(--butter2)',name:'Marketplace',tease:'Toko online di aplikasi belanja.',
+    plus:'Orang datang memang untuk belanja. Ada pembayaran, pengiriman, dan ulasan.',
+    fit:'Produk yang awet dan bisa dikirim jauh, seperti keripik kemasan atau kerajinan.',
+    care:'Saingannya banyak dan ada biaya. Kurang cocok untuk es atau makanan basah.'},
+  gm:{icon:'map-pin',bg:'var(--sky2)',name:'Google Maps',tease:'Titik lokasi usaha di peta.',
+    plus:'Mudah ditemukan saat orang mencari "terdekat". Ada arah jalan dan jam buka.',
+    fit:'Usaha yang punya tempat tetap: warung, bengkel, kantin, toko.',
+    care:'Alamat, jam buka, dan nomor harus benar dan selalu diperbarui.'}
+};
+
+/* ================= PEMANASAN : TEBAK KANAL ================= */
+const WU=[
+  {icon:'utensils',bg:'var(--mint2)',name:'Katering Bu Ratih',sub:'Foto menu mingguan dikirim ke grup warga. Tetangga langsung membalas "pesan 2 porsi, Bu!"',price:'Cerita 1',
+   opts:['TikTok','WhatsApp','Google Maps'],a:1,
+   why:'WhatsApp cocok untuk pelanggan yang sudah kenal, seperti tetangga di grup RT. Mereka bisa langsung memesan.'},
+  {icon:'bike',bg:'var(--sky2)',name:'Bengkel Pak Jaya',sub:'Ban sepeda Dimas bocor. Ia mencari "tambal ban terdekat" dan langsung tahu arah jalannya.',price:'Cerita 2',
+   opts:['Instagram','Marketplace','Google Maps'],a:2,
+   why:'Google Maps membantu orang menemukan usaha yang punya tempat tetap, lengkap dengan arah jalan.'},
+  {icon:'flame',bg:'var(--peach2)',name:'Keripik Level 5',sub:'Video "tantangan keripik pedas" ditonton ribuan orang yang belum pernah kenal penjualnya.',price:'Cerita 3',
+   opts:['TikTok','WhatsApp','Google Maps'],a:0,
+   why:'Video pendek di TikTok bisa sampai ke banyak orang baru yang belum kenal usaha kita.'}
+];
+let wuI=0,wuScore=0;
+function renderWu(){
+  const w=WU[wuI];
+  document.getElementById('wuMedia').style.background=w.bg;
+  document.getElementById('wuIc').innerHTML=`<i data-lucide="${w.icon}"></i>`;
+  document.getElementById('wuName').textContent=w.name;
+  document.getElementById('wuSub').textContent=w.sub;
+  document.getElementById('wuPrice').textContent=w.price;
+  document.getElementById('wuRound').textContent=`Cerita ${wuI+1} dari ${WU.length}`;
+  document.getElementById('wuFb').classList.add('hidden');
+  document.getElementById('wuNext').classList.add('hidden');
+  const box=document.getElementById('wuOpts');
+  box.innerHTML=w.opts.map((o,i)=>`<button class="wu-opt" data-i="${i}"><span class="letter">${LET[i]}</span>${o}</button>`).join('');
+  box.querySelectorAll('.wu-opt').forEach(b=>b.onclick=()=>{
+    const pick=+b.dataset.i;
+    box.querySelectorAll('.wu-opt').forEach(x=>{x.disabled=true;if(+x.dataset.i===w.a)x.classList.add('good')});
+    if(pick===w.a){wuScore++;celebrate(60)}else b.classList.add('bad');
+    const fb=document.getElementById('wuFb');
+    fb.querySelector('span').textContent=(pick===w.a?'Tepat! ':'Belum tepat. ')+w.why;
+    fb.classList.remove('hidden');
+    const nx=document.getElementById('wuNext');
+    nx.querySelector('span').textContent=wuI===WU.length-1?'Lihat Hasil':'Cerita Berikutnya';
+    nx.classList.remove('hidden');
+  });
+  window.lucide&&lucide.createIcons();
+}
+document.getElementById('wuNext').onclick=()=>{
+  wuI++;
+  if(wuI<WU.length){renderWu();return}
+  document.getElementById('wuShell').classList.add('hidden');
+  document.getElementById('wuScore').textContent=wuScore;
+  document.getElementById('wuDone').classList.remove('hidden');
+  celebrate(200);
+};
+renderWu();
+
+/* ================= FLIP 5 KANAL ================= */
+document.getElementById('chFlip').innerHTML=Object.values(CH).map((c,i)=>`
+  <div class="fcard anim" style="--d:${2+i*.3}" onclick="this.classList.toggle('flipped')">
+    <div class="finner">
+      <div class="fface ffront">
+        <span class="fic" style="background:${c.bg}"><i data-lucide="${c.icon}"></i></span>
+        <h3>${c.name}</h3><p class="tease">${c.tease}</p>
+        <span class="hint"><i data-lucide="mouse-pointer-click"></i> klik untuk detail</span>
+      </div>
+      <div class="fface fback" style="background:${c.bg}">
+        <span class="tag">${c.name}</span>
+        <p class="fl"><b>Kelebihan</b>${c.plus}</p>
+        <p class="fl"><b>Cocok untuk</b>${c.fit}</p>
+        <p class="eg"><b>Hati-hati:</b> ${c.care}</p>
+      </div>
+    </div>
+  </div>`).join('');
+
+/* ================= SATU PROMO, LIMA TAMPILAN ================= */
+const CV={
+  wa:{bar:'Status · Keripik Level 5',time:'baru saja',img:'var(--peach2)',ov:'STOK BARU HARI INI!',play:false,
+    txt:'Keripik Level 5 sudah ready lagi! Rp2.000/bungkus. Balas status ini untuk pesan, ya.',
+    chips:[['reply','Balas untuk pesan',1]],
+    form:'Foto atau video singkat di status, pesan pribadi ke pelanggan.',who:'Orang yang sudah menyimpan nomor usaha kita.',
+    buy:'Langsung membalas pesan, lalu ambil di tempat.',tip:'Pasang status saat ada stok baru, jangan setiap jam.'},
+  ig:{bar:'keripik.level5',time:'Feed',img:'var(--pink2)',ov:'Seberani apa kamu?',play:false,
+    txt:'Keripik singkong pedas level 5, dibuat sendiri oleh tim kami. Rp2.000/bungkus.',
+    chips:[['heart','128 suka',0],['message-circle','DM untuk pesan',1]],
+    form:'Foto produk yang rapi, poster, Reels, dan Story.',who:'Pengikut akun dan orang yang suka melihat visual.',
+    buy:'Mengirim pesan langsung (DM) ke akun usaha.',tip:'Buat tampilan feed rapi dengan warna yang konsisten.'},
+  tt:{bar:'keripik.level5',time:'Video 20 dtk',img:'var(--lav2)',ov:'Tantangan Level 5!',play:true,
+    txt:'Berani makan 1 tanpa minum? Tantang temanmu! #keripikpedas',
+    chips:[['eye','2.400 ditonton',0],['message-circle','Tanya di komentar',1]],
+    form:'Video pendek 15–30 detik dengan hook 3 detik.',who:'Banyak orang baru, termasuk yang belum kenal usaha kita.',
+    buy:'Bertanya di komentar atau datang ke lokasi.',tip:'Posting rutin dan pakai hook yang jujur.'},
+  mp:{bar:'Toko Keripik Level 5',time:'Marketplace',img:'var(--butter2)',ov:'Keripik Pedas Level 5 · 100 g',play:false,
+    txt:'Rp10.000 · kemasan 100 g, tahan 1 bulan. Dikirim ke seluruh kota.',
+    chips:[['star','4,8 (36 ulasan)',0],['shopping-cart','Beli Sekarang',1]],
+    form:'Daftar produk: foto, harga, berat, dan keterangan.',who:'Orang yang sedang mencari dan membandingkan barang.',
+    buy:'Memesan dan membayar di aplikasi, lalu barang dikirim.',tip:'Tulis keterangan dengan jujur dan jawab ulasan dengan sopan.'},
+  gm:{bar:'Warung Keripik Bu Tini',time:'Google Maps',img:'var(--sky2)',ov:'Buka · 07.00–16.00',play:false,
+    txt:'Jl. Melati No. 5, depan SMP. 300 m dari lokasimu.',
+    chips:[['navigation','Rute',1],['phone','Telepon',0]],
+    form:'Titik lokasi, foto tempat, jam buka, dan nomor telepon.',who:'Orang di sekitar yang mencari "terdekat".',
+    buy:'Datang langsung mengikuti rute di peta.',tip:'Pastikan alamat dan jam buka selalu benar.'}
+};
+document.getElementById('chvTabs').innerHTML=Object.entries(CH).map(([k,c])=>`<button class="tg" data-cv="${k}"><i data-lucide="${c.icon}"></i> ${c.name}</button>`).join('');
+function showCv(k){
+  const v=CV[k],c=CH[k];
+  document.getElementById('chvMock').innerHTML=`
+    <div class="mk-bar"><span class="av" style="background:${c.bg}"><i data-lucide="${c.icon}"></i></span>${v.bar}<small>${v.time}</small></div>
+    <div class="mk-body">
+      <div class="mk-img" style="background:${v.img}">
+        <span class="ic"><i data-lucide="${k==='gm'?'store':'flame'}"></i></span>
+        <span class="ov">${v.ov}</span>
+        ${v.play?'<span class="play"><i data-lucide="play"></i></span>':''}
+      </div>
+      <div class="mk-txt">${v.txt}</div>
+      <div class="mk-row">${v.chips.map(([ic,t,cta])=>`<span class="mk-chip${cta?' cta':''}"><i data-lucide="${ic}"></i>${t}</span>`).join('')}</div>
+    </div>`;
+  document.getElementById('cvForm').textContent=v.form;
+  document.getElementById('cvWho').textContent=v.who;
+  document.getElementById('cvBuy').textContent=v.buy;
+  document.getElementById('cvTip').textContent=v.tip;
+  document.querySelectorAll('[data-cv]').forEach(b=>b.classList.toggle('on',b.dataset.cv===k));
+  window.lucide&&lucide.createIcons();
+}
+document.querySelectorAll('[data-cv]').forEach(b=>b.onclick=()=>showCv(b.dataset.cv));
+showCv('wa');
+
+/* ================= GAME : PERSONA → KANAL ================= */
+const PER=[
+  {icon:'briefcase',bg:'var(--peach2)',name:'Bu Ratih, 38 tahun',d:'Ibu bekerja. Setiap malam membaca grup WhatsApp RT dan grup sekolah anaknya.',a:'wa',
+   why:'Bu Ratih paling sering membuka grup WhatsApp, dan ia lebih percaya pada tetangga yang ia kenal.'},
+  {icon:'camera',bg:'var(--pink2)',name:'Kak Nadia, 17 tahun',d:'Suka foto estetik dan sering melihat-lihat akun toko lucu sebelum membeli.',a:'ig',
+   why:'Nadia suka visual yang rapi. Instagram adalah etalase yang ia lihat setiap hari.'},
+  {icon:'gamepad-2',bg:'var(--lav2)',name:'Bima, 14 tahun',d:'Setiap sore menonton video pendek lucu dan tantangan seru.',a:'tt',
+   why:'Bima menghabiskan waktu menonton video pendek. Video tantangan bisa sampai ke berandanya.'},
+  {icon:'package',bg:'var(--butter2)',name:'Om Hendra, 45 tahun',d:'Belanja lewat aplikasi, selalu membaca ulasan dan membandingkan harga.',a:'mp',
+   why:'Om Hendra memang datang ke marketplace untuk belanja dan percaya pada ulasan pembeli lain.'},
+  {icon:'car',bg:'var(--sky2)',name:'Pak Joko, 50 tahun',d:'Sering di perjalanan dan mencari "warung makan terdekat" saat lapar.',a:'gm',
+   why:'Pak Joko mencari tempat terdekat. Google Maps menunjukkan warung lengkap dengan arah jalannya.'}
+];
+let perSel=-1,pDone=0;
+const perOk=new Set();
+document.getElementById('chList').innerHTML=Object.entries(CH).map(([k,c])=>
+  `<button class="chb" data-ch="${k}"><span class="ti" style="background:${c.bg}"><i data-lucide="${c.icon}"></i></span>${c.name}</button>`).join('');
+function renderPer(){
+  document.getElementById('perList').innerHTML=PER.map((p,i)=>{
+    const ok=perOk.has(i);
+    return `<button class="per${ok?' done':''}${perSel===i?' sel':''}" data-per="${i}" ${ok?'disabled':''}>
+      <span class="av" style="background:${p.bg}"><i data-lucide="${p.icon}"></i></span>
+      <span><b>${p.name}</b><span class="d">${p.d}</span></span>
+      ${ok?`<span class="got"><i data-lucide="${CH[p.a].icon}"></i>${CH[p.a].name}</span>`:''}
+    </button>`;
+  }).join('');
+  document.querySelectorAll('[data-per]').forEach(b=>b.onclick=()=>{perSel=+b.dataset.per;renderPer()});
+  window.lucide&&lucide.createIcons();
+}
+document.querySelectorAll('[data-ch]').forEach(b=>b.onclick=()=>{
+  const why=document.getElementById('pairWhy');
+  if(perSel<0){
+    why.classList.remove('hidden');why.querySelector('span').textContent='Pilih persona dulu di sebelah kiri, ya!';return;
+  }
+  const p=PER[perSel];
+  if(b.dataset.ch===p.a){
+    perOk.add(perSel);pDone++;perSel=-1;
+    document.getElementById('pDone').textContent=pDone;
+    why.classList.remove('hidden');why.querySelector('span').textContent='Tepat! '+p.why;
+    celebrate(70);
+    if(pDone===PER.length){document.getElementById('pMsg').textContent='Hebat! Kamu tahu di mana setiap persona berada!';celebrate(220)}
+    renderPer();
+  }else{
+    b.classList.add('shake');setTimeout(()=>b.classList.remove('shake'),350);
+    why.classList.remove('hidden');why.querySelector('span').textContent=`Belum tepat. Baca lagi kebiasaan ${p.name.split(',')[0]}: aplikasi apa yang paling sering ia buka?`;
+  }
+});
+renderPer();
+
+/* ================= PILIH 2 KANAL UTAMA ================= */
+const BIZ={
+  esteh:{icon:'cup-soda',bg:'var(--butter2)',name:'Es Teh Bu Sri',sub:'warung depan sekolah',
+    per:'<b>Persona:</b> siswa SMP 12–15 tahun. Pulang sekolah lewat gerbang. Sering menonton video pendek dan membaca grup WhatsApp kelas.',
+    fit:{wa:[2,'Status WhatsApp akun usaha dilihat siswa dan orang tua yang sudah menyimpan nomornya.'],ig:[1,'Bisa untuk foto menu, tapi persona lebih sering menonton video pendek.'],
+      tt:[2,'Persona suka video pendek. Video "es teh berubah warna" bisa menarik siswa baru.'],mp:[0,'Es teh tidak bisa dikirim jauh. Pembeli datang langsung.'],
+      gm:[1,'Warungnya punya tempat tetap, tapi siswa sudah tahu lokasinya.']}},
+  katering:{icon:'utensils',bg:'var(--mint2)',name:'Katering Bu Ratih',sub:'antar ke rumah sekitar',
+    per:'<b>Persona:</b> ibu bekerja 30–45 tahun di perumahan sekitar. Aktif di grup WhatsApp RT. Kadang mencari "katering terdekat".',
+    fit:{wa:[2,'Persona aktif di grup WA RT dan bisa langsung memesan lewat chat.'],ig:[1,'Bisa untuk foto menu, tapi persona jarang membukanya.'],
+      tt:[0,'Persona jarang menonton video pendek.'],mp:[0,'Makanan harian lebih mudah dipesan langsung, bukan dikirim jauh.'],
+      gm:[2,'Orang yang mencari "katering terdekat" bisa langsung menemukannya.']}},
+  kue:{icon:'cake-slice',bg:'var(--pink2)',name:'Kue Ulang Tahun Mini',sub:'pesanan dari rumah',
+    per:'<b>Persona:</b> remaja dan orang tua yang ingin memesan kue untuk ulang tahun. Suka melihat foto hasil kue sebelum memesan.',
+    fit:{wa:[2,'Pemesan perlu bertanya detail: tulisan, warna, tanggal. Paling mudah lewat chat.'],ig:[2,'Foto kue yang cantik menjadi etalase. Persona melihat contoh sebelum memesan.'],
+      tt:[1,'Video menghias kue bisa menarik, tapi pemesan tetap perlu melihat contoh dan bertanya.'],mp:[1,'Bisa, tapi kue basah sulit dikirim jauh.'],
+      gm:[0,'Dibuat di rumah tanpa toko, jadi tidak perlu titik lokasi.']}}
+};
+const REASONS=['Persona sering membukanya','Pembeli mudah memesan','Menjangkau orang baru','Mudah ditemukan saat dicari','Bisa pamer foto/video'];
+const FIT_TXT=['Kurang cocok','Bisa dipakai','Cocok sekali'];
+let bizK='esteh',chosen=[],reasons={};
+const bizPicks=document.getElementById('bizPicks');
+bizPicks.innerHTML=Object.entries(BIZ).map(([k,b])=>
+  `<button class="pk" data-biz="${k}"><span class="ti" style="background:${b.bg}"><i data-lucide="${b.icon}"></i></span><span>${b.name}<small>${b.sub}</small></span></button>`).join('');
+bizPicks.querySelectorAll('[data-biz]').forEach(b=>b.onclick=()=>{bizK=b.dataset.biz;chosen=[];reasons={};renderP2()});
+document.getElementById('p2Ch').innerHTML=Object.entries(CH).map(([k,c])=>
+  `<button class="p2b" data-p2="${k}"><span class="ti" style="background:${c.bg}"><i data-lucide="${c.icon}"></i></span>${c.name}</button>`).join('');
+document.querySelectorAll('[data-p2]').forEach(b=>b.onclick=()=>{
+  const k=b.dataset.p2;
+  if(chosen.includes(k)){chosen=chosen.filter(x=>x!==k);delete reasons[k]}
+  else if(chosen.length<2)chosen.push(k);
+  renderP2();
+});
+let p2Cheered='';
+function renderP2(){
+  const B=BIZ[bizK];
+  bizPicks.querySelectorAll('[data-biz]').forEach(b=>b.classList.toggle('on',b.dataset.biz===bizK));
+  document.getElementById('bizPer').innerHTML=B.per;
+  document.querySelectorAll('[data-p2]').forEach(b=>{
+    const on=chosen.includes(b.dataset.p2);
+    b.classList.toggle('on',on);b.disabled=!on&&chosen.length>=2;
+  });
+  document.getElementById('p2Slots').innerHTML=[0,1].map(i=>{
+    const k=chosen[i];
+    if(!k)return `<div class="slot"><h4><i data-lucide="circle-dashed"></i> Kanal ${i+1}</h4><div class="empty">Klik salah satu kanal di atas.</div></div>`;
+    const c=CH[k],[f,t]=B.fit[k];
+    return `<div class="slot filled"><h4><i data-lucide="${c.icon}"></i> ${c.name}</h4>
+      <div class="empty">Alasanmu:</div>
+      <div class="rs">${REASONS.map((r,j)=>`<button class="rchip${reasons[k]===j?' on':''}" data-rk="${k}" data-rj="${j}">${r}</button>`).join('')}</div>
+      <div class="fit f${f}"><b>${FIT_TXT[f]}.</b> ${t}</div></div>`;
+  }).join('');
+  document.querySelectorAll('[data-rk]').forEach(b=>b.onclick=()=>{reasons[b.dataset.rk]=+b.dataset.rj;renderP2()});
+  const sum=document.getElementById('p2Sum');
+  if(chosen.length<2){sum.innerHTML=`Pilih <b>${2-chosen.length} kanal lagi</b> untuk ${B.name}.`}
+  else{
+    const score=chosen.reduce((n,k)=>n+B.fit[k][0],0);
+    const rs=chosen.map(k=>reasons[k]!==undefined?REASONS[reasons[k]].toLowerCase():'___');
+    sum.innerHTML=`"${B.name} promosi di <b>${CH[chosen[0]].name}</b> karena ${rs[0]}, dan di <b>${CH[chosen[1]].name}</b> karena ${rs[1]}."<br>`
+      +(score===4?'<b>Pilihan yang sangat tepat!</b> Kedua kanal cocok dengan kebiasaan persona.':score>=3?'Pilihan bagus. Coba cek apakah ada kanal yang lebih cocok lagi.':'Kurang pas. Baca lagi kebiasaan persona, lalu ganti kanalnya.');
+    const key=bizK+chosen.slice().sort().join();
+    if(score===4&&p2Cheered!==key){p2Cheered=key;celebrate(180)}
+  }
+  window.lucide&&lucide.createIcons();
+}
+renderP2();
+
+/* ================= KUIS ================= */
+const quizData=[
+  {q:"Kanal promosi adalah...", opts:[
+    "Tempat kita memasang promosi supaya dilihat target market",
+    "Nama produk kita",
+    "Harga yang kita pasang"],a:0,
+    why:"Betul! Kanal promosi adalah tempat pesan promosi bertemu dengan pembeli."},
+  {q:"Bengkel sepeda punya tempat tetap. Kanal yang membantu orang menemukannya saat mencari \"terdekat\" adalah...", opts:[
+    "TikTok",
+    "Google Maps",
+    "Marketplace"],a:1,
+    why:"Tepat! Google Maps menunjukkan lokasi, arah jalan, dan jam buka."},
+  {q:"Kamu ingin produkmu dikenal banyak orang baru lewat video pendek. Kanal yang paling cocok adalah...", opts:[
+    "TikTok",
+    "Grup WhatsApp keluarga",
+    "Google Maps"],a:0,
+    why:"Iya! Video pendek di TikTok bisa sampai ke orang yang belum kenal usaha kita."},
+  {q:"Bagaimana cara terbaik memilih kanal promosi?", opts:[
+    "Pilih aplikasi yang paling kita sukai sendiri",
+    "Pasang di semua aplikasi sekaligus",
+    "Pilih 2 kanal yang paling sering dibuka persona kita"],a:2,
+    why:"Betul! Kanal dipilih berdasarkan kebiasaan persona, bukan kesukaan kita sendiri."},
+  {q:"Siapa yang sebaiknya memegang akun usaha kelompok kalian?", opts:[
+    "Pembina atau orang tua, karena banyak aplikasi punya batas usia",
+    "Akun pribadi salah satu anggota kelompok",
+    "Siapa saja yang mau"],a:0,
+    why:"Tepat sekali! Akun usaha dipegang pembina. Kalian fokus membuat kontennya."}
+];
+
+const quizArea=document.getElementById('quizArea');
+let qi=0,score=0;
+function renderQuiz(){
+  if(qi>=quizData.length){renderDone();return}
+  const d=quizData[qi];
+  quizArea.innerHTML=`
+    <div class="q-card card">
+      <div class="q-meta">
+        <span class="q-badge">Soal ${qi+1} dari ${quizData.length}</span>
+        <span class="q-score"><i data-lucide="star"></i> Skor: ${score}</span>
+      </div>
+      <h3 class="q-q">${d.q}</h3>
+      <div class="q-opts">
+        ${d.opts.map((o,i)=>`<button class="opt" data-i="${i}"><span class="letter">${LET[i]}</span>${o}</button>`).join('')}
+      </div>
+      <div class="q-foot hidden" id="qFoot">
+        <div class="q-why" id="qWhy"></div>
+        <button class="btn mint" id="qNext">${qi===quizData.length-1?'Lihat Hasil':'Lanjut'} <i data-lucide="chevron-right"></i></button>
+      </div>
+    </div>`;
+  window.lucide&&lucide.createIcons();
+  quizArea.querySelectorAll('.opt').forEach(btn=>{
+    btn.onclick=()=>{
+      const pick=+btn.dataset.i;
+      quizArea.querySelectorAll('.opt').forEach(b=>b.disabled=true);
+      quizArea.querySelector(`.opt[data-i="${d.a}"]`).classList.add('good');
+      if(pick===d.a){score++;celebrate(60)}
+      else btn.classList.add('bad');
+      document.getElementById('qWhy').innerHTML=`<i data-lucide="${pick===d.a?'circle-check':'info'}"></i><span>${d.why}</span>`;
+      document.getElementById('qFoot').classList.remove('hidden');
+      window.lucide&&lucide.createIcons();
+      document.getElementById('qNext').onclick=()=>{qi++;renderQuiz()};
+    };
+  });
+}
+function renderDone(){
+  let msg;
+  if(score===5)msg="Sempurna! Kamu tahu harus promosi di mana!";
+  else if(score===4)msg="Hebat! Sedikit lagi menuju sempurna!";
+  else if(score===3)msg="Bagus! Ayo bahas lagi soal yang keliru bareng teman sebangku.";
+  else msg="Tidak apa-apa — belajar memang proses. Coba ulangi, ya!";
+  quizArea.innerHTML=`
+    <div class="q-card card q-done">
+      <div class="tro"><i data-lucide="trophy"></i></div>
+      <h3>Kuis Selesai!</h3>
+      <div class="big">${score} / 5</div>
+      <p>${msg}</p>
+      <button class="btn" id="qRetry"><i data-lucide="rotate-ccw"></i> Ulangi Kuis</button>
+    </div>`;
+  window.lucide&&lucide.createIcons();
+  celebrate(180);
+  document.getElementById('qRetry').onclick=()=>{qi=0;score=0;renderQuiz()};
+}
+renderQuiz();
+
+/* ================= KONFETI ================= */
+const cvs=document.getElementById('confetti'),ctx=cvs.getContext('2d');
+const COLORS=['#FF7E67','#FFC531','#3FBF8F','#FFA8C5','#B9A7F2','#7FD8A6'];
+let parts=[],raf=null;
+function sizeC(){cvs.width=innerWidth;cvs.height=innerHeight}
+sizeC();addEventListener('resize',sizeC);
+function celebrate(n=140){
+  for(let i=0;i<n;i++){
+    parts.push({
+      x:Math.random()*cvs.width,y:-30-Math.random()*cvs.height*.35,
+      vx:-1.6+Math.random()*3.2,vy:2.2+Math.random()*3.4,
+      w:9+Math.random()*9,h:5+Math.random()*6,
+      rot:Math.random()*Math.PI,vr:-.16+Math.random()*.32,
+      ph:Math.random()*Math.PI*2,
+      c:COLORS[Math.floor(Math.random()*COLORS.length)],
+      shape:Math.floor(Math.random()*3)
+    });
+  }
+  if(!raf)tick();
+}
+function tick(){
+  ctx.clearRect(0,0,cvs.width,cvs.height);
+  parts.forEach(p=>{
+    p.x+=p.vx;p.y+=p.vy;p.rot+=p.vr;p.ph+=.1;p.vy+=.015;
+    ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);
+    ctx.scale(1,Math.abs(Math.sin(p.ph))*.85+.15);
+    ctx.fillStyle=p.c;
+    if(p.shape===0){ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h)}
+    else if(p.shape===1){ctx.beginPath();ctx.arc(0,0,p.h,0,7);ctx.fill()}
+    else{ctx.beginPath();ctx.moveTo(0,-p.h);ctx.lineTo(p.w/2,p.h/2);ctx.lineTo(-p.w/2,p.h/2);ctx.closePath();ctx.fill()}
+    ctx.restore();
+  });
+  parts=parts.filter(p=>p.y<cvs.height+40);
+  if(parts.length)raf=requestAnimationFrame(tick);
+  else{raf=null;ctx.clearRect(0,0,cvs.width,cvs.height)}
+}
+document.getElementById('partyBtn').onclick=()=>{celebrate(260);setTimeout(()=>celebrate(160),700)};
+
+window.lucide&&lucide.createIcons();
+</script>
+</body>
+</html>

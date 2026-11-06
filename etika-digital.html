@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Etika &amp; Keamanan Digital — Promosi Jujur · SMP Kelas 7</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#453A4E; --ink-soft:#6B5F75; --cream:#FDF7EF;
+    --peach:#FFF1E8; --peach2:#FFCBB5;
+    --mint:#EAF7F0;  --mint2:#BFEAD2;
+    --butter:#FFF6DF;--butter2:#FFE39A;
+    --lav:#F3F0FC;   --lav2:#DCD2F7;
+    --pink:#FFF0F5;  --pink2:#FFC9DC;
+    --sky:#E9F1FB;   --sky2:#C5DCF2;
+    --coral:#FF7E67; --teal:#3FBF8F; --sun:#FFC531;
+    --shadow:6px 6px 0 var(--ink);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--ink);background:var(--cream);overflow:hidden}
+  h1,h2,h3,.disp{font-family:'Fredoka',sans-serif}
+
+  /* ===== CHROME ===== */
+  #bar{position:fixed;top:0;left:0;height:6px;background:var(--coral);width:0;z-index:60;transition:width .4s ease;border-radius:0 4px 4px 0}
+  .pagenum{position:fixed;left:26px;bottom:22px;z-index:60;font-family:'Fredoka';font-weight:600;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:7px 16px;box-shadow:4px 4px 0 var(--ink);font-size:14px;letter-spacing:.06em}
+  .dots{position:fixed;left:50%;transform:translateX(-50%);bottom:24px;z-index:60;display:flex;gap:9px}
+  .dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--ink);background:#fff;cursor:pointer;transition:.25s;padding:0}
+  .dot.on{background:var(--sun);transform:scale(1.35)}
+  .navbtns{position:fixed;right:26px;bottom:18px;z-index:60;display:flex;gap:10px}
+  .nav{width:52px;height:52px;border-radius:50%;background:#fff;border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink);cursor:pointer;display:grid;place-items:center;transition:.15s;color:var(--ink)}
+  .nav:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .nav:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+  .nav:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:4px 4px 0 var(--ink)}
+  .navbar-bg{display:none;position:fixed;left:0;right:0;bottom:0;height:calc(76px + env(safe-area-inset-bottom,0px));z-index:55;background:rgba(253,247,239,.94);border-top:3px solid var(--ink);backdrop-filter:blur(6px)}
+
+  /* ===== SLIDES ===== */
+  .slide{position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;opacity:0;visibility:hidden;transform:translateX(46px);transition:opacity .5s ease,transform .55s cubic-bezier(.22,.9,.32,1),visibility .5s;overflow:auto;padding:56px 40px 100px}
+  .slide.active{opacity:1;visibility:visible;transform:none;z-index:5}
+  .slide::before,.slide::after{content:'';position:absolute;border-radius:50%;z-index:0}
+  .slide::before{width:44vw;height:44vw;top:-20vw;right:-14vw;background:var(--bA);opacity:.75}
+  .slide::after{width:34vw;height:34vw;bottom:-16vw;left:-12vw;background:var(--bB);opacity:.7}
+  [data-theme="peach"] {background:var(--peach);--bA:var(--peach2);--bB:var(--butter2)}
+  [data-theme="cream"] {background:var(--cream);--bA:var(--mint2);--bB:var(--pink2)}
+  [data-theme="butter"]{background:var(--butter);--bA:var(--butter2);--bB:var(--mint2)}
+  [data-theme="mint"]  {background:var(--mint);--bA:var(--mint2);--bB:var(--peach2)}
+  [data-theme="lav"]   {background:var(--lav);--bA:var(--lav2);--bB:var(--peach2)}
+  [data-theme="pink"]  {background:var(--pink);--bA:var(--pink2);--bB:var(--sky2)}
+  [data-theme="sky"]   {background:var(--sky);--bA:var(--sky2);--bB:var(--butter2)}
+
+  .wrap{position:relative;z-index:2;width:100%}
+  .slide .wrap{margin-top:auto;margin-bottom:auto}
+  .anim{opacity:0}
+  .slide.active .anim{animation:rise .7s cubic-bezier(.22,.9,.32,1) forwards;animation-delay:calc(var(--d,0)*.09s)}
+  @keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+
+  .kicker{display:inline-flex;align-items:center;gap:8px;font-family:'Fredoka';font-weight:600;font-size:13px;letter-spacing:.14em;text-transform:uppercase;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:8px 18px;box-shadow:4px 4px 0 var(--ink)}
+  .kicker svg{width:16px;height:16px}
+  h2.title{font-size:clamp(30px,3.6vw,48px);font-weight:700;margin:18px 0 8px;line-height:1.12}
+  p.lead{font-size:clamp(15px,1.3vw,19px);color:var(--ink-soft);max-width:680px;font-weight:500}
+  .hl{background:linear-gradient(transparent 62%,var(--butter2) 62%);padding:0 3px;border-radius:3px}
+  .hl.m{background:linear-gradient(transparent 62%,var(--mint2) 62%)}
+  .hl.p{background:linear-gradient(transparent 62%,var(--pink2) 62%)}
+  .hl.l{background:linear-gradient(transparent 62%,var(--lav2) 62%)}
+  .card{background:#fff;border:3px solid var(--ink);border-radius:20px;box-shadow:var(--shadow)}
+  .btn{display:inline-flex;align-items:center;gap:10px;font-family:'Fredoka';font-weight:600;font-size:17px;color:var(--ink);background:var(--coral);border:3px solid var(--ink);border-radius:14px;padding:13px 26px;box-shadow:5px 5px 0 var(--ink);cursor:pointer;transition:.15s;text-decoration:none}
+  .btn svg{width:20px;height:20px}
+  .btn:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+  .btn.sun{background:var(--sun)} .btn.mint{background:var(--mint2)} .btn.ghost{background:#fff}
+  .hidden{display:none !important}
+  .deco{position:absolute;z-index:1;pointer-events:none;color:var(--ink);opacity:.55}
+  .deco svg{width:100%;height:100%}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}50%{transform:translateY(-14px) rotate(var(--r,0deg))}}
+  .bob{animation:bob 4.5s ease-in-out infinite}
+
+  /* ===== HERO ===== */
+  .s-hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center}
+  .badge-row{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap}
+  .badge{display:inline-flex;align-items:center;gap:8px;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:8px 16px;font-weight:700;font-size:14px;box-shadow:3px 3px 0 var(--ink)}
+  .badge svg{width:17px;height:17px}
+  .b1{background:var(--mint2)} .b2{background:var(--pink2)} .b3{background:var(--butter2)}
+  .art-stage{position:relative;display:grid;place-items:center;min-height:460px}
+  .art-stage>svg{width:min(400px,90%);filter:drop-shadow(8px 10px 0 rgba(69,58,78,.18))}
+  .fchip{position:absolute;display:grid;place-items:center;border:3px solid var(--ink);border-radius:50%;box-shadow:4px 4px 0 var(--ink)}
+  .fchip svg{width:52%;height:52%}
+  .fc1{width:74px;height:74px;background:var(--coral);color:#fff;top:36px;left:34px;--r:-8deg}
+  .fc2{width:64px;height:64px;background:var(--sun);top:118px;right:26px;--r:10deg}
+  .fc3{width:70px;height:70px;background:var(--teal);color:#fff;bottom:92px;left:14px;--r:6deg}
+  .fc4{width:60px;height:60px;background:var(--lav2);bottom:34px;right:48px;--r:-10deg}
+  .fc5{width:52px;height:52px;background:var(--pink2);top:8px;right:130px;--r:14deg}
+
+  /* ===== GOALS ===== */
+  .goal-list{margin-top:30px;display:flex;flex-direction:column;gap:16px;max-width:880px}
+  .goal{display:flex;align-items:center;gap:22px;background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:16px 24px}
+  .goal:nth-child(odd){margin-right:56px}.goal:nth-child(even){margin-left:56px}
+  .gnum{flex:0 0 56px;height:56px;border-radius:50%;border:3px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:24px}
+  .g1{background:var(--coral);color:#fff}.g2{background:var(--sun)}.g3{background:var(--mint2)}.g4{background:var(--pink2)}
+  .goal h3{font-size:19px;font-weight:600;margin-bottom:3px}
+  .goal p{font-size:14.5px;color:var(--ink-soft);font-weight:500}
+
+  /* ===== PEMANASAN : TEBAK PEMBELI ===== */
+  .wu-shell{margin-top:26px;display:grid;grid-template-columns:330px 1fr;gap:32px;align-items:start}
+  .prod{border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);overflow:hidden;background:#fff}
+  .prod-media{height:200px;display:grid;place-items:center;border-bottom:2.5px solid var(--ink)}
+  .prod-media .ic{width:110px;height:110px;border-radius:50%;background:#fff;border:3px solid var(--ink);display:grid;place-items:center;box-shadow:5px 5px 0 var(--ink)}
+  .prod-media .ic svg{width:54px;height:54px}
+  .prod-cap{padding:14px 18px}
+  .prod-cap h4{font-family:'Fredoka';font-size:21px;line-height:1.15}
+  .prod-cap .sub{font-size:13.5px;font-weight:600;margin-top:4px;color:var(--ink-soft)}
+  .prod-cap .price{display:inline-block;margin-top:8px;font-family:'Fredoka';font-weight:700;font-size:14px;border:2.5px solid var(--ink);border-radius:10px;padding:4px 10px;background:var(--butter2)}
+  .wu-round{font-family:'Fredoka';font-weight:600;font-size:14px;color:var(--ink-soft)}
+  .wu-q{font-family:'Fredoka';font-weight:600;font-size:clamp(19px,1.8vw,23px);margin:6px 0 14px}
+  .wu-opts{display:flex;flex-direction:column;gap:12px;max-width:430px}
+  .wu-opt{display:flex;align-items:center;gap:13px;text-align:left;background:#fff;border:3px solid var(--ink);border-radius:14px;padding:12px 18px;font-family:'Plus Jakarta Sans';font-weight:600;font-size:15.5px;cursor:pointer;transition:.15s;color:var(--ink);box-shadow:4px 4px 0 var(--ink)}
+  .wu-opt:hover:not(:disabled){transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .wu-opt:disabled{cursor:default}
+  .wu-opt .letter{flex:0 0 34px;height:34px;border-radius:10px;border:2.5px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;background:var(--butter2)}
+  .wu-opt.good{background:var(--mint2)} .wu-opt.good .letter{background:var(--teal);color:#fff}
+  .wu-opt.bad{background:var(--pink2)} .wu-opt.bad .letter{background:var(--coral);color:#fff}
+  .wu-fb{margin-top:16px;display:flex;gap:12px;align-items:flex-start;background:var(--butter);border:2.5px solid var(--ink);border-radius:14px;padding:14px 18px;font-size:14.5px;font-weight:600;line-height:1.55;max-width:430px}
+  .wu-fb svg{width:20px;height:20px;flex:0 0 20px;margin-top:2px}
+  .wu-next{margin-top:14px}
+  .wu-done{background:#fff;border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);padding:30px 34px;max-width:640px;text-align:center}
+  .wu-done .tro{width:84px;height:84px;border-radius:50%;background:var(--sun);border:3px solid var(--ink);display:grid;place-items:center;margin:0 auto 14px;box-shadow:4px 4px 0 var(--ink)}
+  .wu-done .tro svg{width:40px;height:40px}
+  .wu-done h3{font-size:26px;margin-bottom:8px}
+  .wu-done p{font-weight:600;color:var(--ink-soft);line-height:1.6}
+  .wu-done .sc{font-family:'Fredoka';font-weight:700;font-size:19px;color:var(--teal);margin-top:10px}
+
+  /* ===== DEFINISI ===== */
+  .s-def .wrap{display:grid;grid-template-columns:1.08fr .92fr;gap:40px;align-items:center}
+  .define{margin-top:24px;background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:22px 26px;font-size:clamp(16px,1.45vw,20px);font-weight:600;line-height:1.6}
+  .define .q{color:var(--coral);font-family:'Fredoka'}
+  .analog{margin-top:18px;display:flex;gap:16px;align-items:flex-start;background:var(--lav);border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:18px 22px}
+  .analog .ic{flex:0 0 46px;height:46px;border-radius:50%;background:var(--lav2);display:grid;place-items:center;border:2.5px solid var(--ink)}
+  .analog .ic svg{width:24px;height:24px}
+  .analog p{font-size:15.5px;font-weight:500;line-height:1.55}
+  .target-art{display:grid;place-items:center}
+  .target-art svg{width:min(380px,100%);height:auto;filter:drop-shadow(8px 10px 0 rgba(69,58,78,.18))}
+
+  /* ===== SEMUA ORANG VS TARGET ===== */
+  .vs2{margin-top:28px;display:grid;grid-template-columns:1fr 84px 1fr;align-items:stretch}
+  .vs2-col{border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);padding:22px 26px;background:#fff}
+  .vs2-col.bad{background:var(--pink)}
+  .vs2-col.good{background:var(--mint)}
+  .vs2-col .lab{font-family:'Fredoka';font-weight:700;font-size:13px;letter-spacing:.12em;text-transform:uppercase;display:inline-flex;gap:7px;align-items:center;border:2.5px solid var(--ink);border-radius:999px;padding:5px 14px;margin-bottom:14px}
+  .vs2-col .lab svg{width:15px;height:15px}
+  .bad .lab{background:var(--pink2)} .good .lab{background:var(--mint2)}
+  .vs2-col .bigline{font-family:'Fredoka';font-weight:700;font-size:clamp(20px,2vw,25px);line-height:1.25;margin-bottom:12px}
+  .vs2-col .promo{background:#fff;border:2.5px dashed var(--ink);border-radius:14px;padding:12px 16px;font-size:15px;font-weight:600;line-height:1.5;margin-bottom:12px}
+  .vs2-col p{font-size:14.5px;font-weight:500;color:var(--ink-soft);line-height:1.55}
+  .vs2-mid{display:grid;place-items:center}
+  .vs2-badge{width:60px;height:60px;border-radius:50%;background:var(--sun);border:3px solid var(--ink);display:grid;place-items:center;box-shadow:4px 4px 0 var(--ink);font-family:'Fredoka';font-weight:700;font-size:18px}
+  .vs-note{margin-top:22px;background:#fff;border:3px solid var(--ink);border-left:14px solid var(--sun);border-radius:16px;box-shadow:var(--shadow);padding:15px 22px;font-weight:600;font-size:15px;line-height:1.55;max-width:860px}
+
+  /* ===== FLIP 4 PERTANYAAN ===== */
+  .fgrid{margin-top:26px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+  .fcard{perspective:1100px;min-height:250px;cursor:pointer}
+  .finner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.3,.8,.3,1)}
+  .fcard.flipped .finner{transform:rotateY(180deg)}
+  .fface{position:absolute;inset:0;backface-visibility:hidden;border:3px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 var(--ink);padding:18px 20px;display:flex;flex-direction:column}
+  .ffront{background:#fff}
+  .fback{background:var(--mint2);transform:rotateY(180deg)}
+  .fic{width:52px;height:52px;border-radius:15px;border:2.5px solid var(--ink);display:grid;place-items:center;margin-bottom:12px}
+  .fic svg{width:24px;height:24px}
+  .ffront h3{font-size:22px;line-height:1.15}
+  .ffront .tease{font-size:13.5px;font-weight:600;color:var(--ink-soft);line-height:1.45;margin-top:6px}
+  .ffront .hint{margin-top:auto;display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;color:var(--ink-soft)}
+  .ffront .hint svg{width:15px;height:15px}
+  .fback .tag{font-family:'Fredoka';font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;background:var(--ink);color:#fff;border-radius:999px;padding:4px 12px;align-self:flex-start;margin-bottom:10px}
+  .fback p{font-size:13.8px;font-weight:600;line-height:1.55;flex:1}
+  .fback .eg{font-size:12.5px;font-weight:700;opacity:.8;margin-top:8px;border-top:2px dashed rgba(69,58,78,.4);padding-top:8px;flex:0 0 auto}
+
+  .s-tall{padding-top:40px;padding-bottom:88px}
+  .s-tall h2.title{margin-top:12px}
+
+  /* ===== GAME ===== */
+  .match-list{margin-top:26px;display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .m-card{background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:18px 20px}
+  .m-card.solved{background:var(--mint)}
+  .m-card h3{font-size:14.5px;font-weight:600;line-height:1.5;margin-bottom:12px;font-family:'Plus Jakarta Sans'}
+  .m-card h3 b{font-family:'Fredoka'}
+  .m-opts{display:flex;gap:9px;flex-wrap:wrap}
+  .m-opt{display:inline-flex;align-items:center;gap:7px;font-family:'Fredoka';font-weight:600;font-size:13.5px;border:2.5px solid var(--ink);border-radius:999px;padding:8px 15px;background:#fff;cursor:pointer;box-shadow:3px 3px 0 var(--ink);transition:.15s;color:var(--ink)}
+  .m-opt:hover:not(:disabled){transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--ink)}
+  .m-opt:disabled{cursor:default}
+  .m-opt.good{background:var(--teal);color:#fff}
+  .m-opt.bad{background:var(--pink2)}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+  .m-opt.shake{animation:shake .3s}
+  .m-why{margin-top:12px;background:var(--butter);border:2.5px solid var(--ink);border-radius:12px;padding:10px 14px;font-size:13px;font-weight:600;line-height:1.5;display:flex;gap:9px}
+  .m-why svg{width:17px;height:17px;flex:0 0 17px;margin-top:1px}
+  .m-score{margin-top:22px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;background:var(--ink);color:#fff;border-radius:16px;padding:14px 24px;max-width:640px;box-shadow:var(--shadow)}
+  .m-score b{font-family:'Fredoka';font-size:20px;color:var(--sun)}
+
+  /* ===== QUIZ ===== */
+  .quiz-shell{max-width:780px;margin:0 auto}
+  .q-meta{display:flex;justify-content:space-between;align-items:center;margin:0 0 16px}
+  .q-badge{font-family:'Fredoka';font-weight:700;background:var(--coral);color:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:7px 18px;box-shadow:3px 3px 0 var(--ink);font-size:14px}
+  .q-score{font-family:'Fredoka';font-weight:700;background:var(--sun);border:2.5px solid var(--ink);border-radius:999px;padding:7px 18px;box-shadow:3px 3px 0 var(--ink);font-size:14px;display:flex;align-items:center;gap:7px}
+  .q-score svg{width:16px;height:16px}
+  .q-card{padding:28px 32px;margin-top:20px}
+  .q-q{font-size:clamp(19px,1.8vw,25px);font-weight:600;line-height:1.4;margin-bottom:20px}
+  .q-opts{display:flex;flex-direction:column;gap:12px}
+  .opt{display:flex;align-items:center;gap:16px;text-align:left;background:#fff;border:3px solid var(--ink);border-radius:14px;padding:13px 18px;font-family:'Plus Jakarta Sans';font-weight:600;font-size:16px;cursor:pointer;transition:.15s;color:var(--ink);box-shadow:4px 4px 0 var(--ink)}
+  .opt:hover:not(:disabled){transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .opt:disabled{cursor:default}
+  .opt .letter{flex:0 0 36px;height:36px;border-radius:10px;border:2.5px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;background:var(--lav2)}
+  .opt.good{background:var(--mint2)} .opt.good .letter{background:var(--teal);color:#fff}
+  .opt.bad{background:var(--pink2);opacity:.9} .opt.bad .letter{background:var(--coral);color:#fff}
+  .q-foot{margin-top:18px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+  .q-why{display:flex;gap:12px;align-items:flex-start;background:var(--butter);border:2.5px solid var(--ink);border-radius:14px;padding:14px 18px;font-size:14.5px;font-weight:600;line-height:1.5;flex:1}
+  .q-why svg{width:20px;height:20px;flex:0 0 20px;margin-top:2px}
+  .q-done{text-align:center;padding:38px 30px}
+  .q-done .tro{width:96px;height:96px;border-radius:50%;background:var(--sun);border:3px solid var(--ink);display:grid;place-items:center;margin:0 auto 18px;box-shadow:5px 5px 0 var(--ink)}
+  .q-done .tro svg{width:48px;height:48px}
+  .q-done h3{font-size:30px;margin-bottom:8px}
+  .q-done .big{font-family:'Fredoka';font-size:56px;font-weight:700;color:var(--coral);margin:6px 0 10px}
+  .q-done p{font-weight:600;color:var(--ink-soft);margin-bottom:22px}
+
+  /* ===== MISI ===== */
+  .s-misi .wrap{display:grid;grid-template-columns:1.12fr .88fr;gap:38px;align-items:start}
+  .steps{margin-top:24px;display:flex;flex-direction:column;gap:14px}
+  .step{display:flex;gap:18px;align-items:flex-start;background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:var(--shadow);padding:15px 20px}
+  .step:nth-child(even){margin-left:44px}
+  .snum{flex:0 0 46px;height:46px;border-radius:50%;border:3px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:19px}
+  .st1{background:var(--coral);color:#fff}.st2{background:var(--sun)}.st3{background:var(--mint2)}.st4{background:var(--pink2)}
+  .step h3{font-size:16.5px;font-weight:600}
+  .step p{font-size:13.5px;color:var(--ink-soft);font-weight:500;margin-top:2px;line-height:1.5}
+  .blank-card{padding:18px 22px;background:#fff;border:3px dashed var(--ink);border-radius:16px}
+  .blank-card h4{font-family:'Fredoka';font-size:15.5px;margin-bottom:10px;display:flex;gap:8px;align-items:center}
+  .blank-card h4 svg{width:17px;height:17px}
+  .bl{display:flex;gap:8px;font-size:13px;font-weight:600;padding:5px 0}
+  .bl b{flex:0 0 96px}
+  .bl span{flex:1;border-bottom:2px dotted var(--ink-soft);min-height:18px}
+  .sentence{margin-top:12px;background:var(--butter);border:2.5px solid var(--ink);border-radius:12px;padding:10px 14px;font-size:13.5px;font-weight:600;line-height:1.7}
+  .mini-rubrik{margin-top:18px;padding:18px 22px;background:#fff}
+  .rubrik-row{display:flex;justify-content:space-between;gap:12px;font-size:13.5px;font-weight:700;padding:6px 0;border-top:2px dashed rgba(69,58,78,.25)}
+  .rubrik-row:first-of-type{border-top:none}
+  .rubrik-row span:last-child{color:var(--coral);font-family:'Fredoka';white-space:nowrap}
+
+  /* ===== PENUTUP ===== */
+  .s-end .wrap{display:grid;grid-template-columns:1fr .85fr;gap:44px;align-items:center}
+  .refl{margin-top:24px;display:flex;flex-direction:column;gap:14px;max-width:600px}
+  .refl-item{display:flex;gap:16px;align-items:center;background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:var(--shadow);padding:14px 20px}
+  .rnum{flex:0 0 44px;height:44px;border-radius:50%;border:2.5px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:18px}
+  .r1{background:var(--coral);color:#fff}.r2{background:var(--mint2)}.r3{background:var(--pink2)}
+  .refl-item p{font-size:15.5px;font-weight:600}
+  .end-art{position:relative;display:grid;place-items:center;min-height:420px}
+  .quote{position:relative;background:var(--sun);border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);padding:30px 34px;text-align:center;max-width:380px;transform:rotate(-2deg)}
+  .quote h3{font-size:25px;line-height:1.3;margin-bottom:10px}
+  .quote p{font-weight:600;font-size:14.5px}
+  .end-btn{margin-top:26px;display:flex;gap:14px;flex-wrap:wrap}
+
+  #confetti{position:fixed;inset:0;z-index:100;pointer-events:none}
+
+
+  /* ===== PEMANASAN : JUJUR ATAU MENIPU ===== */
+  .jm{margin-top:22px;display:grid;grid-template-columns:400px 1fr;gap:30px;align-items:start}
+  .promo-card{background:#fff;border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);overflow:hidden}
+  .promo-card .pc-top{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:2.5px solid var(--ink)}
+  .promo-card .av{width:36px;height:36px;border-radius:50%;border:2.5px solid var(--ink);display:grid;place-items:center}
+  .promo-card .av svg{width:18px;height:18px}
+  .promo-card .acc{font-family:'Fredoka';font-weight:700;font-size:15px}
+  .promo-card .acc small{display:block;font-family:'Plus Jakarta Sans';font-weight:600;font-size:11.5px;color:var(--ink-soft)}
+  .promo-card .pc-body{padding:18px 20px;font-family:'Fredoka';font-weight:700;font-size:22px;line-height:1.3;min-height:120px;display:flex;align-items:center}
+  .promo-card .pc-note{padding:10px 16px;border-top:2.5px dashed rgba(69,58,78,.3);font-size:13px;font-weight:600;color:var(--ink-soft);display:flex;gap:8px}
+  .promo-card .pc-note svg{width:16px;height:16px;flex:0 0 16px;margin-top:1px}
+  .wu-opt .letter svg{width:18px;height:18px}
+
+  /* ===== SPOT THE RED FLAG ===== */
+  .spot{margin-top:18px;display:grid;grid-template-columns:1fr 330px;gap:26px;align-items:start}
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+  .tab{display:inline-flex;align-items:center;gap:7px;font-family:'Fredoka';font-weight:600;font-size:14px;border:2.5px solid var(--ink);border-radius:12px;padding:7px 14px;background:#fff;cursor:pointer;box-shadow:3px 3px 0 var(--ink);color:var(--ink)}
+  .tab svg{width:16px;height:16px}
+  .tab.on{background:var(--ink);color:#fff}
+  .tab .tc{font-size:12px;background:var(--butter2);color:var(--ink);border:2px solid var(--ink);border-radius:999px;padding:0 7px}
+  .tab.done .tc{background:var(--teal);color:#fff}
+  .feed{background:#fff;border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);overflow:hidden}
+  .feed .pc-top{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:2.5px solid var(--ink)}
+  .feed .av{width:34px;height:34px;border-radius:50%;border:2.5px solid var(--ink);display:grid;place-items:center}
+  .feed .av svg{width:17px;height:17px}
+  .feed .acc{font-family:'Fredoka';font-weight:700;font-size:15px}
+  .feed .acc small{display:block;font-family:'Plus Jakarta Sans';font-weight:600;font-size:11.5px;color:var(--ink-soft)}
+  .feed-media{height:150px;display:grid;place-items:center;border-bottom:2.5px solid var(--ink);position:relative}
+  .feed-media .ic{width:80px;height:80px;border-radius:50%;background:#fff;border:3px solid var(--ink);display:grid;place-items:center;box-shadow:4px 4px 0 var(--ink)}
+  .feed-media .ic svg{width:38px;height:38px}
+  .feed-cap{padding:14px 18px;font-size:15.5px;font-weight:600;line-height:1.75}
+  .sg{cursor:pointer;border-radius:6px;padding:1px 3px;transition:background .2s;border-bottom:2.5px dotted rgba(69,58,78,.35)}
+  .sg:hover{background:var(--butter)}
+  .sg.found{background:var(--pink2);border-bottom:2.5px solid var(--coral)}
+  .sg.safe{background:var(--mint2);border-bottom-color:transparent}
+  .sg.media{position:absolute;bottom:10px;left:10px;right:10px;text-align:center;font-size:12.5px;font-weight:700;background:#fff;border:2.5px dashed var(--ink);border-radius:10px;padding:4px 8px}
+  .sg.media.found{background:var(--pink2);border-style:solid}
+  .sg.shake{animation:shake .3s;display:inline-block}
+  .sg.media.shake{display:block}
+  .spot-side{display:flex;flex-direction:column;gap:12px}
+  .spot-meter{background:var(--ink);color:#fff;border-radius:16px;box-shadow:5px 5px 0 var(--sun);padding:14px 18px;font-weight:600;font-size:14px}
+  .spot-meter b{font-family:'Fredoka';font-size:26px;color:var(--sun)}
+  .flags{display:flex;gap:6px;margin-top:8px}
+  .flags span{width:30px;height:30px;border-radius:9px;border:2px solid #fff;display:grid;place-items:center;opacity:.35}
+  .flags span svg{width:16px;height:16px}
+  .flags span.on{opacity:1;background:var(--coral)}
+  .spot-fb{background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:4px 4px 0 var(--ink);padding:14px 16px;font-size:14px;font-weight:600;line-height:1.55;display:flex;gap:10px}
+  .spot-fb svg{width:20px;height:20px;flex:0 0 20px;margin-top:1px}
+  .spot-fb.rf{background:var(--pink)} .spot-fb.ok{background:var(--mint)}
+
+  /* ===== LABEL IKLAN ===== */
+  .lbl{margin-top:20px;display:grid;grid-template-columns:360px 1fr;gap:28px;align-items:start}
+  .toggle{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+  .tg{display:inline-flex;align-items:center;gap:8px;font-family:'Fredoka';font-weight:600;font-size:15px;border:2.5px solid var(--ink);border-radius:12px;padding:8px 14px;background:#fff;cursor:pointer;box-shadow:3px 3px 0 var(--ink);color:var(--ink)}
+  .tg svg{width:17px;height:17px}
+  .tg.on{background:var(--ink);color:#fff}
+  .adtag{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;background:var(--butter2);border:2px solid var(--ink);border-radius:999px;padding:2px 10px;margin-top:3px}
+  .adtag svg{width:13px;height:13px}
+  .lbl-note{margin-top:12px;font-size:13.5px;font-weight:600;line-height:1.5;display:flex;gap:10px;align-items:flex-start;border:2.5px solid var(--ink);border-radius:14px;padding:10px 14px}
+  .lbl-note svg{width:18px;height:18px;flex:0 0 18px;margin-top:1px}
+  .need-list{display:flex;flex-direction:column;gap:10px}
+  .need{background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:4px 4px 0 var(--ink);padding:11px 15px}
+  .need.solved{background:var(--mint)}
+  .need-row{display:flex;align-items:center;gap:12px;justify-content:space-between}
+  .need p{font-size:14px;font-weight:600;line-height:1.45}
+  .need .m-opts{flex:0 0 auto;flex-wrap:nowrap}
+  .need .m-why{margin-top:8px}
+
+  /* ===== PRIVASI ===== */
+  .priv{margin-top:18px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .pv{background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:4px 4px 0 var(--ink);padding:10px 13px;display:flex;flex-direction:column;gap:8px}
+  .pv-top{display:flex;align-items:center;gap:10px;font-family:'Fredoka';font-weight:600;font-size:15px;line-height:1.2}
+  .pv-top .ti{flex:0 0 34px;height:34px;border-radius:10px;border:2.5px solid var(--ink);display:grid;place-items:center;background:var(--lav2)}
+  .pv-top .ti svg{width:17px;height:17px}
+  .pv .m-opts{gap:7px}
+  .pv .m-opt{font-size:12.5px;padding:5px 11px}
+  .pv .m-opt svg{width:14px;height:14px}
+  .pv .why{font-size:12px;font-weight:600;line-height:1.45;color:var(--ink-soft)}
+  .pv.solved{background:var(--mint)}
+  .pv.solved.r{background:var(--pink)}
+
+  /* ===== HAK CIPTA & USIA ===== */
+  .two{margin-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .two .card{padding:18px 22px}
+  .two h3{font-size:20px;display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .two h3 span{width:40px;height:40px;border-radius:12px;border:2.5px solid var(--ink);display:grid;place-items:center}
+  .two h3 svg{width:20px;height:20px}
+  .do{display:flex;gap:10px;align-items:flex-start;font-size:14px;font-weight:600;line-height:1.45;padding:6px 0;border-top:2px dashed rgba(69,58,78,.2)}
+  .do:first-of-type{border-top:none}
+  .do svg{width:18px;height:18px;flex:0 0 18px;margin-top:1px}
+  .do.y svg{color:var(--teal)} .do.n svg{color:var(--coral)}
+  .apps{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 12px}
+  .app{display:inline-flex;align-items:center;gap:7px;font-family:'Fredoka';font-weight:600;font-size:14px;border:2.5px solid var(--ink);border-radius:12px;padding:6px 10px;background:var(--cream)}
+  .app b{background:var(--coral);color:#fff;border:2px solid var(--ink);border-radius:8px;padding:0 6px;font-size:12.5px}
+  .age-note{background:var(--butter);border:2.5px solid var(--ink);border-radius:14px;padding:11px 14px;font-size:13.5px;font-weight:600;line-height:1.55}
+
+  /* ===== ATURAN JUJUR ===== */
+  .rules{margin-top:18px;display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:start}
+  .sugg{display:flex;flex-direction:column;gap:8px}
+  .sg-btn{display:flex;align-items:center;gap:10px;text-align:left;background:#fff;border:2.5px solid var(--ink);border-radius:12px;padding:7px 12px;font-family:'Plus Jakarta Sans';font-weight:600;font-size:13.5px;cursor:pointer;box-shadow:3px 3px 0 var(--ink);color:var(--ink);transition:.15s}
+  .sg-btn svg{width:16px;height:16px;flex:0 0 16px}
+  .sg-btn:hover{transform:translateX(3px)}
+  .sg-btn.on{background:var(--mint2)}
+  .own{display:flex;gap:8px;margin-top:4px}
+  .own input{flex:1;min-width:0;font-family:'Plus Jakarta Sans';font-weight:600;font-size:14px;border:2.5px solid var(--ink);border-radius:12px;padding:8px 12px;background:#fff;color:var(--ink)}
+  .rposter{background:var(--sun);border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);padding:18px 22px}
+  .rposter .rp-k{font-family:'Fredoka';font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+  .rposter .rp-k svg{width:16px;height:16px}
+  .rposter input{margin:6px 0 10px;width:100%;font-family:'Fredoka';font-weight:700;font-size:22px;border:none;border-bottom:3px dashed var(--ink);background:transparent;color:var(--ink);padding:2px 0}
+  .rlist{background:#fff;border:2.5px solid var(--ink);border-radius:14px;padding:6px 14px;min-height:120px;counter-reset:r}
+  .rlist li{list-style:none;display:flex;gap:10px;align-items:flex-start;font-size:14px;font-weight:600;line-height:1.45;padding:6px 0;border-top:2px dashed rgba(69,58,78,.2)}
+  .rlist li:first-child{border-top:none}
+  .rlist li::before{counter-increment:r;content:counter(r);flex:0 0 24px;height:24px;border-radius:50%;background:var(--coral);color:#fff;border:2px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:12px}
+  .rlist li span{flex:1}
+  .rlist li button{border:none;background:none;cursor:pointer;color:var(--ink-soft);padding:2px}
+  .rlist li button svg{width:16px;height:16px}
+  .rlist .empty{font-size:13.5px;font-weight:600;color:var(--ink-soft);padding:12px 0}
+  .rp-foot{margin-top:10px;display:flex;justify-content:space-between;align-items:center;gap:10px;font-family:'Fredoka';font-weight:700;font-size:14.5px}
+  .rp-foot .ok{background:var(--teal);color:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:4px 12px}
+  .btn.sm{font-size:14px;padding:8px 14px;box-shadow:3px 3px 0 var(--ink);border-width:2.5px}
+  .btn.sm svg{width:16px;height:16px}
+
+  /* ===== MISI ===== */
+  .bl.n b{flex:0 0 24px}
+
+  @media (max-width:960px){
+    .s-hero .wrap,.s-def .wrap,.s-misi .wrap,.s-end .wrap{grid-template-columns:1fr}
+    .wu-shell{grid-template-columns:1fr}
+    .fgrid{grid-template-columns:1fr 1fr}
+    .vs2{grid-template-columns:1fr}
+    .vs2-mid{margin:14px 0}
+    .match-list{grid-template-columns:1fr}
+    .goal:nth-child(odd),.goal:nth-child(even){margin:0}
+    .step:nth-child(even){margin-left:0}
+    .art-stage,.end-art{min-height:340px}
+    .slide{padding:40px 20px 110px}
+  }
+
+  /* ===== MOBILE ===== */
+  @media (max-width:640px){
+    .slide{padding:22px 16px 104px}
+    .slide::before{width:70vw;height:70vw;top:-30vw;right:-30vw}
+    .slide::after{width:60vw;height:60vw;bottom:-28vw;left:-26vw}
+    .kicker{font-size:11px;letter-spacing:.1em;padding:6px 12px;box-shadow:3px 3px 0 var(--ink)}
+    h2.title{font-size:27px;margin:14px 0 6px}
+    p.lead{font-size:15px}
+    .card,.goal,.step,.m-card,.refl-item,.vs2-col,.prod{box-shadow:4px 4px 0 var(--ink)}
+    .deco{display:none}
+    .dots{display:none}
+    .navbar-bg{display:block}
+    .pagenum{left:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));font-size:13px;padding:6px 14px;box-shadow:3px 3px 0 var(--ink)}
+    .navbtns{right:16px;bottom:calc(12px + env(safe-area-inset-bottom,0px))}
+    .nav{width:48px;height:48px;box-shadow:3px 3px 0 var(--ink)}
+    .s-hero .wrap{gap:12px}
+    .art-stage{min-height:300px}
+    .art-stage>svg{width:min(260px,76%)}
+    .fchip{transform:scale(.7)}
+    .badge{font-size:13px;padding:6px 12px}
+    .goal{gap:14px;padding:12px 16px}
+    .gnum{flex:0 0 44px;height:44px;font-size:20px}
+    .goal h3{font-size:16.5px}
+    .goal p{font-size:13.5px}
+    .prod-media{height:150px}
+    .define{padding:16px 18px}
+    .fgrid{grid-template-columns:1fr}
+    .fcard{min-height:200px}
+    .q-card{padding:18px 16px}
+    .q-q{font-size:18px}
+    .opt{font-size:14.5px;padding:10px 14px;gap:12px}
+    .q-foot{flex-direction:column;align-items:stretch}
+    .q-done .big{font-size:44px}
+    .quote{padding:22px}
+    .quote h3{font-size:21px}
+    .end-art{min-height:300px}
+  }
+
+  @media (max-width:960px){
+    .jm,.spot,.lbl,.two,.rules{grid-template-columns:1fr}
+    .priv{grid-template-columns:1fr 1fr}
+  }
+  @media (max-width:640px){
+    .promo-card,.feed,.rposter{box-shadow:4px 4px 0 var(--ink)}
+    .promo-card .pc-body{font-size:19px;min-height:90px;padding:14px 16px}
+    .feed-media{height:120px}
+    .feed-cap{font-size:14.5px;padding:12px 14px}
+    .need-row{flex-direction:column;align-items:flex-start;gap:8px}
+    .priv{grid-template-columns:1fr}
+    .two .card{padding:14px 16px}
+    .sg-btn:hover{transform:none}
+  }
+
+</style>
+</head>
+<body>
+
+<div id="bar"></div>
+
+<!-- ============ SLIDE 1 : JUDUL ============ -->
+<section class="slide active" data-theme="peach">
+  <div class="deco bob" style="top:14%;left:5%;width:26px;height:26px">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 2v20M2 12h20"/></svg>
+  </div>
+  <div class="deco bob" style="bottom:18%;left:12%;width:34px;height:34px;animation-delay:1.2s">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/></svg>
+  </div>
+  <div class="s-hero wrap" style="display:contents"><div class="wrap">
+    <div>
+      <span class="kicker anim" style="--d:0"><i data-lucide="shield-check"></i> Digital Marketing · Pertemuan 13 · SMP Kelas 7</span>
+      <h1 class="anim" style="--d:1;font-size:clamp(38px,4.6vw,62px);font-weight:700;line-height:1.08;margin:20px 0 14px">
+        Promosi <span class="hl">Jujur</span>,<br>Internet Aman
+      </h1>
+      <p class="lead anim" style="--d:2">Promosi boleh seru dan menarik, tapi <b>tidak boleh menipu</b>.
+      Hari ini kita belajar mengenali promosi curang, memberi label iklan, dan menjaga data pribadi.</p>
+      <div class="badge-row anim" style="--d:3">
+        <span class="badge b2"><i data-lucide="flag"></i> Spot the Red Flag</span>
+        <span class="badge b3"><i data-lucide="lock"></i> Jaga Privasi</span>
+        <span class="badge b1"><i data-lucide="scroll-text"></i> Aturan Jujur</span>
+      </div>
+    </div>
+    <div class="art-stage anim" style="--d:2">
+      <svg viewBox="0 0 380 420" aria-hidden="true">
+        <ellipse cx="190" cy="215" rx="172" ry="186" fill="#FFCBB5"/>
+        <path d="M190 58 L312 104 V206 C312 290 258 344 190 372 C122 344 68 290 68 206 V104 Z" fill="#fff" stroke="#453A4E" stroke-width="6" stroke-linejoin="round"/>
+        <path d="M190 88 L286 124 V206 C286 274 244 318 190 342 C136 318 94 274 94 206 V124 Z" fill="#BFEAD2" stroke="#453A4E" stroke-width="4" stroke-linejoin="round"/>
+        <path d="M140 214 l34 34 66 -72" fill="none" stroke="#453A4E" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+        <g transform="translate(292 70) rotate(12)">
+          <line x1="0" y1="0" x2="0" y2="84" stroke="#453A4E" stroke-width="6" stroke-linecap="round"/>
+          <path d="M0 4 h46 l-12 16 12 16 h-46 z" fill="#FF7E67" stroke="#453A4E" stroke-width="4" stroke-linejoin="round"/>
+        </g>
+      </svg>
+      <span class="fchip fc1 bob"><i data-lucide="shield-check"></i></span>
+      <span class="fchip fc2 bob" style="animation-delay:.8s"><i data-lucide="badge-check"></i></span>
+      <span class="fchip fc3 bob" style="animation-delay:1.6s"><i data-lucide="lock"></i></span>
+      <span class="fchip fc4 bob" style="animation-delay:.4s"><i data-lucide="copyright"></i></span>
+      <span class="fchip fc5 bob" style="animation-delay:2s"><i data-lucide="flag"></i></span>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============ SLIDE 2 : TUJUAN ============ -->
+<section class="slide" data-theme="cream">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="map"></i> Rencana Belajar Hari Ini</span>
+    <h2 class="title anim" style="--d:1">Hari ini kita akan...</h2>
+    <div class="goal-list">
+      <div class="goal anim" style="--d:2">
+        <div class="gnum g1">1</div>
+        <div><h3>Mengenali Promosi yang Menipu</h3><p>Clickbait, diskon palsu, testimoni palsu, dan foto yang tidak jujur.</p></div>
+      </div>
+      <div class="goal anim" style="--d:3">
+        <div class="gnum g2">2</div>
+        <div><h3>Paham Label Iklan &amp; Endorse</h3><p>Kapan sebuah postingan wajib diberi tanda "iklan".</p></div>
+      </div>
+      <div class="goal anim" style="--d:4">
+        <div class="gnum g3">3</div>
+        <div><h3>Menjaga Privasi &amp; Hak Cipta</h3><p>Data apa yang rahasia, foto siapa yang boleh dipakai, dan batas usia aplikasi.</p></div>
+      </div>
+      <div class="goal anim" style="--d:5">
+        <div class="gnum g4">4</div>
+        <div><h3>Membuat "Aturan Jujur" Kelompok</h3><p>Janji bersama yang dipakai sampai projek akhir.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 3 : PEMANASAN ============ -->
+<section class="slide" data-theme="butter">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="hand"></i> Pemanasan · Jujur atau Menipu?</span>
+    <h2 class="title anim" style="--d:1">Promosi ini <span class="hl p">jujur atau menipu?</span></h2>
+    <p class="lead anim" style="--d:1.5">Baca promosinya dan catatannya. Angkat tangan dulu sebelum jawabannya dibuka!</p>
+    <div class="jm anim" style="--d:2" id="jmShell">
+      <div class="promo-card">
+        <div class="pc-top"><span class="av" id="jmAv"></span><span class="acc" id="jmAcc"></span></div>
+        <div class="pc-body" id="jmText"></div>
+        <div class="pc-note"><i data-lucide="info"></i><span id="jmNote"></span></div>
+      </div>
+      <div>
+        <div class="wu-round" id="jmRound"></div>
+        <div class="wu-q">Menurutmu, promosi ini...</div>
+        <div class="wu-opts" id="jmOpts">
+          <button class="wu-opt" data-v="1"><span class="letter"><i data-lucide="badge-check"></i></span>Jujur</button>
+          <button class="wu-opt" data-v="0"><span class="letter"><i data-lucide="flag"></i></span>Menipu</button>
+        </div>
+        <div class="wu-fb hidden" id="jmFb"><i data-lucide="circle-check"></i><span></span></div>
+        <button class="btn mint wu-next hidden" id="jmNext"><i data-lucide="arrow-right"></i> <span>Promosi Berikutnya</span></button>
+      </div>
+    </div>
+    <div class="wu-done hidden anim" id="jmDone" style="--d:0">
+      <div class="tro"><i data-lucide="shield-check"></i></div>
+      <h3>Matamu sudah jeli!</h3>
+      <p>Promosi yang menipu biasanya <b>berlebihan, mengarang angka, atau menyembunyikan hal penting</b>.
+      Hari ini kita belajar mengenalinya, supaya kita tidak tertipu dan tidak ikut menipu.</p>
+      <div class="sc">Tebakan tepat: <span id="jmScore">0</span> dari 3</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 4 : KONSEP ============ -->
+<section class="slide" data-theme="mint">
+  <div class="s-def wrap" style="display:contents"><div class="wrap">
+    <div>
+      <span class="kicker anim" style="--d:0"><i data-lucide="search"></i> Konsep Utama</span>
+      <h2 class="title anim" style="--d:1">Apa itu <span class="hl m">promosi jujur?</span></h2>
+      <div class="define anim" style="--d:2">
+        <span class="q">Catat baik-baik, ya!</span><br>
+        Promosi jujur adalah promosi yang menunjukkan kelebihan produk <span class="hl">tanpa berbohong</span>, <span class="hl">tanpa mengarang</span>, dan <span class="hl">tanpa menyembunyikan</span> hal penting.
+      </div>
+      <div class="analog anim" style="--d:3">
+        <div class="ic"><i data-lucide="heart-handshake"></i></div>
+        <p><b>Seperti teman yang merekomendasikan jajanan:</b> kalau ia bilang "enak banget!" padahal rasanya biasa saja,
+        kamu tidak akan percaya lagi padanya. Pembeli juga begitu. <b>Sekali tertipu, mereka tidak kembali</b>, dan bisa cerita ke teman-temannya.</p>
+      </div>
+    </div>
+    <div class="target-art anim" style="--d:3">
+      <svg viewBox="0 0 360 340" aria-hidden="true">
+        <rect x="20" y="20" width="320" height="300" rx="26" fill="#fff" stroke="#453A4E" stroke-width="4"/>
+        <line x1="180" y1="70" x2="180" y2="262" stroke="#453A4E" stroke-width="6" stroke-linecap="round"/>
+        <rect x="120" y="262" width="120" height="22" rx="11" fill="#FFE39A" stroke="#453A4E" stroke-width="4"/>
+        <line x1="74" y1="108" x2="286" y2="108" stroke="#453A4E" stroke-width="6" stroke-linecap="round"/>
+        <circle cx="180" cy="70" r="12" fill="#FF7E67" stroke="#453A4E" stroke-width="4"/>
+        <path d="M74 108 l-34 78 h68 z" fill="none" stroke="#453A4E" stroke-width="3"/>
+        <path d="M286 108 l-34 78 h68 z" fill="none" stroke="#453A4E" stroke-width="3"/>
+        <path d="M36 186 a38 16 0 0 0 76 0 z" fill="#BFEAD2" stroke="#453A4E" stroke-width="4"/>
+        <path d="M248 186 a38 16 0 0 0 76 0 z" fill="#FFC9DC" stroke="#453A4E" stroke-width="4"/>
+        <g font-family="Fredoka, sans-serif" font-weight="700" font-size="15" fill="#453A4E" text-anchor="middle">
+          <text x="74" y="232">Menarik</text><text x="286" y="232">Jujur</text>
+        </g>
+        <text x="180" y="306" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="14" fill="#453A4E">Harus seimbang!</text>
+      </svg>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============ SLIDE 5 : 4 RED FLAG ============ -->
+<section class="slide" data-theme="pink">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="flag"></i> Kenali Tandanya</span>
+    <h2 class="title anim" style="--d:1">4 <span class="hl p">red flag</span> promosi curang</h2>
+    <p class="lead anim" style="--d:1.5"><b>Red flag</b> artinya bendera merah: tanda bahaya. Klik kartunya untuk melihat contohnya!</p>
+    <div class="fgrid">
+      <div class="fcard anim" style="--d:2" onclick="this.classList.toggle('flipped')">
+        <div class="finner">
+          <div class="fface ffront">
+            <span class="fic" style="background:var(--peach2)"><i data-lucide="megaphone"></i></span>
+            <h3>Clickbait</h3><p class="tease">Judul heboh yang membuat penasaran, tapi isinya tidak sesuai.</p>
+            <span class="hint"><i data-lucide="mouse-pointer-click"></i> klik untuk contoh</span>
+          </div>
+          <div class="fface fback" style="background:var(--pink2)">
+            <span class="tag">Contoh</span>
+            <p>"KAMU NGGAK AKAN PERCAYA apa yang terjadi setelah minum es teh ini!!!" Padahal tidak terjadi apa-apa.</p>
+            <p class="eg">Judul menarik boleh, asalkan isinya benar.</p>
+          </div>
+        </div>
+      </div>
+      <div class="fcard anim" style="--d:2.4" onclick="this.classList.toggle('flipped')">
+        <div class="finner">
+          <div class="fface ffront">
+            <span class="fic" style="background:var(--butter2)"><i data-lucide="tag"></i></span>
+            <h3>Diskon Palsu</h3><p class="tease">Harga dinaikkan dulu, lalu "didiskon". Atau "hari ini saja" padahal setiap hari.</p>
+            <span class="hint"><i data-lucide="mouse-pointer-click"></i> klik untuk contoh</span>
+          </div>
+          <div class="fface fback" style="background:var(--pink2)">
+            <span class="tag">Contoh</span>
+            <p>"Harga normal Rp50.000, sekarang Rp8.000!" Padahal boba itu tidak pernah dijual Rp50.000.</p>
+            <p class="eg">Diskon hanya ditulis kalau memang ada potongan harga.</p>
+          </div>
+        </div>
+      </div>
+      <div class="fcard anim" style="--d:2.8" onclick="this.classList.toggle('flipped')">
+        <div class="finner">
+          <div class="fface ffront">
+            <span class="fic" style="background:var(--mint2)"><i data-lucide="message-square-quote"></i></span>
+            <h3>Testimoni Palsu</h3><p class="tease">Ulasan atau pujian yang dikarang sendiri, seolah-olah dari pembeli.</p>
+            <span class="hint"><i data-lucide="mouse-pointer-click"></i> klik untuk contoh</span>
+          </div>
+          <div class="fface fback" style="background:var(--pink2)">
+            <span class="tag">Contoh</span>
+            <p>Menulis "Enak banget! (Rina, Jakarta)" padahal Rina tidak ada, atau menyuruh teman memberi bintang 5 tanpa mencoba.</p>
+            <p class="eg">Pakai ulasan asli, dan minta izin sebelum menampilkannya.</p>
+          </div>
+        </div>
+      </div>
+      <div class="fcard anim" style="--d:3.2" onclick="this.classList.toggle('flipped')">
+        <div class="finner">
+          <div class="fface ffront">
+            <span class="fic" style="background:var(--sky2)"><i data-lucide="image"></i></span>
+            <h3>Foto Menipu</h3><p class="tease">Foto milik orang lain, atau editan yang membuat produk terlihat berbeda.</p>
+            <span class="hint"><i data-lucide="mouse-pointer-click"></i> klik untuk contoh</span>
+          </div>
+          <div class="fface fback" style="background:var(--pink2)">
+            <span class="tag">Contoh</span>
+            <p>Memakai foto bolu dari toko lain yang lebih besar, atau membuat porsi terlihat dua kali lipat dengan AI.</p>
+            <p class="eg">Ingat Pertemuan 5: AI boleh merapikan, tapi produknya harus tetap asli.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 6 : SPOT THE RED FLAG ============ -->
+<section class="slide s-tall" data-theme="sky">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="flag"></i> Ayo Main · Spot the Red Flag</span>
+    <h2 class="title anim" style="--d:1">Temukan <span class="hl">bagian yang menipu!</span></h2>
+    <p class="lead anim" style="--d:1.5">Ada 3 postingan. Klik kalimat atau label foto yang menurutmu curang. Setiap postingan punya 2 red flag.</p>
+    <div class="spot">
+      <div class="anim" style="--d:2">
+        <div class="tabs" id="spotTabs"></div>
+        <div class="feed" id="spotFeed"></div>
+      </div>
+      <div class="spot-side anim" style="--d:3">
+        <div class="spot-meter">Red flag ditemukan<br><b><span id="spotN">0</span> / 6</b>
+          <div class="flags" id="spotFlags"></div></div>
+        <div class="spot-fb" id="spotFb"><i data-lucide="mouse-pointer-click"></i><span>Klik bagian postingan yang bergaris titik-titik.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 7 : LABEL IKLAN ============ -->
+<section class="slide s-tall" data-theme="lav">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="badge-info"></i> Label Iklan &amp; Endorse</span>
+    <h2 class="title anim" style="--d:1">Dibayar untuk promosi? <span class="hl l">Bilang saja!</span></h2>
+    <p class="lead anim" style="--d:1.5"><b>Endorse</b> artinya seseorang mempromosikan produk karena dibayar atau diberi barang gratis. Penonton berhak tahu.</p>
+    <div class="lbl">
+      <div class="anim" style="--d:2">
+        <div class="toggle">
+          <button class="tg" data-k="no"><i data-lucide="eye-off"></i> Tanpa label</button>
+          <button class="tg on" data-k="yes"><i data-lucide="badge-check"></i> Dengan label</button>
+        </div>
+        <div class="feed">
+          <div class="pc-top"><span class="av" style="background:var(--pink2)"><i data-lucide="user-round"></i></span>
+            <span class="acc">kak.rara.review<small id="adSub"></small></span></div>
+          <div class="feed-media" style="background:var(--butter2);height:120px"><span class="ic"><i data-lucide="cake"></i></span></div>
+          <div class="feed-cap" id="adCap"></div>
+        </div>
+        <div class="lbl-note" id="adNote"></div>
+      </div>
+      <div class="anim" style="--d:3">
+        <div class="wu-q" style="margin-top:0">Perlu diberi label iklan atau tidak?</div>
+        <div class="need-list">
+          <div class="need"><div class="need-row"><p>Kak Rara <b>dibayar Rp50.000</b> untuk mengulas bolu.</p>
+            <div class="m-opts"><button class="m-opt" data-ok="1">Perlu</button><button class="m-opt" data-ok="0">Tidak</button></div></div>
+            <div class="m-why hidden"><i data-lucide="circle-check"></i><span>Betul! Dibayar untuk promosi berarti iklan. Wajib diberi label.</span></div></div>
+          <div class="need"><div class="need-row"><p>Kak Rara <b>diberi bolu gratis</b> supaya mau memposting.</p>
+            <div class="m-opts"><button class="m-opt" data-ok="1">Perlu</button><button class="m-opt" data-ok="0">Tidak</button></div></div>
+            <div class="m-why hidden"><i data-lucide="circle-check"></i><span>Tepat! Barang gratis juga termasuk bayaran. Tetap perlu label.</span></div></div>
+          <div class="need"><div class="need-row"><p>Kamu <b>membeli es teh sendiri</b>, suka, lalu bercerita di status.</p>
+            <div class="m-opts"><button class="m-opt" data-ok="0">Perlu</button><button class="m-opt" data-ok="1">Tidak</button></div></div>
+            <div class="m-why hidden"><i data-lucide="circle-check"></i><span>Betul! Tidak ada yang membayarmu, jadi ini cerita biasa, bukan iklan.</span></div></div>
+          <div class="need"><div class="need-row"><p>Kelompokmu memposting produk sendiri di <b>akun usaha kelompok</b>.</p>
+            <div class="m-opts"><button class="m-opt" data-ok="0">Perlu</button><button class="m-opt" data-ok="1">Tidak</button></div></div>
+            <div class="m-why hidden"><i data-lucide="circle-check"></i><span>Benar! Semua orang tahu itu akun penjualnya, jadi tidak perlu label endorse. Tapi isinya tetap harus jujur.</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 8 : PRIVASI ============ -->
+<section class="slide s-tall" data-theme="butter">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="lock"></i> Jaga Privasi</span>
+    <h2 class="title anim" style="--d:1">Boleh dibagikan atau <span class="hl p">rahasia?</span></h2>
+    <p class="lead anim" style="--d:1.5">Akun usaha dilihat banyak orang yang tidak kita kenal. Pilih: info ini boleh diposting atau harus dirahasiakan?</p>
+    <div class="priv anim" style="--d:2" id="priv"></div>
+    <div class="m-score anim" style="--d:3">
+      <span>Info yang sudah dipilah:</span><b><span id="pvDone">0</span> / 9</b>
+      <span id="pvMsg" style="font-weight:600;font-size:14px;color:var(--butter2)"></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 9 : HAK CIPTA & BATAS USIA ============ -->
+<section class="slide" data-theme="mint">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="copyright"></i> Hak Cipta &amp; Batas Usia</span>
+    <h2 class="title anim" style="--d:1">Foto siapa? <span class="hl m">Umur berapa?</span></h2>
+    <p class="lead anim" style="--d:1.5">Dua hal yang sering dilupakan saat berjualan online.</p>
+    <div class="two">
+      <div class="card anim" style="--d:2">
+        <h3><span style="background:var(--sky2)"><i data-lucide="camera"></i></span> Hak cipta foto</h3>
+        <div class="do y"><i data-lucide="circle-check"></i><span>Foto yang <b>kita potret sendiri</b> dari produk kita.</span></div>
+        <div class="do y"><i data-lucide="circle-check"></i><span>Foto teman atau pembeli, <b>setelah minta izin</b>.</span></div>
+        <div class="do y"><i data-lucide="circle-check"></i><span>Gambar dari situs yang <b>membolehkan dipakai gratis</b>, dan sumbernya ditulis.</span></div>
+        <div class="do n"><i data-lucide="circle-x"></i><span>Mengambil foto toko lain dari internet lalu <b>mengaku itu produk kita</b>.</span></div>
+        <div class="do n"><i data-lucide="circle-x"></i><span>Memakai foto artis atau tokoh kartun terkenal <b>tanpa izin</b>.</span></div>
+      </div>
+      <div class="card anim" style="--d:3">
+        <h3><span style="background:var(--peach2)"><i data-lucide="user-round-check"></i></span> Batas usia aplikasi</h3>
+        <p style="font-size:14px;font-weight:600;line-height:1.5;margin-bottom:8px">Kebanyakan media sosial meminta pengguna berumur <b>minimal 13 tahun</b> untuk membuat akun sendiri:</p>
+        <div class="apps">
+          <span class="app">Instagram <b>13+</b></span><span class="app">TikTok <b>13+</b></span><span class="app">YouTube <b>13+</b></span><span class="app">Facebook <b>13+</b></span>
+        </div>
+        <div class="age-note">Aturan bisa berbeda di tiap negara dan bisa berubah. Karena itu, di ekskul ini kita <b>tidak memakai akun pribadi</b>. Semua konten diposting lewat <b>akun usaha yang dipegang pembina atau orang tua</b>.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 10 : ATURAN JUJUR ============ -->
+<section class="slide s-tall" data-theme="sky">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="scroll-text"></i> Coba Langsung · Aturan Jujur</span>
+    <h2 class="title anim" style="--d:1">Susun <span class="hl">Aturan Jujur</span> kelompokmu</h2>
+    <p class="lead anim" style="--d:1.5">Klik aturan yang ingin kalian pakai, atau tulis aturan sendiri. Kumpulkan minimal 5 aturan!</p>
+    <div class="rules">
+      <div class="anim noswipe" style="--d:2">
+        <div class="sugg" id="sugg"></div>
+        <div class="own">
+          <input id="ownRule" type="text" maxlength="90" placeholder="Tulis aturan kalian sendiri...">
+          <button class="btn sm mint" id="ownAdd"><i data-lucide="plus"></i> Tambah</button>
+        </div>
+      </div>
+      <div class="rposter anim noswipe" style="--d:3">
+        <div class="rp-k"><i data-lucide="shield-check"></i> Aturan Jujur Kelompok</div>
+        <input id="grpName" type="text" maxlength="40" placeholder="Nama usaha kelompok" aria-label="Nama usaha kelompok">
+        <ol class="rlist" id="rlist"></ol>
+        <div class="rp-foot"><span><span id="rN">0</span> aturan</span><span id="rOk"></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 11 : KUIS ============ -->
+<section class="slide" data-theme="lav">
+  <div class="wrap quiz-shell">
+    <div style="text-align:center">
+      <span class="kicker anim" style="--d:0"><i data-lucide="trophy"></i> Kuis Seru</span>
+      <h2 class="title anim" style="--d:1">Uji Pemahaman Etika Digital-mu!</h2>
+    </div>
+    <div id="quizArea" class="anim" style="--d:2"></div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 12 : MISI ============ -->
+<section class="slide s-tall" data-theme="pink">
+  <div class="s-misi wrap" style="display:contents"><div class="wrap">
+    <div>
+      <span class="kicker anim" style="--d:0"><i data-lucide="flag"></i> Giliranmu!</span>
+      <h2 class="title anim" style="--d:1">Misi: <span class="hl p">Aturan Jujur</span> kelompok</h2>
+      <p class="lead anim" style="--d:2">Aturan ini akan dipakai untuk memeriksa semua konten saat projek akhir di Pertemuan 14 dan 15.</p>
+      <div class="steps">
+        <div class="step anim" style="--d:3"><div class="snum st1">1</div>
+          <div><h3>Pilih 5–7 aturan</h3><p>Harus ada aturan tentang harga, foto, testimoni, label iklan, dan privasi.</p></div></div>
+        <div class="step anim" style="--d:4"><div class="snum st2">2</div>
+          <div><h3>Tulis dengan kalimat kalian</h3><p>Mulai dengan "Kami...", singkat dan mudah dipahami anak SD sekalipun.</p></div></div>
+        <div class="step anim" style="--d:5"><div class="snum st3">3</div>
+          <div><h3>Periksa 1 konten lama</h3><p>Cek foto, caption, atau poster kalian. Ada yang melanggar? Tulis cara memperbaikinya.</p></div></div>
+        <div class="step anim" style="--d:6"><div class="snum st4">4</div>
+          <div><h3>Tanda tangan bersama</h3><p>Semua anggota tanda tangan, lalu tempel di buku atau kelas.</p></div></div>
+      </div>
+    </div>
+    <div>
+      <div class="blank-card anim" style="--d:4">
+        <h4><i data-lucide="scroll-text"></i> Aturan Jujur Kelompok ______ — salin di kertas</h4>
+        <div class="bl n"><b>1.</b><span></span></div>
+        <div class="bl n"><b>2.</b><span></span></div>
+        <div class="bl n"><b>3.</b><span></span></div>
+        <div class="bl n"><b>4.</b><span></span></div>
+        <div class="bl n"><b>5.</b><span></span></div>
+        <div class="sentence">Konten yang kami periksa: <b>___</b>. Yang perlu diperbaiki: <b>___</b>.<br>Tanda tangan anggota: ________________</div>
+      </div>
+      <div class="mini-rubrik card anim" style="--d:5">
+        <h3 style="font-family:'Fredoka';font-size:17px;margin-bottom:8px;display:flex;align-items:center;gap:9px"><i data-lucide="clipboard-check" style="width:19px;height:19px"></i> Cara Penilaian</h3>
+        <div class="rubrik-row"><span>Minimal 5 aturan, mencakup 5 topik</span><span>40 poin</span></div>
+        <div class="rubrik-row"><span>Kalimatnya jelas dan bisa dipraktikkan</span><span>20 poin</span></div>
+        <div class="rubrik-row"><span>1 konten lama diperiksa &amp; diperbaiki</span><span>40 poin</span></div>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============ SLIDE 13 : PENUTUP ============ -->
+<section class="slide" data-theme="peach">
+  <div class="deco bob" style="top:16%;right:8%;width:30px;height:30px">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 2v20M2 12h20"/></svg>
+  </div>
+  <div class="s-end wrap" style="display:contents"><div class="wrap">
+    <div>
+      <span class="kicker anim" style="--d:0"><i data-lucide="message-circle-heart"></i> Refleksi &amp; Penutup</span>
+      <h2 class="title anim" style="--d:1">Sebelum pulang, <span class="hl p">ayo curhat dikit!</span></h2>
+      <div class="refl">
+        <div class="refl-item anim" style="--d:2"><div class="rnum r1">1</div>
+          <p>Sebutkan 3 red flag promosi yang menipu!</p></div>
+        <div class="refl-item anim" style="--d:3"><div class="rnum r2">2</div>
+          <p>Kapan sebuah postingan harus diberi label iklan atau endorse?</p></div>
+        <div class="refl-item anim" style="--d:4"><div class="rnum r3">3</div>
+          <p>Info apa saja tentang dirimu yang tidak boleh dibagikan di internet?</p></div>
+      </div>
+      <div class="end-btn anim" style="--d:5">
+        <button class="btn sun" id="partyBtn"><i data-lucide="party-popper"></i> Rayakan Hari Ini!</button>
+        <a class="btn ghost" href="silabus.html"><i data-lucide="book-open"></i> Lihat Silabus</a>
+        <a class="btn ghost" href="projek-rancang.html"><i data-lucide="arrow-right"></i> Pertemuan berikutnya</a>
+      </div>
+    </div>
+    <div class="end-art anim" style="--d:3">
+      <div class="quote">
+        <h3>Promosi bisa menarik pembeli, tapi hanya kejujuran yang membuat mereka kembali.</h3>
+        <p>Pertemuan berikutnya: <b>Projek: Rancang Kampanye</b>. Bawa Aturan Jujur kelompokmu, ya!</p>
+      </div>
+      <span class="fchip fc1 bob"><i data-lucide="shield-check"></i></span>
+      <span class="fchip fc2 bob" style="animation-delay:.7s"><i data-lucide="badge-check"></i></span>
+      <span class="fchip fc4 bob" style="animation-delay:1.4s"><i data-lucide="lock"></i></span>
+      <span class="fchip fc5 bob" style="animation-delay:2s"><i data-lucide="sparkles"></i></span>
+    </div>
+  </div></div>
+</section>
+
+<!-- NAV -->
+<div class="navbar-bg"></div>
+<div class="pagenum"><span id="cur">01</span> / <span id="tot">13</span></div>
+<div class="dots" id="dots"></div>
+<div class="navbtns">
+  <button class="nav" id="prev" aria-label="Sebelumnya"><i data-lucide="chevron-left"></i></button>
+  <button class="nav" id="next" aria-label="Berikutnya"><i data-lucide="chevron-right"></i></button>
+</div>
+<canvas id="confetti"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.454.0/dist/umd/lucide.min.js"></script>
+<script>
+/* ================= NAVIGASI ================= */
+const slides=[...document.querySelectorAll('.slide')];
+const dotsBox=document.getElementById('dots');
+let cur=0;
+slides.forEach((_,i)=>{
+  const d=document.createElement('button');
+  d.className='dot'+(i===0?' on':'');d.title='Slide '+(i+1);
+  d.onclick=()=>go(i);dotsBox.appendChild(d);
+});
+const dots=[...dotsBox.children];
+document.getElementById('tot').textContent=String(slides.length).padStart(2,'0');
+function go(i){
+  cur=Math.max(0,Math.min(slides.length-1,i));
+  slides.forEach((s,k)=>s.classList.toggle('active',k===cur));
+  slides[cur].scrollTop=0;
+  dots.forEach((d,k)=>d.classList.toggle('on',k===cur));
+  document.getElementById('cur').textContent=String(cur+1).padStart(2,'0');
+  document.getElementById('bar').style.width=((cur+1)/slides.length*100)+'%';
+  document.getElementById('prev').disabled=cur===0;
+  document.getElementById('next').disabled=cur===slides.length-1;
+}
+document.getElementById('prev').onclick=()=>go(cur-1);
+document.getElementById('next').onclick=()=>go(cur+1);
+addEventListener('keydown',e=>{
+  if(e.target.closest&&e.target.closest('input,textarea'))return;
+  if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();go(cur+1)}
+  if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(cur-1)}
+});
+let tx=0,ty=0,txSkip=false;
+addEventListener('touchstart',e=>{
+  tx=e.touches[0].clientX;ty=e.touches[0].clientY;
+  txSkip=!!e.target.closest('.noswipe,input,textarea');
+},{passive:true});
+addEventListener('touchend',e=>{
+  if(txSkip)return;
+  const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;
+  // hanya geser mendatar yang jelas, supaya scroll ke bawah tidak ikut pindah slide
+  if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5) dx<0?go(cur+1):go(cur-1);
+},{passive:true});
+go(+location.hash.slice(1)||0);
+
+const LET=['A','B','C'];
+/* ================= PEMANASAN : JUJUR ATAU MENIPU ================= */
+const JM=[
+  {icon:'cup-soda',bg:'var(--butter2)',acc:'esteh.busri',sub:'Akun usaha',text:'Es teh jumbo Rp3.000. Foto asli dari warung kami, diambil tadi pagi.',
+   note:'Harga dan fotonya sesuai dengan yang dijual di warung.',honest:1,
+   why:'Harga jelas, foto asli, dan tidak ada yang dilebih-lebihkan. Inilah promosi jujur.'},
+  {icon:'tag',bg:'var(--pink2)',acc:'boba.murah.banget',sub:'Akun usaha',text:'DISKON 90%!!! Hanya hari ini! Buruan sebelum kehabisan!',
+   note:'Tulisan ini dipasang setiap hari, dan harganya dinaikkan dulu sebelum "didiskon".',honest:0,
+   why:'Ini diskon palsu. "Hanya hari ini" padahal setiap hari, dan harga awalnya dikarang supaya diskonnya terlihat besar.'},
+  {icon:'flame',bg:'var(--peach2)',acc:'keripik.ajaib',sub:'Akun usaha',text:'Makan keripik ini, dijamin langsung pintar matematika!',
+   note:'Keripiknya keripik singkong biasa.',honest:0,
+   why:'Klaimnya berlebihan dan tidak benar. Tidak ada makanan yang membuat orang langsung pintar.'}
+];
+let jmI=0,jmScore=0;
+function renderJm(){
+  const j=JM[jmI];
+  const av=document.getElementById('jmAv');
+  av.style.background=j.bg;av.innerHTML=`<i data-lucide="${j.icon}"></i>`;
+  document.getElementById('jmAcc').innerHTML=`${j.acc}<small>${j.sub}</small>`;
+  document.getElementById('jmText').textContent=j.text;
+  document.getElementById('jmNote').textContent=j.note;
+  document.getElementById('jmRound').textContent=`Promosi ${jmI+1} dari ${JM.length}`;
+  document.getElementById('jmFb').classList.add('hidden');
+  document.getElementById('jmNext').classList.add('hidden');
+  document.querySelectorAll('#jmOpts .wu-opt').forEach(b=>{b.disabled=false;b.classList.remove('good','bad')});
+  window.lucide&&lucide.createIcons();
+}
+document.querySelectorAll('#jmOpts .wu-opt').forEach(b=>b.onclick=()=>{
+  const j=JM[jmI],pick=+b.dataset.v;
+  document.querySelectorAll('#jmOpts .wu-opt').forEach(x=>{x.disabled=true;if(+x.dataset.v===j.honest)x.classList.add('good')});
+  if(pick===j.honest){jmScore++;celebrate(60)}else b.classList.add('bad');
+  const fb=document.getElementById('jmFb');
+  fb.querySelector('span').textContent=(pick===j.honest?'Tepat! ':'Belum tepat. ')+j.why;
+  fb.classList.remove('hidden');
+  const nx=document.getElementById('jmNext');
+  nx.querySelector('span').textContent=jmI===JM.length-1?'Lihat Hasil':'Promosi Berikutnya';
+  nx.classList.remove('hidden');
+});
+document.getElementById('jmNext').onclick=()=>{
+  jmI++;
+  if(jmI<JM.length){renderJm();return}
+  document.getElementById('jmShell').classList.add('hidden');
+  document.getElementById('jmScore').textContent=jmScore;
+  document.getElementById('jmDone').classList.remove('hidden');
+  celebrate(200);
+};
+renderJm();
+
+/* ================= SPOT THE RED FLAG ================= */
+const POSTS=[
+  {tab:'Keripik',icon:'flame',bg:'var(--peach2)',acc:'keripik.level5',
+   media:null,
+   segs:[
+    {t:'KAMU NGGAK AKAN PERCAYA apa yang terjadi setelah makan keripik ini!!!',f:1,why:'<b>Clickbait!</b> Judulnya heboh, tapi tidak ada kejadian apa-apa. Pembaca merasa dibohongi.'},
+    {t:'Keripik singkong pedas level 5, Rp2.000 per bungkus.',f:0,why:'Aman. Nama produk dan harganya jelas.'},
+    {t:'"Enak banget!" kata 10.000 pembeli puas.',f:1,why:'<b>Testimoni palsu!</b> Usahanya baru buka seminggu. Angka 10.000 pembeli itu dikarang.'},
+    {t:'Pesan lewat WA di link profil, ya.',f:0,why:'Aman. Ajakan dan cara memesannya jelas.'}]},
+  {tab:'Boba',icon:'coffee',bg:'var(--lav2)',acc:'boba.kakbobi',
+   media:null,
+   segs:[
+    {t:'Boba cokelat dengan gula aren asli.',f:0,why:'Aman. Bahannya dijelaskan apa adanya.'},
+    {t:'Harga normal Rp50.000, sekarang cuma Rp8.000! Diskon 84%!',f:1,why:'<b>Diskon palsu!</b> Boba ini tidak pernah dijual Rp50.000. Harga awalnya dikarang supaya diskonnya terlihat besar.'},
+    {t:'Promo berakhir 5 menit lagi!',f:1,why:'<b>Tekanan palsu!</b> Tulisan ini dipasang setiap hari supaya pembeli panik dan buru-buru membeli.'},
+    {t:'Buka setiap hari pukul 15.00–20.00.',f:0,why:'Aman. Jam buka itu info yang berguna.'}]},
+  {tab:'Bolu',icon:'cake',bg:'var(--butter2)',acc:'kak.rara.review',
+   media:{t:'Foto: bolu raksasa milik toko lain, diambil dari internet',f:1,why:'<b>Foto menipu!</b> Fotonya milik toko lain dan ukurannya jauh lebih besar. Pembeli akan kecewa saat bolu asli datang.'},
+   segs:[
+    {t:'Halo! Hari ini aku mencoba Bolu Mini Bu Ani.',f:0,why:'Aman. Kalimat pembuka biasa.'},
+    {t:'Aku beli sendiri lho, bukan dibayar!',f:1,why:'<b>Endorse tanpa label!</b> Kak Rara sebenarnya dibayar. Ia harus memberi label iklan, bukan berbohong.'},
+    {t:'Rp15.000 per kotak isi 6.',f:0,why:'Aman. Harga dan isinya jelas.'}]}
+];
+let spotP=0;
+const spotFound=POSTS.map(()=>new Set());
+const spotTotal=POSTS.reduce((n,p)=>n+p.segs.filter(s=>s.f).length+(p.media&&p.media.f?1:0),0);
+function spotCount(){return spotFound.reduce((n,s)=>n+s.size,0)}
+function postFlags(p){return p.segs.filter(s=>s.f).length+(p.media&&p.media.f?1:0)}
+function renderSpot(){
+  document.getElementById('spotTabs').innerHTML=POSTS.map((p,i)=>
+    `<button class="tab${i===spotP?' on':''}${spotFound[i].size===postFlags(p)?' done':''}" data-i="${i}"><i data-lucide="${p.icon}"></i> ${p.tab} <span class="tc">${spotFound[i].size}/${postFlags(p)}</span></button>`).join('');
+  document.querySelectorAll('#spotTabs .tab').forEach(b=>b.onclick=()=>{spotP=+b.dataset.i;renderSpot()});
+  const p=POSTS[spotP],F=spotFound[spotP];
+  const seg=(s,k,extra)=>`<span class="sg${extra||''}${F.has(k)?' found':''}" data-k="${k}">${s.t}</span>`;
+  document.getElementById('spotFeed').innerHTML=
+    `<div class="pc-top"><span class="av" style="background:${p.bg}"><i data-lucide="${p.icon}"></i></span><span class="acc">${p.acc}<small>Postingan</small></span></div>
+     <div class="feed-media" style="background:${p.bg}"><span class="ic"><i data-lucide="${p.icon}"></i></span>${p.media?seg(p.media,'m',' media'):''}</div>
+     <div class="feed-cap">${p.segs.map((s,k)=>seg(s,k)).join(' ')}</div>`;
+  document.querySelectorAll('#spotFeed .sg').forEach(el=>el.onclick=()=>{
+    const k=el.dataset.k==='m'?'m':+el.dataset.k;
+    const s=k==='m'?p.media:p.segs[k];
+    const fb=document.getElementById('spotFb');
+    if(s.f){
+      fb.className='spot-fb rf';fb.innerHTML=`<i data-lucide="flag"></i><span>${s.why}</span>`;
+      if(!F.has(k)){
+        F.add(k);el.classList.add('found');celebrate(50);
+        if(spotCount()===spotTotal){
+          fb.className='spot-fb ok';
+          fb.innerHTML=`<i data-lucide="trophy"></i><span><b>Hebat, semua red flag ketemu!</b> ${s.why}</span>`;
+          celebrate(220);
+        }
+        updSpot();
+      }
+    }else{
+      fb.className='spot-fb ok';fb.innerHTML=`<i data-lucide="circle-check"></i><span>${s.why}</span>`;
+      el.classList.add('safe','shake');setTimeout(()=>el.classList.remove('shake'),350);
+    }
+    window.lucide&&lucide.createIcons();
+  });
+  updSpot();
+  window.lucide&&lucide.createIcons();
+}
+function updSpot(){
+  const n=spotCount();
+  document.getElementById('spotN').textContent=n;
+  document.getElementById('spotFlags').innerHTML=Array.from({length:spotTotal},(_,i)=>`<span class="${i<n?'on':''}"><i data-lucide="flag"></i></span>`).join('');
+  document.querySelectorAll('#spotTabs .tab').forEach((b,i)=>{
+    b.querySelector('.tc').textContent=`${spotFound[i].size}/${postFlags(POSTS[i])}`;
+    b.classList.toggle('done',spotFound[i].size===postFlags(POSTS[i]));
+  });
+  window.lucide&&lucide.createIcons();
+}
+renderSpot();
+
+/* ================= LABEL IKLAN ================= */
+const AD={
+  no:{sub:'Postingan',cap:'Wah, Bolu Mini Bu Ani lembut banget! Aku suka. Kalian harus coba!',
+      note:['triangle-alert','var(--pink2)','Penonton mengira ini pendapat pribadi. Padahal Kak Rara dibayar. Ini <b>tidak jujur</b>.']},
+  yes:{sub:'<span class="adtag"><i data-lucide="badge-info"></i> Iklan · Kerja sama berbayar</span>',cap:'Wah, Bolu Mini Bu Ani lembut banget! Aku suka. Kalian harus coba! <b>#iklan #endorse</b>',
+      note:['circle-check','var(--mint2)','Penonton tahu ini promosi berbayar, lalu bisa menilai sendiri. Ini <b>jujur</b>.']}
+};
+function setAd(k){
+  const a=AD[k];
+  document.getElementById('adSub').innerHTML=a.sub;
+  document.getElementById('adCap').innerHTML=a.cap;
+  const n=document.getElementById('adNote');
+  n.style.background=a.note[1];n.innerHTML=`<i data-lucide="${a.note[0]}"></i><span>${a.note[2]}</span>`;
+  document.querySelectorAll('.lbl .tg').forEach(b=>b.classList.toggle('on',b.dataset.k===k));
+  window.lucide&&lucide.createIcons();
+}
+document.querySelectorAll('.lbl .tg').forEach(b=>b.onclick=()=>setAd(b.dataset.k));
+setAd('no');
+let needDone=0;
+document.querySelectorAll('.need').forEach(card=>{
+  card.querySelectorAll('.m-opt').forEach(btn=>btn.onclick=()=>{
+    if(card.classList.contains('solved'))return;
+    if(btn.dataset.ok==='1'){
+      btn.classList.add('good');card.classList.add('solved');
+      card.querySelectorAll('.m-opt').forEach(b=>b.disabled=true);
+      card.querySelector('.m-why').classList.remove('hidden');
+      celebrate(60);
+      if(++needDone===4)celebrate(200);
+    }else{
+      btn.classList.add('bad','shake');btn.disabled=true;
+      setTimeout(()=>btn.classList.remove('shake'),350);
+    }
+  });
+});
+
+/* ================= PRIVASI ================= */
+const PRIV=[
+  {t:'Nama usaha kelompok',icon:'store',ok:1,why:'Boleh. Supaya pembeli mengenal usaha kalian.'},
+  {t:'Alamat rumah lengkap',icon:'house',ok:0,why:'Rahasia! Orang asing bisa tahu rumahmu. Cukup tulis tempat jualan umum, misalnya "kantin sekolah".'},
+  {t:'Menu dan harga',icon:'tag',ok:1,why:'Boleh. Info ini justru dibutuhkan pembeli.'},
+  {t:'Nomor HP pribadimu',icon:'phone',ok:0,why:'Rahasia! Pakai nomor usaha yang dipegang pembina atau orang tua.'},
+  {t:'Password akun',icon:'key-round',ok:0,why:'Rahasia! Jangan beri tahu siapa pun, kecuali orang tua.'},
+  {t:'Jam buka stan',icon:'clock',ok:1,why:'Boleh. Pembeli jadi tahu kapan bisa datang.'},
+  {t:'Foto wajah teman tanpa izin',icon:'camera',ok:0,why:'Jangan! Minta izin dulu. Kalau teman tidak mau, jangan diposting.'},
+  {t:'Lokasimu saat ini (live)',icon:'map-pin',ok:0,why:'Rahasia! Orang asing bisa tahu kamu sedang di mana.'},
+  {t:'Nama sekolah, kelas, dan jam pulang',icon:'school',ok:0,why:'Rahasia! Gabungan info ini membuat orang asing mudah menemukanmu.'}
+];
+let pvDone=0;
+const privBox=document.getElementById('priv');
+privBox.innerHTML=PRIV.map((p,i)=>
+  `<div class="pv" data-i="${i}"><div class="pv-top"><span class="ti"><i data-lucide="${p.icon}"></i></span>${p.t}</div>
+   <div class="m-opts"><button class="m-opt" data-v="1"><i data-lucide="share-2"></i> Boleh</button><button class="m-opt" data-v="0"><i data-lucide="lock"></i> Rahasia</button></div>
+   <div class="why hidden"></div></div>`).join('');
+privBox.querySelectorAll('.pv').forEach(card=>{
+  const p=PRIV[+card.dataset.i];
+  card.querySelectorAll('.m-opt').forEach(btn=>btn.onclick=()=>{
+    if(card.classList.contains('solved'))return;
+    if(+btn.dataset.v===p.ok){
+      btn.classList.add('good');card.classList.add('solved');if(!p.ok)card.classList.add('r');
+      card.querySelectorAll('.m-opt').forEach(b=>b.disabled=true);
+      const w=card.querySelector('.why');w.textContent=p.why;w.classList.remove('hidden');
+      pvDone++;document.getElementById('pvDone').textContent=pvDone;celebrate(50);
+      if(pvDone===PRIV.length){document.getElementById('pvMsg').textContent='Mantap! Kamu tahu cara menjaga data pribadi.';celebrate(220)}
+    }else{
+      btn.classList.add('bad','shake');btn.disabled=true;
+      setTimeout(()=>btn.classList.remove('shake'),350);
+    }
+  });
+});
+
+/* ================= ATURAN JUJUR ================= */
+const SUGG=[
+  'Kami hanya menulis harga yang sebenarnya.',
+  'Kami memakai foto produk kami sendiri.',
+  'Kalau foto dirapikan dengan AI, kami beri keterangan.',
+  'Kami tidak membuat testimoni palsu.',
+  'Kami menulis diskon hanya kalau memang ada.',
+  'Judul boleh seru, tapi tidak boleh bohong.',
+  'Kami memberi label kalau ada kerja sama berbayar.',
+  'Kami tidak membagikan data pribadi siapa pun.',
+  'Kami minta izin sebelum memotret atau memposting orang lain.',
+  'Kami posting lewat akun usaha yang dipegang pembina.'
+];
+let rules=[],rCheered=false;
+function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function renderRules(){
+  document.getElementById('sugg').innerHTML=SUGG.map((s,i)=>{
+    const on=rules.includes(s);
+    return `<button class="sg-btn${on?' on':''}" data-i="${i}"><i data-lucide="${on?'circle-check':'circle-plus'}"></i>${s}</button>`;
+  }).join('');
+  document.querySelectorAll('#sugg .sg-btn').forEach(b=>b.onclick=()=>{
+    const s=SUGG[+b.dataset.i];
+    rules=rules.includes(s)?rules.filter(r=>r!==s):[...rules,s];
+    renderRules();
+  });
+  const list=document.getElementById('rlist');
+  list.innerHTML=rules.length?rules.map((r,i)=>`<li><span>${esc(r)}</span><button data-i="${i}" aria-label="Hapus aturan"><i data-lucide="x"></i></button></li>`).join('')
+    :'<div class="empty">Belum ada aturan. Klik aturan di sebelah kiri.</div>';
+  list.querySelectorAll('button').forEach(b=>b.onclick=()=>{rules.splice(+b.dataset.i,1);renderRules()});
+  document.getElementById('rN').textContent=rules.length;
+  document.getElementById('rOk').innerHTML=rules.length>=5?'<span class="ok">Siap dipakai!</span>':`Kurang ${5-rules.length} lagi`;
+  if(rules.length>=5&&!rCheered){rCheered=true;celebrate(200)}
+  window.lucide&&lucide.createIcons();
+}
+function addOwn(){
+  const inp=document.getElementById('ownRule'),v=inp.value.trim();
+  if(!v)return;
+  if(!rules.includes(v))rules.push(v);
+  inp.value='';renderRules();
+}
+document.getElementById('ownAdd').onclick=addOwn;
+document.getElementById('ownRule').addEventListener('keydown',e=>{if(e.key==='Enter')addOwn()});
+renderRules();
+
+/* ================= KUIS ================= */
+const quizData=[
+  {q:"\"KAMU NGGAK AKAN PERCAYA!!!\" tapi isinya tidak ada yang istimewa. Ini disebut...", opts:[
+    "Clickbait",
+    "Label iklan",
+    "Testimoni asli"],a:0,
+    why:"Betul! Clickbait memakai judul heboh untuk memancing klik, padahal isinya tidak sesuai."},
+  {q:"Harga dinaikkan dulu, lalu ditulis \"diskon 50%\". Bagaimana menurutmu?", opts:[
+    "Boleh, itu strategi jualan yang pintar",
+    "Itu diskon palsu dan menipu pembeli",
+    "Boleh, asalkan posternya bagus"],a:1,
+    why:"Tepat! Diskon palsu membuat pembeli merasa untung, padahal tidak. Itu menipu."},
+  {q:"Seorang kreator dibayar untuk mengulas produk. Apa yang harus ia lakukan?", opts:[
+    "Pura-pura membeli sendiri",
+    "Menghapus komentar yang bertanya",
+    "Memberi label iklan atau endorse"],a:2,
+    why:"Iya! Penonton berhak tahu kalau sebuah postingan adalah promosi berbayar."},
+  {q:"Info mana yang boleh dibagikan di akun usaha kelompok?", opts:[
+    "Menu dan harga produk",
+    "Alamat rumah lengkap anggota",
+    "Password akun"],a:0,
+    why:"Betul! Menu dan harga dibutuhkan pembeli. Alamat rumah dan password harus dirahasiakan."},
+  {q:"Bolehkah memakai foto bolu dari toko lain di internet untuk promosi bolu kita?", opts:[
+    "Boleh, asalkan fotonya bagus",
+    "Boleh, asalkan diberi filter",
+    "Tidak boleh, foto itu milik orang lain dan menipu pembeli"],a:2,
+    why:"Tepat sekali! Foto itu milik orang lain, dan pembeli akan kecewa saat produk aslinya berbeda."}
+];
+const quizArea=document.getElementById('quizArea');
+let qi=0,score=0;
+function renderQuiz(){
+  if(qi>=quizData.length){renderDone();return}
+  const d=quizData[qi];
+  quizArea.innerHTML=`
+    <div class="q-card card">
+      <div class="q-meta">
+        <span class="q-badge">Soal ${qi+1} dari ${quizData.length}</span>
+        <span class="q-score"><i data-lucide="star"></i> Skor: ${score}</span>
+      </div>
+      <h3 class="q-q">${d.q}</h3>
+      <div class="q-opts">
+        ${d.opts.map((o,i)=>`<button class="opt" data-i="${i}"><span class="letter">${LET[i]}</span>${o}</button>`).join('')}
+      </div>
+      <div class="q-foot hidden" id="qFoot">
+        <div class="q-why" id="qWhy"></div>
+        <button class="btn mint" id="qNext">${qi===quizData.length-1?'Lihat Hasil':'Lanjut'} <i data-lucide="chevron-right"></i></button>
+      </div>
+    </div>`;
+  window.lucide&&lucide.createIcons();
+  quizArea.querySelectorAll('.opt').forEach(btn=>{
+    btn.onclick=()=>{
+      const pick=+btn.dataset.i;
+      quizArea.querySelectorAll('.opt').forEach(b=>b.disabled=true);
+      quizArea.querySelector(`.opt[data-i="${d.a}"]`).classList.add('good');
+      if(pick===d.a){score++;celebrate(60)}
+      else btn.classList.add('bad');
+      document.getElementById('qWhy').innerHTML=`<i data-lucide="${pick===d.a?'circle-check':'info'}"></i><span>${d.why}</span>`;
+      document.getElementById('qFoot').classList.remove('hidden');
+      window.lucide&&lucide.createIcons();
+      document.getElementById('qNext').onclick=()=>{qi++;renderQuiz()};
+    };
+  });
+}
+function renderDone(){
+  let msg;
+  if(score===5)msg="Sempurna! Kamu siap jadi marketer yang jujur dan aman!";
+  else if(score===4)msg="Hebat! Sedikit lagi menuju sempurna!";
+  else if(score===3)msg="Bagus! Ayo bahas lagi soal yang keliru bareng teman sebangku.";
+  else msg="Tidak apa-apa, belajar memang proses. Coba ulangi, ya!";
+  quizArea.innerHTML=`
+    <div class="q-card card q-done">
+      <div class="tro"><i data-lucide="trophy"></i></div>
+      <h3>Kuis Selesai!</h3>
+      <div class="big">${score} / 5</div>
+      <p>${msg}</p>
+      <button class="btn" id="qRetry"><i data-lucide="rotate-ccw"></i> Ulangi Kuis</button>
+    </div>`;
+  window.lucide&&lucide.createIcons();
+  celebrate(180);
+  document.getElementById('qRetry').onclick=()=>{qi=0;score=0;renderQuiz()};
+}
+renderQuiz();
+
+/* ================= KONFETI ================= */
+const cvs=document.getElementById('confetti'),ctx=cvs.getContext('2d');
+const COLORS=['#FF7E67','#FFC531','#3FBF8F','#FFA8C5','#B9A7F2','#7FD8A6'];
+let parts=[],raf=null;
+function sizeC(){cvs.width=innerWidth;cvs.height=innerHeight}
+sizeC();addEventListener('resize',sizeC);
+function celebrate(n=140){
+  for(let i=0;i<n;i++){
+    parts.push({
+      x:Math.random()*cvs.width,y:-30-Math.random()*cvs.height*.35,
+      vx:-1.6+Math.random()*3.2,vy:2.2+Math.random()*3.4,
+      w:9+Math.random()*9,h:5+Math.random()*6,
+      rot:Math.random()*Math.PI,vr:-.16+Math.random()*.32,
+      ph:Math.random()*Math.PI*2,
+      c:COLORS[Math.floor(Math.random()*COLORS.length)],
+      shape:Math.floor(Math.random()*3)
+    });
+  }
+  if(!raf)tick();
+}
+function tick(){
+  ctx.clearRect(0,0,cvs.width,cvs.height);
+  parts.forEach(p=>{
+    p.x+=p.vx;p.y+=p.vy;p.rot+=p.vr;p.ph+=.1;p.vy+=.015;
+    ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);
+    ctx.scale(1,Math.abs(Math.sin(p.ph))*.85+.15);
+    ctx.fillStyle=p.c;
+    if(p.shape===0){ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h)}
+    else if(p.shape===1){ctx.beginPath();ctx.arc(0,0,p.h,0,7);ctx.fill()}
+    else{ctx.beginPath();ctx.moveTo(0,-p.h);ctx.lineTo(p.w/2,p.h/2);ctx.lineTo(-p.w/2,p.h/2);ctx.closePath();ctx.fill()}
+    ctx.restore();
+  });
+  parts=parts.filter(p=>p.y<cvs.height+40);
+  if(parts.length)raf=requestAnimationFrame(tick);
+  else{raf=null;ctx.clearRect(0,0,cvs.width,cvs.height)}
+}
+document.getElementById('partyBtn').onclick=()=>{celebrate(260);setTimeout(()=>celebrate(160),700)};
+
+window.lucide&&lucide.createIcons();
+</script>
+</body>
+</html>

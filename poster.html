@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Poster Sekali Lihat Paham — Desain Poster Promosi · SMP Kelas 7</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#453A4E; --ink-soft:#6B5F75; --cream:#FDF7EF;
+    --peach:#FFF1E8; --peach2:#FFCBB5;
+    --mint:#EAF7F0;  --mint2:#BFEAD2;
+    --butter:#FFF6DF;--butter2:#FFE39A;
+    --lav:#F3F0FC;   --lav2:#DCD2F7;
+    --pink:#FFF0F5;  --pink2:#FFC9DC;
+    --sky:#E9F1FB;   --sky2:#C5DCF2;
+    --coral:#FF7E67; --teal:#3FBF8F; --sun:#FFC531;
+    --shadow:6px 6px 0 var(--ink);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--ink);background:var(--cream);overflow:hidden}
+  h1,h2,h3,.disp{font-family:'Fredoka',sans-serif}
+
+  /* ===== CHROME ===== */
+  #bar{position:fixed;top:0;left:0;height:6px;background:var(--coral);width:0;z-index:60;transition:width .4s ease;border-radius:0 4px 4px 0}
+  .pagenum{position:fixed;left:26px;bottom:22px;z-index:60;font-family:'Fredoka';font-weight:600;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:7px 16px;box-shadow:4px 4px 0 var(--ink);font-size:14px;letter-spacing:.06em}
+  .dots{position:fixed;left:50%;transform:translateX(-50%);bottom:24px;z-index:60;display:flex;gap:9px}
+  .dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--ink);background:#fff;cursor:pointer;transition:.25s;padding:0}
+  .dot.on{background:var(--sun);transform:scale(1.35)}
+  .navbtns{position:fixed;right:26px;bottom:18px;z-index:60;display:flex;gap:10px}
+  .nav{width:52px;height:52px;border-radius:50%;background:#fff;border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink);cursor:pointer;display:grid;place-items:center;transition:.15s;color:var(--ink)}
+  .nav:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .nav:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+  .nav:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:4px 4px 0 var(--ink)}
+  .navbar-bg{display:none;position:fixed;left:0;right:0;bottom:0;height:calc(76px + env(safe-area-inset-bottom,0px));z-index:55;background:rgba(253,247,239,.94);border-top:3px solid var(--ink);backdrop-filter:blur(6px)}
+
+  /* ===== SLIDES ===== */
+  .slide{position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;opacity:0;visibility:hidden;transform:translateX(46px);transition:opacity .5s ease,transform .55s cubic-bezier(.22,.9,.32,1),visibility .5s;overflow:auto;padding:56px 40px 100px}
+  .slide.active{opacity:1;visibility:visible;transform:none;z-index:5}
+  .slide::before,.slide::after{content:'';position:absolute;border-radius:50%;z-index:0}
+  .slide::before{width:44vw;height:44vw;top:-20vw;right:-14vw;background:var(--bA);opacity:.75}
+  .slide::after{width:34vw;height:34vw;bottom:-16vw;left:-12vw;background:var(--bB);opacity:.7}
+  [data-theme="peach"] {background:var(--peach);--bA:var(--peach2);--bB:var(--butter2)}
+  [data-theme="cream"] {background:var(--cream);--bA:var(--mint2);--bB:var(--pink2)}
+  [data-theme="butter"]{background:var(--butter);--bA:var(--butter2);--bB:var(--mint2)}
+  [data-theme="mint"]  {background:var(--mint);--bA:var(--mint2);--bB:var(--peach2)}
+  [data-theme="lav"]   {background:var(--lav);--bA:var(--lav2);--bB:var(--peach2)}
+  [data-theme="pink"]  {background:var(--pink);--bA:var(--pink2);--bB:var(--sky2)}
+  [data-theme="sky"]   {background:var(--sky);--bA:var(--sky2);--bB:var(--butter2)}
+
+  .wrap{position:relative;z-index:2;width:100%}
+  .slide .wrap{margin-top:auto;margin-bottom:auto}
+  .anim{opacity:0}
+  .slide.active .anim{animation:rise .7s cubic-bezier(.22,.9,.32,1) forwards;animation-delay:calc(var(--d,0)*.09s)}
+  @keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+
+  .kicker{display:inline-flex;align-items:center;gap:8px;font-family:'Fredoka';font-weight:600;font-size:13px;letter-spacing:.14em;text-transform:uppercase;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:8px 18px;box-shadow:4px 4px 0 var(--ink)}
+  .kicker svg{width:16px;height:16px}
+  h2.title{font-size:clamp(30px,3.6vw,48px);font-weight:700;margin:18px 0 8px;line-height:1.12}
+  p.lead{font-size:clamp(15px,1.3vw,19px);color:var(--ink-soft);max-width:680px;font-weight:500}
+  .hl{background:linear-gradient(transparent 62%,var(--butter2) 62%);padding:0 3px;border-radius:3px}
+  .hl.m{background:linear-gradient(transparent 62%,var(--mint2) 62%)}
+  .hl.p{background:linear-gradient(transparent 62%,var(--pink2) 62%)}
+  .hl.l{background:linear-gradient(transparent 62%,var(--lav2) 62%)}
+  .card{background:#fff;border:3px solid var(--ink);border-radius:20px;box-shadow:var(--shadow)}
+  .btn{display:inline-flex;align-items:center;gap:10px;font-family:'Fredoka';font-weight:600;font-size:17px;color:var(--ink);background:var(--coral);border:3px solid var(--ink);border-radius:14px;padding:13px 26px;box-shadow:5px 5px 0 var(--ink);cursor:pointer;transition:.15s;text-decoration:none}
+  .btn svg{width:20px;height:20px}
+  .btn:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+  .btn.sun{background:var(--sun)} .btn.mint{background:var(--mint2)} .btn.ghost{background:#fff}
+  .hidden{display:none !important}
+  .deco{position:absolute;z-index:1;pointer-events:none;color:var(--ink);opacity:.55}
+  .deco svg{width:100%;height:100%}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}50%{transform:translateY(-14px) rotate(var(--r,0deg))}}
+  .bob{animation:bob 4.5s ease-in-out infinite}
+
+  /* ===== HERO ===== */
+  .s-hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center}
+  .badge-row{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap}
+  .badge{display:inline-flex;align-items:center;gap:8px;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:8px 16px;font-weight:700;font-size:14px;box-shadow:3px 3px 0 var(--ink)}
+  .badge svg{width:17px;height:17px}
+  .b1{background:var(--mint2)} .b2{background:var(--pink2)} .b3{background:var(--butter2)}
+  .art-stage{position:relative;display:grid;place-items:center;min-height:460px}
+  .art-stage>svg{width:min(400px,90%);filter:drop-shadow(8px 10px 0 rgba(69,58,78,.18))}
+  .fchip{position:absolute;display:grid;place-items:center;border:3px solid var(--ink);border-radius:50%;box-shadow:4px 4px 0 var(--ink)}
+  .fchip svg{width:52%;height:52%}
+  .fc1{width:74px;height:74px;background:var(--coral);color:#fff;top:36px;left:34px;--r:-8deg}
+  .fc2{width:64px;height:64px;background:var(--sun);top:118px;right:26px;--r:10deg}
+  .fc3{width:70px;height:70px;background:var(--teal);color:#fff;bottom:92px;left:14px;--r:6deg}
+  .fc4{width:60px;height:60px;background:var(--lav2);bottom:34px;right:48px;--r:-10deg}
+  .fc5{width:52px;height:52px;background:var(--pink2);top:8px;right:130px;--r:14deg}
+
+  /* ===== GOALS ===== */
+  .goal-list{margin-top:30px;display:flex;flex-direction:column;gap:16px;max-width:880px}
+  .goal{display:flex;align-items:center;gap:22px;background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:16px 24px}
+  .goal:nth-child(odd){margin-right:56px}.goal:nth-child(even){margin-left:56px}
+  .gnum{flex:0 0 56px;height:56px;border-radius:50%;border:3px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:24px}
+  .g1{background:var(--coral);color:#fff}.g2{background:var(--sun)}.g3{background:var(--mint2)}.g4{background:var(--pink2)}
+  .goal h3{font-size:19px;font-weight:600;margin-bottom:3px}
+  .goal p{font-size:14.5px;color:var(--ink-soft);font-weight:500}
+
+  /* ===== PEMANASAN : TEBAK PEMBELI ===== */
+  .wu-shell{margin-top:26px;display:grid;grid-template-columns:330px 1fr;gap:32px;align-items:start}
+  .prod{border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);overflow:hidden;background:#fff}
+  .prod-media{height:200px;display:grid;place-items:center;border-bottom:2.5px solid var(--ink)}
+  .prod-media .ic{width:110px;height:110px;border-radius:50%;background:#fff;border:3px solid var(--ink);display:grid;place-items:center;box-shadow:5px 5px 0 var(--ink)}
+  .prod-media .ic svg{width:54px;height:54px}
+  .prod-cap{padding:14px 18px}
+  .prod-cap h4{font-family:'Fredoka';font-size:21px;line-height:1.15}
+  .prod-cap .sub{font-size:13.5px;font-weight:600;margin-top:4px;color:var(--ink-soft)}
+  .prod-cap .price{display:inline-block;margin-top:8px;font-family:'Fredoka';font-weight:700;font-size:14px;border:2.5px solid var(--ink);border-radius:10px;padding:4px 10px;background:var(--butter2)}
+  .wu-round{font-family:'Fredoka';font-weight:600;font-size:14px;color:var(--ink-soft)}
+  .wu-q{font-family:'Fredoka';font-weight:600;font-size:clamp(19px,1.8vw,23px);margin:6px 0 14px}
+  .wu-opts{display:flex;flex-direction:column;gap:12px;max-width:430px}
+  .wu-opt{display:flex;align-items:center;gap:13px;text-align:left;background:#fff;border:3px solid var(--ink);border-radius:14px;padding:12px 18px;font-family:'Plus Jakarta Sans';font-weight:600;font-size:15.5px;cursor:pointer;transition:.15s;color:var(--ink);box-shadow:4px 4px 0 var(--ink)}
+  .wu-opt:hover:not(:disabled){transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .wu-opt:disabled{cursor:default}
+  .wu-opt .letter{flex:0 0 34px;height:34px;border-radius:10px;border:2.5px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;background:var(--butter2)}
+  .wu-opt.good{background:var(--mint2)} .wu-opt.good .letter{background:var(--teal);color:#fff}
+  .wu-opt.bad{background:var(--pink2)} .wu-opt.bad .letter{background:var(--coral);color:#fff}
+  .wu-fb{margin-top:16px;display:flex;gap:12px;align-items:flex-start;background:var(--butter);border:2.5px solid var(--ink);border-radius:14px;padding:14px 18px;font-size:14.5px;font-weight:600;line-height:1.55;max-width:430px}
+  .wu-fb svg{width:20px;height:20px;flex:0 0 20px;margin-top:2px}
+  .wu-next{margin-top:14px}
+  .wu-done{background:#fff;border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);padding:30px 34px;max-width:640px;text-align:center}
+  .wu-done .tro{width:84px;height:84px;border-radius:50%;background:var(--sun);border:3px solid var(--ink);display:grid;place-items:center;margin:0 auto 14px;box-shadow:4px 4px 0 var(--ink)}
+  .wu-done .tro svg{width:40px;height:40px}
+  .wu-done h3{font-size:26px;margin-bottom:8px}
+  .wu-done p{font-weight:600;color:var(--ink-soft);line-height:1.6}
+  .wu-done .sc{font-family:'Fredoka';font-weight:700;font-size:19px;color:var(--teal);margin-top:10px}
+
+  /* ===== DEFINISI ===== */
+  .s-def .wrap{display:grid;grid-template-columns:1.08fr .92fr;gap:40px;align-items:center}
+  .define{margin-top:24px;background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:22px 26px;font-size:clamp(16px,1.45vw,20px);font-weight:600;line-height:1.6}
+  .define .q{color:var(--coral);font-family:'Fredoka'}
+  .analog{margin-top:18px;display:flex;gap:16px;align-items:flex-start;background:var(--lav);border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:18px 22px}
+  .analog .ic{flex:0 0 46px;height:46px;border-radius:50%;background:var(--lav2);display:grid;place-items:center;border:2.5px solid var(--ink)}
+  .analog .ic svg{width:24px;height:24px}
+  .analog p{font-size:15.5px;font-weight:500;line-height:1.55}
+  .target-art{display:grid;place-items:center}
+  .target-art svg{width:min(380px,100%);height:auto;filter:drop-shadow(8px 10px 0 rgba(69,58,78,.18))}
+
+  /* ===== SEMUA ORANG VS TARGET ===== */
+  .vs2{margin-top:28px;display:grid;grid-template-columns:1fr 84px 1fr;align-items:stretch}
+  .vs2-col{border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);padding:22px 26px;background:#fff}
+  .vs2-col.bad{background:var(--pink)}
+  .vs2-col.good{background:var(--mint)}
+  .vs2-col .lab{font-family:'Fredoka';font-weight:700;font-size:13px;letter-spacing:.12em;text-transform:uppercase;display:inline-flex;gap:7px;align-items:center;border:2.5px solid var(--ink);border-radius:999px;padding:5px 14px;margin-bottom:14px}
+  .vs2-col .lab svg{width:15px;height:15px}
+  .bad .lab{background:var(--pink2)} .good .lab{background:var(--mint2)}
+  .vs2-col .bigline{font-family:'Fredoka';font-weight:700;font-size:clamp(20px,2vw,25px);line-height:1.25;margin-bottom:12px}
+  .vs2-col .promo{background:#fff;border:2.5px dashed var(--ink);border-radius:14px;padding:12px 16px;font-size:15px;font-weight:600;line-height:1.5;margin-bottom:12px}
+  .vs2-col p{font-size:14.5px;font-weight:500;color:var(--ink-soft);line-height:1.55}
+  .vs2-mid{display:grid;place-items:center}
+  .vs2-badge{width:60px;height:60px;border-radius:50%;background:var(--sun);border:3px solid var(--ink);display:grid;place-items:center;box-shadow:4px 4px 0 var(--ink);font-family:'Fredoka';font-weight:700;font-size:18px}
+  .vs-note{margin-top:22px;background:#fff;border:3px solid var(--ink);border-left:14px solid var(--sun);border-radius:16px;box-shadow:var(--shadow);padding:15px 22px;font-weight:600;font-size:15px;line-height:1.55;max-width:860px}
+
+  /* ===== FLIP 4 PERTANYAAN ===== */
+  .fgrid{margin-top:26px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+  .fcard{perspective:1100px;min-height:250px;cursor:pointer}
+  .finner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.3,.8,.3,1)}
+  .fcard.flipped .finner{transform:rotateY(180deg)}
+  .fface{position:absolute;inset:0;backface-visibility:hidden;border:3px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 var(--ink);padding:18px 20px;display:flex;flex-direction:column}
+  .ffront{background:#fff}
+  .fback{background:var(--mint2);transform:rotateY(180deg)}
+  .fic{width:52px;height:52px;border-radius:15px;border:2.5px solid var(--ink);display:grid;place-items:center;margin-bottom:12px}
+  .fic svg{width:24px;height:24px}
+  .ffront h3{font-size:22px;line-height:1.15}
+  .ffront .tease{font-size:13.5px;font-weight:600;color:var(--ink-soft);line-height:1.45;margin-top:6px}
+  .ffront .hint{margin-top:auto;display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;color:var(--ink-soft)}
+  .ffront .hint svg{width:15px;height:15px}
+  .fback .tag{font-family:'Fredoka';font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;background:var(--ink);color:#fff;border-radius:999px;padding:4px 12px;align-self:flex-start;margin-bottom:10px}
+  .fback p{font-size:13.8px;font-weight:600;line-height:1.55;flex:1}
+  .fback .eg{font-size:12.5px;font-weight:700;opacity:.8;margin-top:8px;border-top:2px dashed rgba(69,58,78,.4);padding-top:8px;flex:0 0 auto}
+
+  /* ===== MESIN TARGET ===== */
+  .lab{margin-top:24px;display:grid;grid-template-columns:300px 1fr;gap:28px;align-items:start}
+  .picks{display:flex;flex-direction:column;gap:10px}
+  .pk{display:flex;align-items:center;gap:12px;text-align:left;background:#fff;border:2.5px solid var(--ink);border-radius:14px;padding:10px 14px;cursor:pointer;box-shadow:3px 3px 0 var(--ink);transition:.15s;font-family:'Fredoka';font-weight:600;font-size:15px;color:var(--ink)}
+  .pk .ti{width:38px;height:38px;border-radius:11px;border:2px solid var(--ink);display:grid;place-items:center;flex:0 0 38px}
+  .pk .ti svg{width:19px;height:19px}
+  .pk small{display:block;font-family:'Plus Jakarta Sans';font-size:12px;font-weight:600;color:var(--ink-soft)}
+  .pk:hover{transform:translateX(3px)}
+  .pk.on{background:var(--ink);color:#fff}
+  .pk.on small{color:var(--butter2)}
+  .pk.on .ti{border-color:#fff}
+  .lab-seen{margin-top:6px;font-family:'Fredoka';font-weight:600;font-size:13px;background:var(--butter2);border:2.5px solid var(--ink);border-radius:999px;display:inline-flex;align-items:center;gap:8px;padding:6px 14px;box-shadow:3px 3px 0 var(--ink);align-self:flex-start}
+  .lab-seen svg{width:14px;height:14px}
+  .tmap{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .tq{background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:5px 5px 0 var(--ink);padding:14px 16px}
+  .tq h4{font-family:'Fredoka';font-size:15px;display:flex;align-items:center;gap:9px;margin-bottom:6px}
+  .tq h4 span.i{width:30px;height:30px;border-radius:9px;border:2px solid var(--ink);display:grid;place-items:center}
+  .tq h4 svg{width:16px;height:16px}
+  .tq p{font-size:14px;font-weight:600;line-height:1.5}
+  .tsum{grid-column:1/-1;background:var(--ink);color:#fff;border-radius:16px;box-shadow:5px 5px 0 var(--sun);padding:14px 18px;font-size:15px;font-weight:600;line-height:1.55}
+  .tsum b{color:var(--sun);font-family:'Fredoka'}
+  .tsum .idea{display:block;margin-top:6px;font-size:13.5px;color:var(--mint2)}
+
+  /* ===== PRODUK SAMA, TARGET BEDA ===== */
+  .swap{margin-top:24px;display:grid;grid-template-columns:340px 1fr;gap:32px;align-items:start}
+  .toggle{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+  .tg{display:inline-flex;align-items:center;gap:8px;font-family:'Fredoka';font-weight:600;font-size:15px;border:2.5px solid var(--ink);border-radius:12px;padding:9px 16px;background:#fff;cursor:pointer;box-shadow:3px 3px 0 var(--ink);color:var(--ink)}
+  .tg svg{width:17px;height:17px}
+  .tg.on{background:var(--ink);color:#fff}
+  .poster{border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);min-height:400px;padding:26px 22px;position:relative;transition:background .45s;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px}
+  .pp-plat{position:absolute;top:14px;left:14px;display:inline-flex;gap:7px;align-items:center;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:6px 13px;font-family:'Fredoka';font-weight:700;font-size:12.5px;box-shadow:3px 3px 0 var(--ink)}
+  .pp-plat svg{width:15px;height:15px}
+  .pp-ic{width:86px;height:86px;border-radius:50%;background:#fff;border:3px solid var(--ink);display:grid;place-items:center;box-shadow:4px 4px 0 var(--ink)}
+  .pp-ic svg{width:42px;height:42px}
+  .pp-title{font-family:'Fredoka';font-weight:700;font-size:28px;line-height:1.12}
+  .pp-sub{font-weight:600;font-size:14px;line-height:1.5;max-width:270px}
+  .pp-price{font-family:'Fredoka';font-weight:700;font-size:15px;border:2.5px solid var(--ink);border-radius:10px;padding:5px 12px;background:#fff;box-shadow:3px 3px 0 var(--ink)}
+  .pp-cta{display:inline-flex;gap:8px;align-items:center;font-family:'Fredoka';font-weight:700;font-size:14.5px;padding:9px 18px;border:2.5px solid var(--ink);border-radius:999px;box-shadow:3px 3px 0 var(--ink)}
+  .pp-cta svg{width:15px;height:15px}
+  .diff{background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+  .diff table{width:100%;border-collapse:collapse}
+  .diff th,.diff td{text-align:left;padding:11px 16px;border-top:2px dashed rgba(69,58,78,.22);font-size:14px;vertical-align:top}
+  .diff th{font-family:'Fredoka';font-weight:600;font-size:14px;width:130px;border-top:2px dashed rgba(69,58,78,.22)}
+  .diff tr:first-child th,.diff tr:first-child td{border-top:none}
+  .diff td{font-weight:600}
+  .same{margin-top:16px;display:flex;gap:12px;align-items:flex-start;background:var(--sun);border:3px solid var(--ink);border-radius:16px;box-shadow:5px 5px 0 var(--ink);padding:12px 16px;font-size:14px;font-weight:600;line-height:1.5}
+  .same svg{width:20px;height:20px;flex:0 0 20px;margin-top:1px}
+
+  /* ===== GAME ===== */
+  .match-list{margin-top:26px;display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .m-card{background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:18px 20px}
+  .m-card.solved{background:var(--mint)}
+  .m-card h3{font-size:14.5px;font-weight:600;line-height:1.5;margin-bottom:12px;font-family:'Plus Jakarta Sans'}
+  .m-card h3 b{font-family:'Fredoka'}
+  .m-opts{display:flex;gap:9px;flex-wrap:wrap}
+  .m-opt{display:inline-flex;align-items:center;gap:7px;font-family:'Fredoka';font-weight:600;font-size:13.5px;border:2.5px solid var(--ink);border-radius:999px;padding:8px 15px;background:#fff;cursor:pointer;box-shadow:3px 3px 0 var(--ink);transition:.15s;color:var(--ink)}
+  .m-opt:hover:not(:disabled){transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--ink)}
+  .m-opt:disabled{cursor:default}
+  .m-opt.good{background:var(--teal);color:#fff}
+  .m-opt.bad{background:var(--pink2)}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+  .m-opt.shake{animation:shake .3s}
+  .m-why{margin-top:12px;background:var(--butter);border:2.5px solid var(--ink);border-radius:12px;padding:10px 14px;font-size:13px;font-weight:600;line-height:1.5;display:flex;gap:9px}
+  .m-why svg{width:17px;height:17px;flex:0 0 17px;margin-top:1px}
+  .m-score{margin-top:22px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;background:var(--ink);color:#fff;border-radius:16px;padding:14px 24px;max-width:640px;box-shadow:var(--shadow)}
+  .m-score b{font-family:'Fredoka';font-size:20px;color:var(--sun)}
+
+  /* ===== QUIZ ===== */
+  .quiz-shell{max-width:780px;margin:0 auto}
+  .q-meta{display:flex;justify-content:space-between;align-items:center;margin:0 0 16px}
+  .q-badge{font-family:'Fredoka';font-weight:700;background:var(--coral);color:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:7px 18px;box-shadow:3px 3px 0 var(--ink);font-size:14px}
+  .q-score{font-family:'Fredoka';font-weight:700;background:var(--sun);border:2.5px solid var(--ink);border-radius:999px;padding:7px 18px;box-shadow:3px 3px 0 var(--ink);font-size:14px;display:flex;align-items:center;gap:7px}
+  .q-score svg{width:16px;height:16px}
+  .q-card{padding:28px 32px;margin-top:20px}
+  .q-q{font-size:clamp(19px,1.8vw,25px);font-weight:600;line-height:1.4;margin-bottom:20px}
+  .q-opts{display:flex;flex-direction:column;gap:12px}
+  .opt{display:flex;align-items:center;gap:16px;text-align:left;background:#fff;border:3px solid var(--ink);border-radius:14px;padding:13px 18px;font-family:'Plus Jakarta Sans';font-weight:600;font-size:16px;cursor:pointer;transition:.15s;color:var(--ink);box-shadow:4px 4px 0 var(--ink)}
+  .opt:hover:not(:disabled){transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+  .opt:disabled{cursor:default}
+  .opt .letter{flex:0 0 36px;height:36px;border-radius:10px;border:2.5px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;background:var(--lav2)}
+  .opt.good{background:var(--mint2)} .opt.good .letter{background:var(--teal);color:#fff}
+  .opt.bad{background:var(--pink2);opacity:.9} .opt.bad .letter{background:var(--coral);color:#fff}
+  .q-foot{margin-top:18px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+  .q-why{display:flex;gap:12px;align-items:flex-start;background:var(--butter);border:2.5px solid var(--ink);border-radius:14px;padding:14px 18px;font-size:14.5px;font-weight:600;line-height:1.5;flex:1}
+  .q-why svg{width:20px;height:20px;flex:0 0 20px;margin-top:2px}
+  .q-done{text-align:center;padding:38px 30px}
+  .q-done .tro{width:96px;height:96px;border-radius:50%;background:var(--sun);border:3px solid var(--ink);display:grid;place-items:center;margin:0 auto 18px;box-shadow:5px 5px 0 var(--ink)}
+  .q-done .tro svg{width:48px;height:48px}
+  .q-done h3{font-size:30px;margin-bottom:8px}
+  .q-done .big{font-family:'Fredoka';font-size:56px;font-weight:700;color:var(--coral);margin:6px 0 10px}
+  .q-done p{font-weight:600;color:var(--ink-soft);margin-bottom:22px}
+
+  /* ===== MISI ===== */
+  .s-misi .wrap{display:grid;grid-template-columns:1.12fr .88fr;gap:38px;align-items:start}
+  .steps{margin-top:24px;display:flex;flex-direction:column;gap:14px}
+  .step{display:flex;gap:18px;align-items:flex-start;background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:var(--shadow);padding:15px 20px}
+  .step:nth-child(even){margin-left:44px}
+  .snum{flex:0 0 46px;height:46px;border-radius:50%;border:3px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:19px}
+  .st1{background:var(--coral);color:#fff}.st2{background:var(--sun)}.st3{background:var(--mint2)}.st4{background:var(--pink2)}
+  .step h3{font-size:16.5px;font-weight:600}
+  .step p{font-size:13.5px;color:var(--ink-soft);font-weight:500;margin-top:2px;line-height:1.5}
+  .blank-card{padding:18px 22px;background:#fff;border:3px dashed var(--ink);border-radius:16px}
+  .blank-card h4{font-family:'Fredoka';font-size:15.5px;margin-bottom:10px;display:flex;gap:8px;align-items:center}
+  .blank-card h4 svg{width:17px;height:17px}
+  .bl{display:flex;gap:8px;font-size:13px;font-weight:600;padding:5px 0}
+  .bl b{flex:0 0 96px}
+  .bl span{flex:1;border-bottom:2px dotted var(--ink-soft);min-height:18px}
+  .sentence{margin-top:12px;background:var(--butter);border:2.5px solid var(--ink);border-radius:12px;padding:10px 14px;font-size:13.5px;font-weight:600;line-height:1.7}
+  .mini-rubrik{margin-top:18px;padding:18px 22px;background:#fff}
+  .rubrik-row{display:flex;justify-content:space-between;gap:12px;font-size:13.5px;font-weight:700;padding:6px 0;border-top:2px dashed rgba(69,58,78,.25)}
+  .rubrik-row:first-of-type{border-top:none}
+  .rubrik-row span:last-child{color:var(--coral);font-family:'Fredoka';white-space:nowrap}
+
+  /* ===== PENUTUP ===== */
+  .s-end .wrap{display:grid;grid-template-columns:1fr .85fr;gap:44px;align-items:center}
+  .refl{margin-top:24px;display:flex;flex-direction:column;gap:14px;max-width:600px}
+  .refl-item{display:flex;gap:16px;align-items:center;background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:var(--shadow);padding:14px 20px}
+  .rnum{flex:0 0 44px;height:44px;border-radius:50%;border:2.5px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:18px}
+  .r1{background:var(--coral);color:#fff}.r2{background:var(--mint2)}.r3{background:var(--pink2)}
+  .refl-item p{font-size:15.5px;font-weight:600}
+  .end-art{position:relative;display:grid;place-items:center;min-height:420px}
+  .quote{position:relative;background:var(--sun);border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);padding:30px 34px;text-align:center;max-width:380px;transform:rotate(-2deg)}
+  .quote h3{font-size:25px;line-height:1.3;margin-bottom:10px}
+  .quote p{font-weight:600;font-size:14.5px}
+  .end-btn{margin-top:26px;display:flex;gap:14px;flex-wrap:wrap}
+
+  #confetti{position:fixed;inset:0;z-index:100;pointer-events:none}
+
+  .s-tall{padding-top:40px;padding-bottom:88px}
+  .s-tall h2.title{margin-top:12px}
+
+  /* ===== PEMANASAN : MATA MELIHAT APA DULU ===== */
+  .ey-shell{margin-top:22px;display:grid;grid-template-columns:340px 1fr;gap:34px;align-items:start}
+  .ey-poster{position:relative;height:440px;background:var(--mint);border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:22px;text-align:center}
+  .ey-el{position:relative;background:none;border:2.5px dashed transparent;border-radius:14px;cursor:pointer;padding:4px 8px;font:inherit;color:var(--ink);transition:.15s}
+  .ey-el:hover:not(:disabled){border-color:rgba(69,58,78,.4)}
+  .ey-el:disabled{cursor:default}
+  .ey-el.picked{border-color:var(--ink);border-style:solid;background:rgba(255,255,255,.45)}
+  .ey-foto .ic{width:130px;height:130px;border-radius:50%;background:#fff;border:3.5px solid var(--ink);display:grid;place-items:center;box-shadow:6px 6px 0 var(--ink);background:var(--sky2)}
+  .ey-foto .ic svg{width:64px;height:64px}
+  .ey-title{font-family:'Fredoka';font-weight:700;font-size:38px;line-height:1}
+  .ey-price{font-family:'Fredoka';font-weight:700;font-size:22px;background:var(--sun);border:3px solid var(--ink);border-radius:12px;padding:4px 14px}
+  .ey-cta{font-family:'Fredoka';font-weight:700;font-size:15px;background:var(--coral);color:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:7px 16px}
+  .ey-info{font-size:11px;font-weight:600;color:var(--ink-soft)}
+  .ey-badge{position:absolute;top:-12px;right:-12px;width:30px;height:30px;border-radius:50%;border:2.5px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:15px;background:var(--ink);color:#fff;z-index:2}
+  .ey-badge.ds{top:-12px;left:-12px;right:auto;background:var(--teal)}
+  .ey-steps{display:flex;flex-direction:column;gap:8px;max-width:460px;margin-top:6px}
+  .ey-row{display:flex;gap:12px;align-items:center;background:#fff;border:2.5px solid var(--ink);border-radius:12px;padding:8px 12px;font-size:14px;font-weight:600}
+  .ey-row .n{flex:0 0 30px;height:30px;border-radius:50%;border:2.5px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;background:var(--cream)}
+  .ey-row.you .n{background:var(--ink);color:#fff}
+  .ey-row.ds .n{background:var(--teal);color:#fff}
+  .ey-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;font-weight:700;margin:8px 0 10px}
+  .ey-legend span{display:inline-flex;align-items:center;gap:6px}
+  .ey-legend i{width:16px;height:16px;border-radius:50%;border:2px solid var(--ink);display:inline-block}
+
+  /* ===== KONSEP ===== */
+  .ord-list{display:flex;flex-direction:column;gap:12px}
+  .ord{display:flex;gap:16px;align-items:center;background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:12px 18px}
+  .ord .on{flex:0 0 auto;border-radius:50%;border:3px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700}
+  .ord h3{font-size:18px;line-height:1.15}
+  .ord p{font-size:13.5px;font-weight:600;color:var(--ink-soft);margin-top:2px;line-height:1.4}
+
+  /* ===== JURUS TOGGLE ===== */
+  .jt-wrap{margin-top:20px;display:grid;grid-template-columns:1fr 340px;gap:30px;align-items:start}
+  .jt-btns{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .jt-btn{display:flex;align-items:center;gap:12px;text-align:left;background:#fff;border:3px solid var(--ink);border-radius:16px;padding:12px 14px;cursor:pointer;box-shadow:4px 4px 0 var(--ink);font-family:'Fredoka';font-weight:600;font-size:16px;color:var(--ink);transition:.15s}
+  .jt-btn .ti{flex:0 0 40px;height:40px;border-radius:12px;border:2.5px solid var(--ink);display:grid;place-items:center}
+  .jt-btn .ti svg{width:20px;height:20px}
+  .jt-btn small{display:block;font-family:'Plus Jakarta Sans';font-size:12px;font-weight:600;color:var(--ink-soft)}
+  .jt-btn.on{background:var(--ink);color:#fff}
+  .jt-btn.on small{color:var(--butter2)}
+  .jt-btn.on .ti{border-color:#fff}
+  .jt-say{margin-top:16px}
+  .jt-meter{margin-top:14px;display:flex;align-items:center;gap:12px;font-family:'Fredoka';font-weight:700;font-size:15px}
+  .jt-meter .bar{flex:1;height:16px;border:2.5px solid var(--ink);border-radius:999px;background:#fff;overflow:hidden}
+  .jt-meter .bar i{display:block;height:100%;background:var(--teal);width:0;transition:width .35s}
+  .hz{height:440px;border:3px solid var(--ink);border-radius:22px;box-shadow:var(--shadow);background:#EDEAF0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:3px;padding:6px;overflow:hidden;transition:background .4s,padding .4s,gap .4s}
+  .hz>*{transition:all .4s}
+  .hz .z-foto{width:56px;height:56px;border-radius:50%;border:2.5px solid var(--ink);background:#fff;display:grid;place-items:center}
+  .hz .z-foto svg{width:50%;height:50%}
+  .hz .z-t,.hz .z-p,.hz .z-c,.hz .z-i{font-family:'Plus Jakarta Sans';font-size:15px;font-weight:600;color:var(--ink-soft);line-height:1.2}
+  .hz .z-p,.hz .z-c{border:2px solid transparent;border-radius:10px;padding:2px 8px}
+  .hz.j-besar .z-t{font-family:'Fredoka';font-size:36px;font-weight:700;line-height:1}
+  .hz.j-besar .z-foto{width:120px;height:120px}
+  .hz.j-besar .z-p{font-size:22px;font-weight:800}
+  .hz.j-besar .z-i{font-size:11px}
+  .hz.j-warna{background:var(--peach)}
+  .hz.j-warna .z-t{color:var(--ink)}
+  .hz.j-warna .z-foto{background:var(--sun);box-shadow:5px 5px 0 var(--ink)}
+  .hz.j-warna .z-p{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .hz.j-warna .z-c{background:var(--coral);color:#fff;border-color:var(--ink);border-radius:999px;padding:6px 14px}
+  .hz.j-posisi .z-foto{order:1}.hz.j-posisi .z-t{order:2}.hz.j-posisi .z-p{order:3}.hz.j-posisi .z-c{order:4}.hz.j-posisi .z-i{order:5}
+  .hz.j-ruang{padding:30px;gap:14px}
+
+  /* ===== UKURAN POSTER ===== */
+  .sz-wrap{margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:start}
+  .sz-stage{height:440px;display:grid;place-items:center;background:repeating-linear-gradient(45deg,rgba(255,255,255,.5) 0 12px,transparent 12px 24px);border:3px dashed var(--ink-soft);border-radius:22px}
+  .sz-frame{position:relative;height:400px;aspect-ratio:1/1;background:var(--butter);border:3px solid var(--ink);border-radius:14px;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;padding:18px;overflow:hidden;transition:aspect-ratio .4s}
+  .sz-frame .s-ic{width:110px;height:110px;border-radius:50%;border:3px solid var(--ink);background:var(--peach2);display:grid;place-items:center}
+  .sz-frame .s-ic svg{width:52px;height:52px}
+  .sz-frame .s-t{font-family:'Fredoka';font-weight:700;font-size:30px;line-height:1.05}
+  .sz-frame .s-p{font-family:'Fredoka';font-weight:700;font-size:19px;background:var(--sun);border:2.5px solid var(--ink);border-radius:10px;padding:3px 12px}
+  .sz-frame .s-c{font-family:'Fredoka';font-weight:700;font-size:13px;background:var(--coral);color:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:6px 14px}
+  .sz-frame .s-x{font-size:11px;font-weight:700;color:var(--ink-soft);line-height:1.4}
+  .safe{position:absolute;left:0;right:0;background:repeating-linear-gradient(45deg,rgba(255,126,103,.22) 0 8px,rgba(255,126,103,.08) 8px 16px);border:2px dashed var(--coral);font-family:'Fredoka';font-weight:600;font-size:10.5px;color:#B5412C;display:grid;place-items:center;pointer-events:none}
+  .safe.top{top:0;height:13%;border-top:none}
+  .safe.bot{bottom:0;height:17%;border-bottom:none}
+  .sz-info{background:#fff;border:3px solid var(--ink);border-radius:20px;box-shadow:var(--shadow);overflow:hidden}
+  .sz-info table{width:100%;border-collapse:collapse}
+  .sz-info th,.sz-info td{text-align:left;padding:11px 16px;border-top:2px dashed rgba(69,58,78,.22);font-size:14px;vertical-align:top}
+  .sz-info th{font-family:'Fredoka';font-weight:600;width:120px}
+  .sz-info tr:first-child th,.sz-info tr:first-child td{border-top:none}
+  .sz-info td{font-weight:600;line-height:1.5}
+
+  /* ===== POSTER BUILDER ===== */
+  .pb-wrap{margin-top:18px;display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start}
+  .fld{margin-bottom:10px}
+  .fld label{display:block;font-family:'Fredoka';font-weight:600;font-size:14px;margin-bottom:5px}
+  .fld input{width:100%;font:600 15px 'Plus Jakarta Sans',sans-serif;color:var(--ink);background:#fff;border:2.5px solid var(--ink);border-radius:12px;padding:9px 12px;box-shadow:2px 2px 0 var(--ink)}
+  .fld input:focus{outline:3px solid var(--sun);outline-offset:1px}
+  .fld2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .opt-row{display:flex;gap:7px;flex-wrap:wrap}
+  .ob{display:inline-flex;align-items:center;gap:6px;font-family:'Fredoka';font-weight:600;font-size:13px;border:2.5px solid var(--ink);border-radius:10px;padding:6px 11px;background:#fff;cursor:pointer;box-shadow:2px 2px 0 var(--ink);color:var(--ink)}
+  .ob svg{width:16px;height:16px}
+  .ob.on{background:var(--ink);color:#fff}
+  .ob .pal{display:inline-flex}
+  .ob .pal i{width:14px;height:14px;border:1.5px solid var(--ink);border-radius:50%;margin-right:-4px}
+  .pb-stage{height:450px;display:grid;place-items:center}
+  .pb{position:relative;height:100%;aspect-ratio:1/1;max-width:100%;border:3px solid var(--ink);border-radius:14px;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px;padding:22px;overflow:hidden;transition:background .3s}
+  .pb.story{aspect-ratio:9/16;padding:22px 16px}
+  .pb .p-acc{position:absolute;top:12px;left:0;right:0;font-size:11px;font-weight:700;opacity:.75}
+  .pb.story .p-acc{top:auto;bottom:12px}
+  .pb .p-ic{width:130px;height:130px;border-radius:50%;border:3px solid var(--ink);background:#fff;display:grid;place-items:center;box-shadow:5px 5px 0 var(--ink)}
+  .pb.story .p-ic{width:116px;height:116px}
+  .pb .p-ic svg{width:50%;height:50%}
+  .pb .p-t{font-family:'Fredoka';font-weight:700;font-size:34px;line-height:1.02;word-break:break-word;max-width:100%}
+  .pb.story .p-t{font-size:30px}
+  .pb .p-p{font-family:'Fredoka';font-weight:700;font-size:21px;border:2.5px solid var(--ink);border-radius:12px;padding:4px 14px}
+  .pb .p-c{display:inline-flex;align-items:center;gap:7px;font-family:'Fredoka';font-weight:700;font-size:14px;border:2.5px solid var(--ink);border-radius:999px;padding:7px 15px;max-width:100%}
+  .pb .p-c svg{width:15px;height:15px;flex:0 0 15px}
+  .checks{margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .ck{display:flex;gap:9px;align-items:center;background:#fff;border:2.5px solid var(--ink);border-radius:12px;padding:7px 11px;font-size:13px;font-weight:700;line-height:1.3}
+  .ck svg{width:18px;height:18px;flex:0 0 18px}
+  .ck.ok{background:var(--mint2)} .ck.no{background:var(--pink2)}
+
+  /* ===== GAME DOKTER POSTER ===== */
+  .dp-top{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+  .dp-ic{flex:0 0 42px;height:42px;border-radius:12px;border:2.5px solid var(--ink);display:grid;place-items:center}
+  .dp-ic svg{width:20px;height:20px}
+  .dp-top b{font-family:'Fredoka';font-size:15.5px}
+  .dp-top small{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);line-height:1.4}
+  .s-dp .match-list{margin-top:16px;gap:14px}
+  .s-dp .m-card{padding:13px 18px}
+  .s-dp .m-why{margin-top:8px;padding:7px 12px}
+  .s-dp .m-score{margin-top:14px}
+  .ey-shell>*,.jt-wrap>*,.sz-wrap>*,.pb-wrap>*{min-width:0}
+
+  @media (max-width:960px){
+    .s-hero .wrap,.s-def .wrap,.s-misi .wrap,.s-end .wrap{grid-template-columns:1fr}
+    .wu-shell,.lab,.swap{grid-template-columns:1fr}
+    .fgrid{grid-template-columns:1fr 1fr}
+    .vs2{grid-template-columns:1fr}
+    .vs2-mid{margin:14px 0}
+    .match-list{grid-template-columns:1fr}
+    .goal:nth-child(odd),.goal:nth-child(even){margin:0}
+    .step:nth-child(even){margin-left:0}
+    .art-stage,.end-art{min-height:340px}
+    .picks{flex-direction:row;flex-wrap:wrap}
+    .slide{padding:40px 20px 110px}
+  }
+
+  /* ===== MOBILE ===== */
+  @media (max-width:640px){
+    .slide{padding:22px 16px 104px}
+    .slide::before{width:70vw;height:70vw;top:-30vw;right:-30vw}
+    .slide::after{width:60vw;height:60vw;bottom:-28vw;left:-26vw}
+    .kicker{font-size:11px;letter-spacing:.1em;padding:6px 12px;box-shadow:3px 3px 0 var(--ink)}
+    h2.title{font-size:27px;margin:14px 0 6px}
+    p.lead{font-size:15px}
+    .card,.goal,.step,.m-card,.refl-item,.tq,.vs2-col,.prod,.poster,.diff{box-shadow:4px 4px 0 var(--ink)}
+    .deco{display:none}
+    .dots{display:none}
+    .navbar-bg{display:block}
+    .pagenum{left:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));font-size:13px;padding:6px 14px;box-shadow:3px 3px 0 var(--ink)}
+    .navbtns{right:16px;bottom:calc(12px + env(safe-area-inset-bottom,0px))}
+    .nav{width:48px;height:48px;box-shadow:3px 3px 0 var(--ink)}
+    .s-hero .wrap{gap:12px}
+    .art-stage{min-height:300px}
+    .art-stage>svg{width:min(260px,76%)}
+    .fchip{transform:scale(.7)}
+    .badge{font-size:13px;padding:6px 12px}
+    .goal{gap:14px;padding:12px 16px}
+    .gnum{flex:0 0 44px;height:44px;font-size:20px}
+    .goal h3{font-size:16.5px}
+    .goal p{font-size:13.5px}
+    .prod-media{height:150px}
+    .define{padding:16px 18px}
+    .fgrid{grid-template-columns:1fr}
+    .fcard{min-height:200px}
+    .picks{flex-wrap:nowrap;overflow-x:auto;margin-right:-16px;padding:2px 4px 8px 2px;scrollbar-width:none}
+    .picks::-webkit-scrollbar{display:none}
+    .pk{flex:0 0 auto;white-space:nowrap}
+    .pk:hover{transform:none}
+    .tmap{grid-template-columns:1fr}
+    .poster{min-height:340px}
+    .diff th{width:96px}
+    .q-card{padding:18px 16px}
+    .q-q{font-size:18px}
+    .opt{font-size:14.5px;padding:10px 14px;gap:12px}
+    .q-foot{flex-direction:column;align-items:stretch}
+    .q-done .big{font-size:44px}
+    .quote{padding:22px}
+    .quote h3{font-size:21px}
+    .end-art{min-height:300px}
+  }
+
+  @media (max-width:960px){
+    .ey-shell,.jt-wrap,.sz-wrap,.pb-wrap{grid-template-columns:1fr}
+    .ey-poster,.hz{max-width:380px}
+  }
+  @media (max-width:640px){
+    .ey-poster{height:380px;box-shadow:4px 4px 0 var(--ink)}
+    .ey-foto .ic{width:104px;height:104px}
+    .ey-foto .ic svg{width:50px;height:50px}
+    .ey-title{font-size:32px}
+    .ord{padding:10px 14px;gap:12px;box-shadow:4px 4px 0 var(--ink)}
+    .ord h3{font-size:16px}
+    .jt-btns{grid-template-columns:1fr}
+    .jt-btn{padding:9px 12px;font-size:15px}
+    .jt-wrap>:last-child{order:-1}
+    .hz{height:360px;box-shadow:4px 4px 0 var(--ink)}
+    .hz.j-besar .z-foto{width:96px;height:96px}
+    .hz.j-besar .z-t{font-size:30px}
+    .sz-stage{height:360px}
+    .sz-frame{height:330px;padding:12px;gap:7px;box-shadow:4px 4px 0 var(--ink)}
+    .sz-frame .s-ic{width:84px;height:84px}
+    .sz-frame .s-ic svg{width:40px;height:40px}
+    .sz-frame .s-t{font-size:24px}
+    .sz-info,.pb{box-shadow:4px 4px 0 var(--ink)}
+    .sz-info th{width:92px}
+    .sz-info th,.sz-info td{padding:9px 12px;font-size:13px}
+    .pb-wrap>:last-child{order:-1}
+    .pb-stage{height:380px}
+    .pb .p-ic{width:96px;height:96px}
+    .pb .p-t{font-size:26px}
+    .pb.story .p-ic{width:76px;height:76px}
+    .pb.story .p-t{font-size:20px}
+    .pb.story .p-p{font-size:16px}
+    .pb.story .p-c{font-size:11.5px;padding:5px 10px}
+    .pb.story{gap:8px}
+    .fld2{grid-template-columns:1fr}
+    .checks{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<div id="bar"></div>
+
+<!-- ============ SLIDE 1 : JUDUL ============ -->
+<section class="slide active" data-theme="peach">
+  <div class="deco bob" style="top:14%;left:5%;width:26px;height:26px">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 2v20M2 12h20"/></svg>
+  </div>
+  <div class="deco bob" style="bottom:18%;left:12%;width:34px;height:34px;animation-delay:1.2s">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/></svg>
+  </div>
+  <div class="s-hero wrap" style="display:contents"><div class="wrap">
+    <div>
+      <span class="kicker anim" style="--d:0"><i data-lucide="image"></i> Digital Marketing · Pertemuan 7 · SMP Kelas 7</span>
+      <h1 class="anim" style="--d:1;font-size:clamp(38px,4.6vw,62px);font-weight:700;line-height:1.08;margin:20px 0 14px">
+        Poster yang Sekali<br><span class="hl">Lihat</span> Langsung Paham
+      </h1>
+      <p class="lead anim" style="--d:2">Orang hanya melirik poster sebentar. Karena itu, <b>foto, judul, harga, dan ajakan</b> harus tersusun jelas.
+      Hari ini kita belajar <b>hierarki visual</b> dan membuat poster untuk feed dan story.</p>
+      <div class="badge-row anim" style="--d:3">
+        <span class="badge b1"><i data-lucide="eye"></i> Mata Melihat Apa Dulu?</span>
+        <span class="badge b3"><i data-lucide="ratio"></i> 1:1 · 9:16 · A4</span>
+        <span class="badge b2"><i data-lucide="wand-sparkles"></i> Mesin Poster</span>
+      </div>
+    </div>
+    <div class="art-stage anim" style="--d:2">
+      <svg viewBox="0 0 380 420" aria-hidden="true">
+        <ellipse cx="190" cy="210" rx="170" ry="190" fill="#FFCBB5"/>
+        <rect x="88" y="40" width="204" height="320" rx="20" fill="#EAF7F0" stroke="#453A4E" stroke-width="5"/>
+        <circle cx="190" cy="128" r="56" fill="#C5DCF2" stroke="#453A4E" stroke-width="5"/>
+        <path d="M170 106h40l-6 46h-28z" fill="#fff" stroke="#453A4E" stroke-width="4" stroke-linejoin="round"/>
+        <rect x="118" y="204" width="144" height="26" rx="13" fill="#453A4E"/>
+        <rect x="150" y="244" width="80" height="28" rx="9" fill="#FFC531" stroke="#453A4E" stroke-width="4"/>
+        <rect x="134" y="286" width="112" height="26" rx="13" fill="#FF7E67" stroke="#453A4E" stroke-width="4"/>
+        <rect x="160" y="326" width="60" height="7" rx="3.5" fill="#6B5F75" opacity=".5"/>
+        <g font-family="Fredoka, sans-serif" font-weight="700" font-size="17" text-anchor="middle">
+          <circle cx="262" cy="80" r="17" fill="#453A4E"/><text x="262" y="86" fill="#fff">1</text>
+          <circle cx="282" cy="204" r="17" fill="#453A4E"/><text x="282" y="210" fill="#fff">2</text>
+          <circle cx="250" cy="250" r="17" fill="#453A4E"/><text x="250" y="256" fill="#fff">3</text>
+          <circle cx="266" cy="300" r="17" fill="#453A4E"/><text x="266" y="306" fill="#fff">4</text>
+        </g>
+      </svg>
+      <span class="fchip fc1 bob"><i data-lucide="eye"></i></span>
+      <span class="fchip fc2 bob" style="animation-delay:.8s"><i data-lucide="type"></i></span>
+      <span class="fchip fc3 bob" style="animation-delay:1.6s"><i data-lucide="ratio"></i></span>
+      <span class="fchip fc4 bob" style="animation-delay:.4s"><i data-lucide="tag"></i></span>
+      <span class="fchip fc5 bob" style="animation-delay:2s"><i data-lucide="megaphone"></i></span>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============ SLIDE 2 : TUJUAN ============ -->
+<section class="slide" data-theme="cream">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="map"></i> Rencana Belajar Hari Ini</span>
+    <h2 class="title anim" style="--d:1">Hari ini kita akan...</h2>
+    <div class="goal-list">
+      <div class="goal anim" style="--d:2">
+        <div class="gnum g1">1</div>
+        <div><h3>Membaca Hierarki Visual</h3><p>Tahu bagian mana yang dilihat mata pertama, kedua, dan seterusnya.</p></div>
+      </div>
+      <div class="goal anim" style="--d:3">
+        <div class="gnum g2">2</div>
+        <div><h3>Kuasai 4 Jurus Hierarki</h3><p>Besar, warna kontras, posisi, dan ruang kosong.</p></div>
+      </div>
+      <div class="goal anim" style="--d:4">
+        <div class="gnum g3">3</div>
+        <div><h3>Pilih Ukuran yang Tepat</h3><p>Feed 1:1, story 9:16, dan poster cetak A4 punya aturan berbeda.</p></div>
+      </div>
+      <div class="goal anim" style="--d:5">
+        <div class="gnum g4">4</div>
+        <div><h3>Buat Poster Promo Kelompok</h3><p>Misi akhir: poster feed dan story di Canva memakai foto dari Pertemuan 5.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 3 : PEMANASAN ============ -->
+<section class="slide" data-theme="butter">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="eye"></i> Pemanasan · Mata Melihat Apa Dulu?</span>
+    <h2 class="title anim" style="--d:1">Lirik posternya <span class="hl p">sekilas saja!</span></h2>
+    <p class="lead anim" style="--d:1.5">Klik bagian poster sesuai urutan yang kamu lihat: pertama, kedua, sampai kelima.</p>
+    <div class="ey-shell anim" style="--d:2">
+      <div class="ey-poster" id="eyPoster">
+        <button class="ey-el ey-foto" data-k="foto"><span class="ic"><i data-lucide="cup-soda"></i></span></button>
+        <button class="ey-el ey-title" data-k="judul">Es Teh Jumbo</button>
+        <button class="ey-el" data-k="harga"><span class="ey-price">Rp4.000</span></button>
+        <button class="ey-el" data-k="ajakan"><span class="ey-cta">Beli di depan gerbang!</span></button>
+        <button class="ey-el ey-info" data-k="info">Buka Senin–Jumat · 10.00–14.00</button>
+      </div>
+      <div>
+        <div class="wu-round" id="eyStatus"></div>
+        <div class="ey-legend" id="eyLegend"><span><i style="background:var(--ink)"></i> Urutanmu</span></div>
+        <div class="ey-steps" id="eySteps"></div>
+        <div class="wu-fb hidden" id="eyFb" style="max-width:460px"><i data-lucide="lightbulb"></i><span></span></div>
+        <div class="bt-foot" style="margin-top:14px;display:flex;gap:12px;flex-wrap:wrap">
+          <button class="btn mint hidden" id="eyCmp"><i data-lucide="scan-eye"></i> Bandingkan dengan Desainer</button>
+          <button class="btn ghost" id="eyReset"><i data-lucide="rotate-ccw"></i> Ulangi</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 4 : KONSEP ============ -->
+<section class="slide" data-theme="mint">
+  <div class="s-def wrap" style="display:contents"><div class="wrap">
+    <div>
+      <span class="kicker anim" style="--d:0"><i data-lucide="search"></i> Konsep Utama</span>
+      <h2 class="title anim" style="--d:1">Apa itu <span class="hl m">hierarki visual?</span></h2>
+      <div class="define anim" style="--d:2">
+        <span class="q">Catat baik-baik, ya!</span><br>
+        Hierarki visual adalah <span class="hl">urutan bagian desain</span> yang dilihat mata, <span class="hl">dari yang paling penting</span> sampai yang paling kecil.
+      </div>
+      <div class="analog anim" style="--d:3">
+        <div class="ic"><i data-lucide="flag"></i></div>
+        <p><b>Ibarat barisan upacara:</b> pemimpin upacara berdiri paling depan dan paling terlihat, lalu pasukan di belakangnya.
+        Di poster, bagian paling penting juga harus "berdiri paling depan".</p>
+      </div>
+    </div>
+    <div class="ord-list">
+      <div class="ord anim" style="--d:3"><span class="on" style="width:58px;height:58px;font-size:24px;background:var(--coral);color:#fff">1</span>
+        <div><h3>Foto atau Judul</h3><p>Paling besar. Membuat orang berhenti dan tahu ini jualan apa.</p></div></div>
+      <div class="ord anim" style="--d:3.5"><span class="on" style="width:50px;height:50px;font-size:21px;background:var(--sun)">2</span>
+        <div><h3>Harga atau Keunggulan</h3><p>Alasan untuk membeli. Dibuat menonjol dengan warna.</p></div></div>
+      <div class="ord anim" style="--d:4"><span class="on" style="width:44px;height:44px;font-size:18px;background:var(--mint2)">3</span>
+        <div><h3>Ajakan</h3><p>Apa yang harus dilakukan pembeli: datang, pesan, atau tanya.</p></div></div>
+      <div class="ord anim" style="--d:4.5"><span class="on" style="width:38px;height:38px;font-size:16px;background:var(--lav2)">4</span>
+        <div><h3>Info Tambahan</h3><p>Jam buka, lokasi, akun usaha. Kecil saja, tapi tetap terbaca.</p></div></div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============ SLIDE 5 : 4 JURUS ============ -->
+<section class="slide s-tall" data-theme="pink">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="sparkles"></i> Coba Langsung · 4 Jurus Hierarki</span>
+    <h2 class="title anim" style="--d:1">Nyalakan jurusnya, <span class="hl p">lihat posternya berubah!</span></h2>
+    <p class="lead anim" style="--d:1.5">Poster ini masih "datar": semua bagian sama pentingnya, jadi mata bingung. Nyalakan jurus satu per satu.</p>
+    <div class="jt-wrap">
+      <div class="anim" style="--d:2">
+        <div class="jt-btns" id="jtBtns"></div>
+        <div class="jt-meter"><span>Kejelasan</span><div class="bar"><i id="jtBar"></i></div><span id="jtN">0/4</span></div>
+        <div class="same jt-say" id="jtSay"><i data-lucide="lightbulb"></i><span>Klik salah satu jurus untuk mulai.</span></div>
+      </div>
+      <div class="anim" style="--d:3">
+        <div class="hz" id="hz">
+          <span class="z-i">Buka 10.00–14.00 · @kriuk.bersama</span>
+          <span class="z-c">Pesan di kantin</span>
+          <span class="z-p">Rp5.000</span>
+          <span class="z-t">Keripik Pisang Kriuk</span>
+          <span class="z-foto"><i data-lucide="cookie"></i></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 6 : UKURAN ============ -->
+<section class="slide s-tall" data-theme="sky">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="ratio"></i> Coba Langsung · Ganti Ukuran</span>
+    <h2 class="title anim" style="--d:1">Satu poster, <span class="hl">tiga ukuran</span></h2>
+    <p class="lead anim" style="--d:1.5">Tempat memasang poster menentukan bentuknya. Klik setiap ukuran dan perhatikan yang berubah.</p>
+    <div class="toggle anim" style="--d:2;margin-top:18px" id="szBtns"></div>
+    <div class="sz-wrap">
+      <div class="sz-stage anim" style="--d:2.5">
+        <div class="sz-frame" id="szFrame">
+          <div class="safe top hidden" id="safeTop">area nama akun</div>
+          <span class="s-ic"><i data-lucide="cake-slice"></i></span>
+          <div class="s-t">Bolu Pandan Bu Ani</div>
+          <div class="s-p">Rp25.000</div>
+          <div class="s-c">Pesan lewat akun usaha</div>
+          <div class="s-x hidden" id="szExtra">Kantin SMP · Senin–Jumat 07.00–14.00<br>Bolu dibuat setiap pagi</div>
+          <div class="safe bot hidden" id="safeBot">area kolom balas</div>
+        </div>
+      </div>
+      <div class="anim" style="--d:3">
+        <div class="sz-info">
+          <table><tbody>
+            <tr><th>Ukuran</th><td id="szSize"></td></tr>
+            <tr><th>Dipakai di</th><td id="szWhere"></td></tr>
+            <tr><th>Di Canva</th><td id="szCanva"></td></tr>
+            <tr><th>Tips</th><td id="szTip"></td></tr>
+          </tbody></table>
+        </div>
+        <div class="same"><i data-lucide="lightbulb"></i><span>Jangan hanya menarik poster 1:1 menjadi 9:16 sampai gepeng. <b>Susun ulang</b> isinya supaya pas dengan bentuk baru.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 7 : POSTER BUILDER ============ -->
+<section class="slide s-tall" data-theme="peach">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="wand-sparkles"></i> Coba Langsung · Mesin Poster</span>
+    <h2 class="title anim" style="--d:1">Rakit <span class="hl">poster promo</span> sendiri!</h2>
+    <p class="lead anim" style="--d:1.5">Isi bagian-bagiannya, lalu cek apakah posternya sudah mudah dibaca dalam sekali lirik.</p>
+    <div class="pb-wrap">
+      <div class="anim" style="--d:2">
+        <div class="fld"><label for="pbT">Judul (singkat saja)</label><input id="pbT" maxlength="30" value="Keripik Pisang Kriuk"></div>
+        <div class="fld2">
+          <div class="fld"><label for="pbP">Harga</label><input id="pbP" maxlength="16" value="Rp5.000"></div>
+          <div class="fld"><label for="pbC">Ajakan</label><input id="pbC" maxlength="28" value="Pesan di kantin"></div>
+        </div>
+        <div class="fld"><label>Foto produk (nanti pakai foto asli dari P5)</label><div class="opt-row" id="pbIcons"></div></div>
+        <div class="fld"><label>Tema warna</label><div class="opt-row" id="pbThemes"></div></div>
+        <div class="fld"><label>Ukuran</label><div class="opt-row" id="pbSizes"></div></div>
+        <div class="checks" id="pbChecks"></div>
+      </div>
+      <div class="anim" style="--d:3">
+        <div class="pb-stage">
+          <div class="pb" id="pb">
+            <span class="p-acc" id="pbAcc">@kriuk.bersama · usaha siswa</span>
+            <span class="p-ic" id="pbIc"></span>
+            <div class="p-t" id="pbTt"></div>
+            <div class="p-p" id="pbPp"></div>
+            <div class="p-c" id="pbCc"><i data-lucide="megaphone"></i><span></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 8 : GAME DOKTER POSTER ============ -->
+<section class="slide s-tall s-dp" data-theme="mint">
+  <div class="wrap">
+    <span class="kicker anim" style="--d:0"><i data-lucide="stethoscope"></i> Ayo Main · Dokter Poster</span>
+    <h2 class="title anim" style="--d:1">Poster ini <span class="hl m">sakit apa?</span> Pilih obatnya!</h2>
+    <p class="lead anim" style="--d:1.5">Baca keluhan setiap poster, lalu pilih cara memperbaikinya yang paling tepat.</p>
+    <div class="match-list">
+      <div class="m-card anim" style="--d:2">
+        <div class="dp-top"><span class="dp-ic" style="background:var(--sky2)"><i data-lucide="cup-soda"></i></span>
+          <div><b>Poster Es Teh</b><small>Judul, harga, dan ajakan ukurannya sama semua. Mata bingung mau lihat yang mana.</small></div></div>
+        <div class="m-opts">
+          <button class="m-opt" data-ok="0">Tambah 5 stiker lucu</button>
+          <button class="m-opt" data-ok="1">Besarkan judul, kecilkan info lain</button>
+          <button class="m-opt" data-ok="0">Ganti semua jadi huruf kapital</button>
+        </div>
+        <div class="m-why hidden"><i data-lucide="circle-check"></i><span>Betul! Jurus <b>Besar</b>: bagian paling penting dibuat paling besar supaya dilihat pertama.</span></div>
+      </div>
+      <div class="m-card anim" style="--d:2.4">
+        <div class="dp-top"><span class="dp-ic" style="background:var(--peach2)"><i data-lucide="flame"></i></span>
+          <div><b>Poster Keripik Pedas</b><small>Ini poster story 9:16. Harganya ditaruh di paling bawah dan tertutup kolom balas.</small></div></div>
+        <div class="m-opts">
+          <button class="m-opt" data-ok="1">Pindahkan harga ke tengah</button>
+          <button class="m-opt" data-ok="0">Buat harganya lebih kecil</button>
+          <button class="m-opt" data-ok="0">Hapus harganya</button>
+        </div>
+        <div class="m-why hidden"><i data-lucide="circle-check"></i><span>Tepat! Di story, bagian paling atas dan paling bawah tertutup tampilan aplikasi. Taruh info penting di tengah.</span></div>
+      </div>
+      <div class="m-card anim" style="--d:2.8">
+        <div class="dp-top"><span class="dp-ic" style="background:var(--pink2)"><i data-lucide="cake-slice"></i></span>
+          <div><b>Poster Kue</b><small>Tulisan kuning muda di atas latar putih. Hampir tidak terlihat dari jauh.</small></div></div>
+        <div class="m-opts">
+          <button class="m-opt" data-ok="0">Tambah bayangan tipis</button>
+          <button class="m-opt" data-ok="0">Ganti latar jadi kuning</button>
+          <button class="m-opt" data-ok="1">Ganti tulisan jadi warna gelap</button>
+        </div>
+        <div class="m-why hidden"><i data-lucide="circle-check"></i><span>Betul! Jurus <b>Warna kontras</b>: terang dengan gelap. Ingat simulator kontras di Pertemuan 3?</span></div>
+      </div>
+      <div class="m-card anim" style="--d:3.2">
+        <div class="dp-top"><span class="dp-ic" style="background:var(--butter2)"><i data-lucide="percent"></i></span>
+          <div><b>Poster Boba</b><small>Tertulis "DISKON 70%!" padahal harganya sama seperti biasa.</small></div></div>
+        <div class="m-opts">
+          <button class="m-opt" data-ok="0">Besarkan tulisan diskonnya</button>
+          <button class="m-opt" data-ok="1">Hapus diskon palsu, tulis harga asli</button>
+          <button class="m-opt" data-ok="0">Ganti jadi "DISKON 90%!"</button>
+        </div>
+        <div class="m-why hidden"><i data-lucide="circle-check"></i><span>Tepat! Diskon palsu itu <b>menipu</b>. Poster yang rapi pun tidak ada gunanya kalau isinya bohong.</span></div>
+      </div>
+    </div>
+    <div class="m-score anim" style="--d:3.6">
+      <span>Poster yang sudah sembuh:</span><b><span id="mDone">0</span> / 4</b>
+      <span id="mMsg" style="font-weight:600;font-size:14px;color:var(--butter2)"></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 9 : KUIS ============ -->
+<section class="slide" data-theme="lav">
+  <div class="wrap quiz-shell">
+    <div style="text-align:center">
+      <span class="kicker anim" style="--d:0"><i data-lucide="trophy"></i> Kuis Seru</span>
+      <h2 class="title anim" style="--d:1">Uji Pemahaman Poster-mu!</h2>
+    </div>
+    <div id="quizArea" class="anim" style="--d:2"></div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 10 : MISI ============ -->
+<section class="slide" data-theme="pink">
+  <div class="s-misi wrap" style="display:contents"><div class="wrap">
+    <div>
+      <span class="kicker anim" style="--d:0"><i data-lucide="flag"></i> Giliranmu!</span>
+      <h2 class="title anim" style="--d:1">Misi: <span class="hl p">Poster Feed &amp; Story</span> di Canva</h2>
+      <p class="lead anim" style="--d:2">Pakai foto produk dari Pertemuan 5 dan kait terbaik dari caption Pertemuan 6.</p>
+      <div class="steps">
+        <div class="step anim" style="--d:3"><div class="snum st1">1</div>
+          <div><h3>Buat desain "Postingan Instagram" (1:1)</h3><p>Unggah foto produk aslimu. Foto atau judul harus menjadi bagian paling besar.</p></div></div>
+        <div class="step anim" style="--d:4"><div class="snum st2">2</div>
+          <div><h3>Susun urutan 1-2-3-4</h3><p>Foto/judul, lalu harga, lalu ajakan, lalu info kecil. Pakai 2 warna dan 2 huruf.</p></div></div>
+        <div class="step anim" style="--d:5"><div class="snum st3">3</div>
+          <div><h3>Buat versi story (9:16)</h3><p>Susun ulang isinya. Jauhkan info penting dari bagian paling atas dan bawah.</p></div></div>
+        <div class="step anim" style="--d:6"><div class="snum st4">4</div>
+          <div><h3>Tes "lirik 3 detik" ke teman</h3><p>Minta teman melihat 3 detik lalu menyebut produk dan harganya. Unduh PNG, tunjukkan ke pembina.</p></div></div>
+      </div>
+    </div>
+    <div>
+      <div class="blank-card anim" style="--d:4">
+        <h4><i data-lucide="image"></i> Rencana poster — salin di kertas</h4>
+        <div class="bl"><b>1. Foto/judul:</b><span></span></div>
+        <div class="bl"><b>2. Harga:</b><span></span></div>
+        <div class="bl"><b>3. Ajakan:</b><span></span></div>
+        <div class="bl"><b>4. Info kecil:</b><span></span></div>
+        <div class="bl"><b>2 warna:</b><span></span></div>
+        <div class="sentence">"Saat dilirik 3 detik, temanku langsung melihat <b>___</b>, lalu <b>___</b>."</div>
+      </div>
+      <div class="mini-rubrik card anim" style="--d:5">
+        <h3 style="font-family:'Fredoka';font-size:17px;margin-bottom:8px;display:flex;align-items:center;gap:9px"><i data-lucide="clipboard-check" style="width:19px;height:19px"></i> Cara Penilaian</h3>
+        <div class="rubrik-row"><span>Hierarki jelas: urutan 1-2-3-4</span><span>30 poin</span></div>
+        <div class="rubrik-row"><span>Lengkap: foto, judul, harga, ajakan</span><span>25 poin</span></div>
+        <div class="rubrik-row"><span>Versi 1:1 dan 9:16 tersusun rapi</span><span>25 poin</span></div>
+        <div class="rubrik-row"><span>Jujur: foto asli, harga asli</span><span>20 poin</span></div>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ============ SLIDE 11 : PENUTUP ============ -->
+<section class="slide" data-theme="peach">
+  <div class="deco bob" style="top:16%;right:8%;width:30px;height:30px">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 2v20M2 12h20"/></svg>
+  </div>
+  <div class="s-end wrap" style="display:contents"><div class="wrap">
+    <div>
+      <span class="kicker anim" style="--d:0"><i data-lucide="message-circle-heart"></i> Refleksi &amp; Penutup</span>
+      <h2 class="title anim" style="--d:1">Sebelum pulang, <span class="hl p">ayo curhat dikit!</span></h2>
+      <div class="refl">
+        <div class="refl-item anim" style="--d:2"><div class="rnum r1">1</div>
+          <p>Di poster kelompokmu, bagian apa yang dilihat mata pertama kali?</p></div>
+        <div class="refl-item anim" style="--d:3"><div class="rnum r2">2</div>
+          <p>Jurus hierarki mana yang paling sering kamu pakai hari ini?</p></div>
+        <div class="refl-item anim" style="--d:4"><div class="rnum r3">3</div>
+          <p>Apa bedanya menyusun poster feed 1:1 dengan story 9:16?</p></div>
+      </div>
+      <div class="end-btn anim" style="--d:5">
+        <button class="btn sun" id="partyBtn"><i data-lucide="party-popper"></i> Rayakan Hari Ini!</button>
+        <a class="btn ghost" href="video-storyboard.html"><i data-lucide="arrow-right"></i> Pertemuan 8: Video</a>
+        <a class="btn ghost" href="silabus.html"><i data-lucide="book-open"></i> Lihat Silabus</a>
+      </div>
+    </div>
+    <div class="end-art anim" style="--d:3">
+      <div class="quote">
+        <h3>Yang paling penting harus paling dulu terlihat.</h3>
+        <p>Pertemuan berikutnya: <b>Video Pendek I: Ide &amp; Storyboard</b>. Posternya diam, videonya bergerak!</p>
+      </div>
+      <span class="fchip fc1 bob"><i data-lucide="eye"></i></span>
+      <span class="fchip fc2 bob" style="animation-delay:.7s"><i data-lucide="image"></i></span>
+      <span class="fchip fc4 bob" style="animation-delay:1.4s"><i data-lucide="clapperboard"></i></span>
+      <span class="fchip fc5 bob" style="animation-delay:2s"><i data-lucide="sparkles"></i></span>
+    </div>
+  </div></div>
+</section>
+
+<!-- NAV -->
+<div class="navbar-bg"></div>
+<div class="pagenum"><span id="cur">01</span> / <span id="tot">11</span></div>
+<div class="dots" id="dots"></div>
+<div class="navbtns">
+  <button class="nav" id="prev" aria-label="Sebelumnya"><i data-lucide="chevron-left"></i></button>
+  <button class="nav" id="next" aria-label="Berikutnya"><i data-lucide="chevron-right"></i></button>
+</div>
+<canvas id="confetti"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.454.0/dist/umd/lucide.min.js"></script>
+<script>
+/* ================= NAVIGASI ================= */
+const slides=[...document.querySelectorAll('.slide')];
+const dotsBox=document.getElementById('dots');
+let cur=0;
+slides.forEach((_,i)=>{
+  const d=document.createElement('button');
+  d.className='dot'+(i===0?' on':'');d.title='Slide '+(i+1);
+  d.onclick=()=>go(i);dotsBox.appendChild(d);
+});
+const dots=[...dotsBox.children];
+document.getElementById('tot').textContent=String(slides.length).padStart(2,'0');
+function go(i){
+  cur=Math.max(0,Math.min(slides.length-1,i));
+  slides.forEach((s,k)=>s.classList.toggle('active',k===cur));
+  slides[cur].scrollTop=0;
+  dots.forEach((d,k)=>d.classList.toggle('on',k===cur));
+  document.getElementById('cur').textContent=String(cur+1).padStart(2,'0');
+  document.getElementById('bar').style.width=((cur+1)/slides.length*100)+'%';
+  document.getElementById('prev').disabled=cur===0;
+  document.getElementById('next').disabled=cur===slides.length-1;
+}
+document.getElementById('prev').onclick=()=>go(cur-1);
+document.getElementById('next').onclick=()=>go(cur+1);
+addEventListener('keydown',e=>{
+  if(e.target.closest&&e.target.closest('input,textarea,select'))return;
+  if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();go(cur+1)}
+  if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(cur-1)}
+});
+let tx=0,ty=0,txSkip=false;
+addEventListener('touchstart',e=>{
+  tx=e.touches[0].clientX;ty=e.touches[0].clientY;
+  txSkip=!!e.target.closest('.picks,.hscroll,input[type=range]');
+},{passive:true});
+addEventListener('touchend',e=>{
+  if(txSkip)return;
+  const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;
+  // hanya geser mendatar yang jelas, supaya scroll ke bawah tidak ikut pindah slide
+  if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5) dx<0?go(cur+1):go(cur-1);
+},{passive:true});
+go(+location.hash.slice(1)||0);
+
+const LET=['A','B','C'];
+const QUIZ_MSG=["Sempurna! Kamu sudah jago menyusun poster!","Hebat! Sedikit lagi menuju sempurna!","Bagus! Ayo bahas lagi soal yang keliru bareng teman sebangku.","Tidak apa-apa — belajar memang proses. Coba ulangi, ya!"];
+
+/* ================= PEMANASAN : MATA MELIHAT APA DULU ================= */
+const EY_NAME={foto:'Foto produk',judul:'Judul "Es Teh Jumbo"',harga:'Harga Rp4.000',ajakan:'Ajakan "Beli di depan gerbang!"',info:'Info jam buka'};
+const EY_DS=['foto','judul','harga','ajakan','info'];
+let eyOrder=[];
+const eyEls=[...document.querySelectorAll('#eyPoster .ey-el')];
+function renderEy(cmp){
+  eyEls.forEach(el=>{
+    el.querySelectorAll('.ey-badge').forEach(b=>b.remove());
+    const k=el.dataset.k,i=eyOrder.indexOf(k);
+    el.classList.toggle('picked',i>=0);
+    el.disabled=i>=0||cmp;
+    if(i>=0)el.insertAdjacentHTML('beforeend',`<span class="ey-badge">${i+1}</span>`);
+    if(cmp)el.insertAdjacentHTML('beforeend',`<span class="ey-badge ds">${EY_DS.indexOf(k)+1}</span>`);
+  });
+  document.getElementById('eyStatus').textContent=eyOrder.length<5?`Klik bagian ke-${eyOrder.length+1} yang kamu lihat`:'Semua sudah diberi nomor!';
+  document.getElementById('eyLegend').innerHTML=`<span><i style="background:var(--ink)"></i> Urutanmu</span>`+(cmp?`<span><i style="background:var(--teal)"></i> Urutan desainer</span>`:'');
+  document.getElementById('eySteps').innerHTML=(cmp?EY_DS:eyOrder).map((k,i)=>{
+    const same=cmp&&eyOrder[i]===k;
+    return `<div class="ey-row ${cmp?'ds':'you'}"><span class="n">${i+1}</span><span>${EY_NAME[k]}${cmp?(same?' <b style="color:var(--teal)">· sama!</b>':` <span style="color:var(--ink-soft)">· kamu: ${EY_NAME[eyOrder[i]].split(' ')[0]}</span>`):''}</span></div>`;
+  }).join('');
+  document.getElementById('eyCmp').classList.toggle('hidden',eyOrder.length<5||cmp);
+  const fb=document.getElementById('eyFb');
+  if(cmp){
+    const same=EY_DS.filter((k,i)=>eyOrder[i]===k).length;
+    fb.querySelector('span').innerHTML=`<b>${same} dari 5 sama dengan rencana desainer.</b> Foto paling besar dan berwarna, judul huruf tebal, harga diberi kotak kuning, ajakan diberi warna oranye, info dibuat kecil. Itulah <b>hierarki visual</b>!`;
+    fb.classList.remove('hidden');
+    if(same>=3)celebrate(140);
+  }else fb.classList.add('hidden');
+}
+eyEls.forEach(el=>el.onclick=()=>{if(eyOrder.length<5&&!eyOrder.includes(el.dataset.k)){eyOrder.push(el.dataset.k);renderEy(false)}});
+document.getElementById('eyCmp').onclick=()=>renderEy(true);
+document.getElementById('eyReset').onclick=()=>{eyOrder=[];renderEy(false)};
+renderEy(false);
+
+/* ================= 4 JURUS HIERARKI ================= */
+const JT=[
+  ['besar','maximize-2','var(--peach2)','Besar','yang penting dibesarkan','Bagian terbesar dilihat pertama. Judul dan foto dibesarkan, info jam buka dikecilkan.'],
+  ['warna','palette','var(--butter2)','Warna kontras','yang penting diberi warna','Warna mencolok menarik mata. Harga dan ajakan diberi warna yang kontras dengan latar.'],
+  ['posisi','arrow-down-up','var(--sky2)','Posisi','urutkan dari atas','Mata membaca dari atas ke bawah. Susun foto, judul, harga, ajakan, lalu info.'],
+  ['ruang','scan','var(--lav2)','Ruang kosong','beri jarak','Jarak membuat setiap bagian terlihat sendiri-sendiri, tidak berdesakan.']
+];
+const jtOn=new Set();
+const jtBox=document.getElementById('jtBtns');
+jtBox.innerHTML=JT.map(([k,icn,bg,t,s])=>`<button class="jt-btn" data-k="${k}"><span class="ti" style="background:${bg}"><i data-lucide="${icn}"></i></span><span>${t}<small>${s}</small></span></button>`).join('');
+jtBox.querySelectorAll('.jt-btn').forEach(b=>b.onclick=()=>{
+  const k=b.dataset.k,j=JT.find(x=>x[0]===k);
+  jtOn.has(k)?jtOn.delete(k):jtOn.add(k);
+  b.classList.toggle('on',jtOn.has(k));
+  document.getElementById('hz').classList.toggle('j-'+k,jtOn.has(k));
+  document.getElementById('jtBar').style.width=(jtOn.size/4*100)+'%';
+  document.getElementById('jtN').textContent=jtOn.size+'/4';
+  document.querySelector('#jtSay span').innerHTML=jtOn.size===4
+    ?'<b>Semua jurus menyala!</b> Sekarang mata langsung tahu: ini keripik pisang, harganya Rp5.000, pesannya di kantin.'
+    :(jtOn.has(k)?`<b>${j[3]}:</b> ${j[5]}`:`Jurus <b>${j[3]}</b> dimatikan. Lihat, posternya jadi kurang jelas lagi.`);
+  if(jtOn.size===4&&!jtBox.cheered){jtBox.cheered=true;celebrate(180)}
+});
+
+/* ================= UKURAN POSTER ================= */
+const SZ={
+  feed:{icon:'square',lab:'Feed 1:1',ratio:'1/1',size:'1080 × 1080 piksel (persegi)',where:'Postingan Instagram dan Facebook, status WhatsApp.',
+    canva:'Cari "Postingan Instagram".',tip:'Isi utama di tengah. Bentuk persegi cocok untuk foto produk besar dengan judul di atas atau bawahnya.',safe:false,extra:false},
+  story:{icon:'rectangle-vertical',lab:'Story 9:16',ratio:'9/16',size:'1080 × 1920 piksel (tegak memanjang)',where:'Story Instagram, status WhatsApp layar penuh, TikTok.',
+    canva:'Cari "Story Instagram".',tip:'Bagian paling atas tertutup nama akun dan paling bawah tertutup kolom balas. Taruh info penting di tengah.',safe:true,extra:false},
+  a4:{icon:'file',lab:'Cetak A4',ratio:'210/297',size:'21 × 29,7 cm (kertas A4)',where:'Ditempel di mading sekolah, kantin, atau stan.',
+    canva:'Cari "Poster A4", unduh sebagai PDF untuk cetak.',tip:'Dilihat dari jauh, jadi judul harus sangat besar. Boleh tambah info lokasi dan jam buka karena orang berdiri di depannya.',safe:false,extra:true}
+};
+const szBtns=document.getElementById('szBtns');
+szBtns.innerHTML=Object.entries(SZ).map(([k,s])=>`<button class="tg" data-k="${k}"><i data-lucide="${s.icon}"></i> ${s.lab}</button>`).join('');
+const szSeen=new Set();
+function szTo(k){
+  const s=SZ[k];
+  document.getElementById('szFrame').style.aspectRatio=s.ratio;
+  document.getElementById('safeTop').classList.toggle('hidden',!s.safe);
+  document.getElementById('safeBot').classList.toggle('hidden',!s.safe);
+  document.getElementById('szExtra').classList.toggle('hidden',!s.extra);
+  document.getElementById('szSize').textContent=s.size;
+  document.getElementById('szWhere').textContent=s.where;
+  document.getElementById('szCanva').textContent=s.canva;
+  document.getElementById('szTip').textContent=s.tip;
+  szBtns.querySelectorAll('.tg').forEach(b=>b.classList.toggle('on',b.dataset.k===k));
+  szSeen.add(k);if(szSeen.size===3&&!szTo.cheered){szTo.cheered=true;celebrate(120)}
+}
+szBtns.querySelectorAll('.tg').forEach(b=>b.onclick=()=>szTo(b.dataset.k));
+szTo('feed');
+
+/* ================= POSTER BUILDER ================= */
+const PB_ICONS=['cookie','cup-soda','cake-slice','milk','sandwich','ice-cream-cone'];
+const PB_THEMES=[
+  {n:'Ceria',bg:'#FFF1E8',tx:'#453A4E',pr:'#FFC531',ct:'#FF7E67',ctx:'#fff',ic:'#FFCBB5'},
+  {n:'Segar',bg:'#EAF7F0',tx:'#1F4A3A',pr:'#FFE39A',ct:'#3FBF8F',ctx:'#fff',ic:'#BFEAD2'},
+  {n:'Manis',bg:'#FFF0F5',tx:'#5A2A3E',pr:'#FFFFFF',ct:'#E6528A',ctx:'#fff',ic:'#FFC9DC'},
+  {n:'Malam',bg:'#1F3A5F',tx:'#FFFFFF',pr:'#FFC531',ct:'#FF7E67',ctx:'#fff',ic:'#C5DCF2'}];
+const pb={icon:0,theme:0,story:false};
+function pbRow(id,items,key,html){
+  const box=document.getElementById(id);
+  box.innerHTML=items.map((it,i)=>`<button class="ob" data-i="${i}">${html(it)}</button>`).join('');
+  box.querySelectorAll('.ob').forEach(b=>b.onclick=()=>{pb[key]=key==='story'?!!+b.dataset.i:+b.dataset.i;renderPb()});
+}
+pbRow('pbIcons',PB_ICONS,'icon',n=>`<i data-lucide="${n}"></i>`);
+pbRow('pbThemes',PB_THEMES,'theme',t=>`<span class="pal"><i style="background:${t.bg}"></i><i style="background:${t.ct}"></i></span>&nbsp;${t.n}`);
+pbRow('pbSizes',['Feed 1:1','Story 9:16'],'story',n=>`<i data-lucide="${n.startsWith('Feed')?'square':'rectangle-vertical'}"></i>${n}`);
+['pbT','pbP','pbC'].forEach(id=>document.getElementById(id).addEventListener('input',renderPb));
+function renderPb(){
+  const t=PB_THEMES[pb.theme],el=document.getElementById('pb');
+  const T=document.getElementById('pbT').value.trim(),P=document.getElementById('pbP').value.trim(),C=document.getElementById('pbC').value.trim();
+  el.classList.toggle('story',pb.story);
+  el.style.background=t.bg;el.style.color=t.tx;
+  const ic=document.getElementById('pbIc');ic.style.background=t.ic;ic.innerHTML=`<i data-lucide="${PB_ICONS[pb.icon]}"></i>`;
+  document.getElementById('pbTt').textContent=T||'Judul Poster';
+  const pp=document.getElementById('pbPp');pp.textContent=P||'Rp...';pp.style.background=t.pr;pp.style.color='#453A4E';
+  const cc=document.getElementById('pbCc');cc.querySelector('span').textContent=C||'Ajakan';cc.style.background=t.ct;cc.style.color=t.ctx;
+  document.querySelectorAll('#pbIcons .ob').forEach(b=>b.classList.toggle('on',+b.dataset.i===pb.icon));
+  document.querySelectorAll('#pbThemes .ob').forEach(b=>b.classList.toggle('on',+b.dataset.i===pb.theme));
+  document.querySelectorAll('#pbSizes .ob').forEach(b=>b.classList.toggle('on',!!+b.dataset.i===pb.story));
+  const words=T?T.split(/\s+/).length:0;
+  const C4=[
+    [T&&words<=4,T?(words<=4?`Judul singkat (${words} kata)`:`Judul kepanjangan (${words} kata, maks 4)`):'Judul belum diisi'],
+    [/\d/.test(P),/\d/.test(P)?'Harga jelas':'Harga belum ada angkanya'],
+    [C.split(/\s+/).filter(Boolean).length>=2,C?'Ajakan jelas':'Ajakan belum diisi'],
+    [!/(diskon|gratis|promo)\s*\d{2,}|\d{2,}\s*%/i.test(T+' '+C),'Tanpa klaim diskon berlebihan']
+  ];
+  document.getElementById('pbChecks').innerHTML=C4.map(([ok,txt])=>`<div class="ck ${ok?'ok':'no'}"><i data-lucide="${ok?'circle-check':'circle-x'}"></i>${txt}</div>`).join('');
+  if(C4.every(c=>c[0])&&pb.touched&&!renderPb.cheered){renderPb.cheered=true;celebrate(160)}
+  pb.touched=true;
+  window.lucide&&lucide.createIcons();
+}
+renderPb();
+
+/* ================= GAME DOKTER POSTER ================= */
+let mDone=0;
+document.querySelectorAll('.m-card').forEach(card=>{
+  card.querySelectorAll('.m-opt').forEach(btn=>{
+    btn.onclick=()=>{
+      if(card.classList.contains('solved'))return;
+      if(btn.dataset.ok==="1"){
+        btn.classList.add('good');
+        card.querySelectorAll('.m-opt').forEach(b=>b.disabled=true);
+        card.classList.add('solved');
+        card.querySelector('.m-why').classList.remove('hidden');
+        mDone++;
+        document.getElementById('mDone').textContent=mDone;
+        celebrate(70);
+        if(mDone===4){
+          document.getElementById('mMsg').textContent="Hebat! Kamu sudah jadi dokter poster!";
+          celebrate(220);
+        }
+      }else{
+        btn.classList.add('bad','shake');
+        btn.disabled=true;
+        setTimeout(()=>btn.classList.remove('shake'),350);
+      }
+    };
+  });
+});
+
+/* ================= KUIS ================= */
+const quizData=[
+  {q:"Hierarki visual adalah...", opts:[
+    "Urutan bagian desain yang dilihat mata, dari yang paling penting",
+    "Jumlah warna yang dipakai di poster",
+    "Nama aplikasi untuk membuat poster"],a:0,
+    why:"Betul! Hierarki visual mengatur apa yang dilihat pertama, kedua, dan seterusnya."},
+  {q:"Cara paling mudah membuat judul dilihat pertama adalah...", opts:[
+    "Menulisnya paling kecil di pojok",
+    "Membuatnya paling besar dan kontras dengan latar",
+    "Memberi banyak stiker di sekitarnya"],a:1,
+    why:"Tepat! Jurus Besar dan Warna kontras membuat judul langsung menarik mata."},
+  {q:"Ukuran yang cocok untuk poster story adalah...", opts:[
+    "1:1 (1080 × 1080 piksel)",
+    "A4 (21 × 29,7 cm)",
+    "9:16 (1080 × 1920 piksel)"],a:2,
+    why:"Iya! Story memenuhi layar HP yang tegak, jadi bentuknya 9:16."},
+  {q:"Kenapa info penting di story sebaiknya tidak ditaruh paling atas atau paling bawah?", opts:[
+    "Karena tertutup nama akun dan kolom balas",
+    "Karena warnanya akan berubah",
+    "Karena dilarang oleh aplikasi"],a:0,
+    why:"Betul! Bagian atas dan bawah story tertutup tampilan aplikasi. Taruh yang penting di tengah."},
+  {q:"Poster menulis \"DISKON 70%!\" padahal harganya tidak turun. Ini...", opts:[
+    "Strategi yang pintar",
+    "Tidak jujur dan menipu pembeli",
+    "Tidak apa-apa asal posternya rapi"],a:1,
+    why:"Tepat! Promosi harus jujur. Diskon palsu membuat pembeli kecewa dan tidak percaya lagi."}
+];
+
+const quizArea=document.getElementById('quizArea');
+let qi=0,score=0;
+function renderQuiz(){
+  if(qi>=quizData.length){renderDone();return}
+  const d=quizData[qi];
+  quizArea.innerHTML=`
+    <div class="q-card card">
+      <div class="q-meta">
+        <span class="q-badge">Soal ${qi+1} dari ${quizData.length}</span>
+        <span class="q-score"><i data-lucide="star"></i> Skor: ${score}</span>
+      </div>
+      <h3 class="q-q">${d.q}</h3>
+      <div class="q-opts">
+        ${d.opts.map((o,i)=>`<button class="opt" data-i="${i}"><span class="letter">${LET[i]}</span>${o}</button>`).join('')}
+      </div>
+      <div class="q-foot hidden" id="qFoot">
+        <div class="q-why" id="qWhy"></div>
+        <button class="btn mint" id="qNext">${qi===quizData.length-1?'Lihat Hasil':'Lanjut'} <i data-lucide="chevron-right"></i></button>
+      </div>
+    </div>`;
+  window.lucide&&lucide.createIcons();
+  quizArea.querySelectorAll('.opt').forEach(btn=>{
+    btn.onclick=()=>{
+      const pick=+btn.dataset.i;
+      quizArea.querySelectorAll('.opt').forEach(b=>b.disabled=true);
+      quizArea.querySelector(`.opt[data-i="${d.a}"]`).classList.add('good');
+      if(pick===d.a){score++;celebrate(60)}
+      else btn.classList.add('bad');
+      document.getElementById('qWhy').innerHTML=`<i data-lucide="${pick===d.a?'circle-check':'info'}"></i><span>${d.why}</span>`;
+      document.getElementById('qFoot').classList.remove('hidden');
+      window.lucide&&lucide.createIcons();
+      document.getElementById('qNext').onclick=()=>{qi++;renderQuiz()};
+    };
+  });
+}
+function renderDone(){
+  let msg;
+  if(score===5)msg=QUIZ_MSG[0];
+  else if(score===4)msg=QUIZ_MSG[1];
+  else if(score===3)msg=QUIZ_MSG[2];
+  else msg=QUIZ_MSG[3];
+  quizArea.innerHTML=`
+    <div class="q-card card q-done">
+      <div class="tro"><i data-lucide="trophy"></i></div>
+      <h3>Kuis Selesai!</h3>
+      <div class="big">${score} / 5</div>
+      <p>${msg}</p>
+      <button class="btn" id="qRetry"><i data-lucide="rotate-ccw"></i> Ulangi Kuis</button>
+    </div>`;
+  window.lucide&&lucide.createIcons();
+  celebrate(180);
+  document.getElementById('qRetry').onclick=()=>{qi=0;score=0;renderQuiz()};
+}
+renderQuiz();
+
+/* ================= KONFETI ================= */
+const cvs=document.getElementById('confetti'),ctx=cvs.getContext('2d');
+const COLORS=['#FF7E67','#FFC531','#3FBF8F','#FFA8C5','#B9A7F2','#7FD8A6'];
+let parts=[],raf=null;
+function sizeC(){cvs.width=innerWidth;cvs.height=innerHeight}
+sizeC();addEventListener('resize',sizeC);
+function celebrate(n=140){
+  for(let i=0;i<n;i++){
+    parts.push({
+      x:Math.random()*cvs.width,y:-30-Math.random()*cvs.height*.35,
+      vx:-1.6+Math.random()*3.2,vy:2.2+Math.random()*3.4,
+      w:9+Math.random()*9,h:5+Math.random()*6,
+      rot:Math.random()*Math.PI,vr:-.16+Math.random()*.32,
+      ph:Math.random()*Math.PI*2,
+      c:COLORS[Math.floor(Math.random()*COLORS.length)],
+      shape:Math.floor(Math.random()*3)
+    });
+  }
+  if(!raf)tick();
+}
+function tick(){
+  ctx.clearRect(0,0,cvs.width,cvs.height);
+  parts.forEach(p=>{
+    p.x+=p.vx;p.y+=p.vy;p.rot+=p.vr;p.ph+=.1;p.vy+=.015;
+    ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);
+    ctx.scale(1,Math.abs(Math.sin(p.ph))*.85+.15);
+    ctx.fillStyle=p.c;
+    if(p.shape===0){ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h)}
+    else if(p.shape===1){ctx.beginPath();ctx.arc(0,0,p.h,0,7);ctx.fill()}
+    else{ctx.beginPath();ctx.moveTo(0,-p.h);ctx.lineTo(p.w/2,p.h/2);ctx.lineTo(-p.w/2,p.h/2);ctx.closePath();ctx.fill()}
+    ctx.restore();
+  });
+  parts=parts.filter(p=>p.y<cvs.height+40);
+  if(parts.length)raf=requestAnimationFrame(tick);
+  else{raf=null;ctx.clearRect(0,0,cvs.width,cvs.height)}
+}
+document.getElementById('partyBtn').onclick=()=>{celebrate(260);setTimeout(()=>celebrate(160),700)};
+
+window.lucide&&lucide.createIcons();
+</script>
+</body>
+</html>
