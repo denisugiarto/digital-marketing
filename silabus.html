@@ -67,10 +67,6 @@
   .mnum{flex:0 0 52px;height:52px;border-radius:16px;border:3px solid var(--ink);display:grid;place-items:center;font-family:'Fredoka';font-weight:700;font-size:22px}
   .mt-top h3{font-size:19px}
   .mt-top .goal{font-size:13.8px;font-weight:600;color:var(--ink-soft);margin-top:3px}
-  .status{margin-left:auto;flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;font-family:'Fredoka';font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;border:2.5px solid var(--ink);border-radius:999px;padding:4px 10px;white-space:nowrap}
-  .status svg{width:13px;height:13px}
-  .status.done{background:var(--teal);color:#fff}
-  .status.todo{background:var(--butter2)}
   .mt h4{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
   .acts{list-style:none;display:flex;flex-direction:column;gap:4px}
   .acts li{display:flex;gap:8px;font-size:14px;font-weight:500;line-height:1.5}
@@ -87,7 +83,7 @@
 
   /* ===== RUBRIK & CATATAN ===== */
   .twocol{margin-top:48px;display:grid;grid-template-columns:1.1fr .9fr;gap:24px;align-items:start}
-  .box{padding:22px 24px}
+  .box{padding:22px 24px;min-width:0}
   .box h2{font-size:24px;display:flex;align-items:center;gap:10px;margin-bottom:6px}
   .box h2 svg{width:22px;height:22px;color:var(--coral)}
   .box > p{font-size:14.5px;font-weight:500;color:var(--ink-soft);margin-bottom:12px}
@@ -111,8 +107,8 @@
   footer{margin-top:48px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;font-size:13px;font-weight:600;color:var(--ink-soft)}
 
   @media (max-width:900px){
-    .hero,.twocol{grid-template-columns:1fr}
-    .meetings{grid-template-columns:1fr}
+    .hero,.twocol{grid-template-columns:minmax(0,1fr)}
+    .meetings{grid-template-columns:minmax(0,1fr)}
   }
   @media (max-width:560px){
     .page{padding-top:28px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
@@ -121,7 +117,6 @@
     .mt-top{flex-wrap:wrap;gap:12px}
     .mt-top>div:not(.mnum){flex:1;min-width:0}
     .mnum{flex-basis:44px;height:44px;font-size:19px}
-    .status{margin-left:56px}
     .box{padding:18px 16px}
     .card,.mt,.fact{box-shadow:4px 4px 0 var(--ink)}
   }
@@ -287,7 +282,6 @@ function card(m){
     <div class="mt-top">
       <div class="mnum">${m.n}</div>
       <div><h3>${m.title}</h3><p class="goal">${m.goal}</p></div>
-      <span class="status ${done?'done':'todo'}"><i data-lucide="${done?'circle-check':'clock'}"></i>${done?'Sudah ada':'Belum dibuat'}</span>
     </div>
     <h4>Kegiatan</h4>
     <ul class="acts">${m.acts.map(a=>`<li><i data-lucide="chevron-right"></i><span>${a}</span></li>`).join('')}</ul>
