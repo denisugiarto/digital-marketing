@@ -37,7 +37,7 @@
   .navbar-bg{display:none;position:fixed;left:0;right:0;bottom:0;height:calc(76px + env(safe-area-inset-bottom,0px));z-index:55;background:rgba(253,247,239,.94);border-top:3px solid var(--ink);backdrop-filter:blur(6px)}
 
   /* ===== SLIDES ===== */
-  .slide{position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;opacity:0;visibility:hidden;transform:translateX(46px);transition:opacity .5s ease,transform .55s cubic-bezier(.22,.9,.32,1),visibility .5s;overflow:auto;overflow-x:hidden;padding:56px 40px 100px}
+  .slide{position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;opacity:0;visibility:hidden;transform:translateX(46px);transition:opacity .5s ease,transform .55s cubic-bezier(.22,.9,.32,1),visibility .5s;overflow:hidden;padding:56px 40px 100px}
   .slide.active{opacity:1;visibility:visible;transform:none;z-index:5}
   .slide::before,.slide::after{content:'';position:absolute;border-radius:50%;z-index:0}
   .slide::before{width:44vw;height:44vw;top:-20vw;right:-14vw;background:var(--bA);opacity:.75}
