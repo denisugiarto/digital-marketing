@@ -36,7 +36,7 @@
   .nav:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:4px 4px 0 var(--ink)}
 
   /* ===== SLIDES ===== */
-  .slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transform:translateX(46px);transition:opacity .5s ease,transform .55s cubic-bezier(.22,.9,.32,1),visibility .5s;overflow:hidden;padding:56px 40px 100px}
+  .slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transform:translateX(46px);transition:opacity .5s ease,transform .55s cubic-bezier(.22,.9,.32,1),visibility .5s;overflow-y:auto;overflow-x:hidden;padding:56px 40px 100px}
   .slide.active{opacity:1;visibility:visible;transform:none;z-index:5}
   .slide::before,.slide::after{content:'';position:absolute;border-radius:50%;z-index:0}
   .slide::before{width:44vw;height:44vw;top:-20vw;right:-14vw;background:var(--bA);opacity:.75}
@@ -348,6 +348,12 @@
     .art-stage,.end-art{min-height:340px}
     .slide{padding:40px 20px 110px}
   }
+
+  /* foto contoh nyata */
+  .pic{margin:16px 0 0;border:3px solid var(--ink);border-radius:20px;overflow:hidden;background:#fff;box-shadow:var(--shadow);max-width:100%}
+  .pic img{display:block;width:100%;height:auto;aspect-ratio:21/8;object-fit:cover}
+  .pic figcaption{padding:8px 14px;font-weight:700;font-size:13.5px;line-height:1.4;border-top:3px solid var(--ink);background:var(--butter2)}
+  @media (max-width:640px){.pic{border-radius:16px;box-shadow:4px 4px 0 var(--ink)}.pic img{aspect-ratio:16/9}.pic figcaption{font-size:12.5px;padding:7px 10px}}
 </style>
 </head>
 <body>
@@ -582,6 +588,7 @@
         penampilannya, kekuatannya. Baru kemudian bermain. <b>Persona = membuat "karakter"
         pembeli idealmu</b>, supaya mendesain terasa seperti tahu dengan siapa kita bicara.</p>
       </div>
+      <figure class="pic anim" style="--d:3.5"><img src="assets/foto/siswa-kelas.jpg" alt="Murid-murid di kelas, satu mengangkat tangan dan satu berdiri menunjukkan poster" loading="lazy" style="object-position:50% 55%"><figcaption>Setiap kelompok murid punya selera berbeda. Persona mewakili satu kelompok seperti ini.</figcaption></figure>
     </div>
     <div class="whylist card anim" style="--d:3">
       <h3><i data-lucide="lightbulb"></i> Dengan persona, kita tidak menebak-nebak:</h3>
@@ -794,6 +801,7 @@
         <div class="mr-dec"><i data-lucide="circle-check"></i><span>Tulis <b>caption seperti gaya bicaranya</b> — santai dan hangat. Bukan bahasa baku seperti pengumuman sekolah.</span></div>
       </button>
     </div>
+    <figure class="pic anim" style="--d:3.8"><img src="assets/foto/remaja-bawa-ransel-hp.jpg" alt="Anak muda bertas ransel duduk sambil melihat ponselnya" loading="lazy" style="object-position:50% 28%"><figcaption>Kebiasaan sehari-hari, misalnya sering memegang ponsel, menentukan di mana konten kita dipasang.</figcaption></figure>
     <div class="map-note anim" style="--d:4">
       <i data-lucide="repeat"></i><span>Lakukan yang sama untuk persona lain — <b>tiap bagian kartu</b> menjawab satu pilihan desain.</span>
     </div>

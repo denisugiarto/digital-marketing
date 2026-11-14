@@ -37,7 +37,7 @@
   .navbar-bg{display:none;position:fixed;left:0;right:0;bottom:0;height:calc(76px + env(safe-area-inset-bottom,0px));z-index:55;background:rgba(253,247,239,.94);border-top:3px solid var(--ink);backdrop-filter:blur(6px)}
 
   /* ===== SLIDES ===== */
-  .slide{position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;opacity:0;visibility:hidden;transform:translateX(46px);transition:opacity .5s ease,transform .55s cubic-bezier(.22,.9,.32,1),visibility .5s;overflow:hidden;padding:56px 40px 100px}
+  .slide{position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;opacity:0;visibility:hidden;transform:translateX(46px);transition:opacity .5s ease,transform .55s cubic-bezier(.22,.9,.32,1),visibility .5s;overflow-y:auto;overflow-x:hidden;padding:56px 40px 100px}
   .slide.active{opacity:1;visibility:visible;transform:none;z-index:5}
   .slide::before,.slide::after{content:'';position:absolute;border-radius:50%;z-index:0}
   .slide::before{width:44vw;height:44vw;top:-20vw;right:-14vw;background:var(--bA);opacity:.75}
@@ -449,6 +449,10 @@
     .sg-btn:hover{transform:none}
   }
 
+  .pfoto{display:flex;align-items:center;gap:16px;margin:14px 0 4px;max-width:100%;background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:4px 4px 0 var(--ink);overflow:hidden}
+  .pfoto img{display:block;flex:0 0 220px;width:220px;height:124px;object-fit:cover;border-right:3px solid var(--ink)}
+  .pfoto figcaption{flex:1 1 auto;min-width:0;padding:8px 16px 8px 0;font-weight:700;font-size:14px;line-height:1.45;color:var(--ink-soft)}
+  @media (max-width:640px){.pfoto{gap:10px;border-radius:14px}.pfoto img{flex-basis:112px;width:112px;height:96px}.pfoto figcaption{font-size:12.5px;padding:6px 10px 6px 0}}
 </style>
 </head>
 <body>
@@ -726,6 +730,7 @@
     <span class="kicker anim" style="--d:0"><i data-lucide="lock"></i> Jaga Privasi</span>
     <h2 class="title anim" style="--d:1">Boleh dibagikan atau <span class="hl p">rahasia?</span></h2>
     <p class="lead anim" style="--d:1.5">Akun usaha dilihat banyak orang yang tidak kita kenal. Pilih: info ini boleh diposting atau harus dirahasiakan?</p>
+    <figure class="pfoto anim" style="--d:1.8"><img src="assets/foto/gembok-keyboard.jpg" loading="lazy" style="object-position:50% 55%" alt="Gembok kombinasi tergeletak di atas keyboard komputer"><figcaption>Contoh: seperti gembok, kata sandi dan info pribadi harus dikunci rapat.</figcaption></figure>
     <div class="priv anim" style="--d:2" id="priv"></div>
     <div class="m-score anim" style="--d:3">
       <span>Info yang sudah dipilah:</span><b><span id="pvDone">0</span> / 9</b>
@@ -767,6 +772,7 @@
     <span class="kicker anim" style="--d:0"><i data-lucide="scroll-text"></i> Coba Langsung · Aturan Jujur</span>
     <h2 class="title anim" style="--d:1">Susun <span class="hl">Aturan Jujur</span> kelompokmu</h2>
     <p class="lead anim" style="--d:1.5">Klik aturan yang ingin kalian pakai, atau tulis aturan sendiri. Kumpulkan minimal 5 aturan!</p>
+    <figure class="pfoto anim" style="--d:1.8"><img src="assets/foto/catat-aturan-kelompok.jpg" loading="lazy" style="object-position:40% 60%" alt="Sekelompok orang duduk di meja kayu sambil mencatat hasil diskusi di buku"><figcaption>Contoh: kelompok berdiskusi dan mencatat aturan bersama.</figcaption></figure>
     <div class="rules">
       <div class="anim noswipe" style="--d:2">
         <div class="sugg" id="sugg"></div>

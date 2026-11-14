@@ -37,7 +37,7 @@
   .navbar-bg{display:none;position:fixed;left:0;right:0;bottom:0;height:calc(76px + env(safe-area-inset-bottom,0px));z-index:55;background:rgba(253,247,239,.94);border-top:3px solid var(--ink);backdrop-filter:blur(6px)}
 
   /* ===== SLIDES ===== */
-  .slide{position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;opacity:0;visibility:hidden;transform:translateX(46px);transition:opacity .5s ease,transform .55s cubic-bezier(.22,.9,.32,1),visibility .5s;overflow:hidden;padding:56px 40px 100px}
+  .slide{position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;opacity:0;visibility:hidden;transform:translateX(46px);transition:opacity .5s ease,transform .55s cubic-bezier(.22,.9,.32,1),visibility .5s;overflow-y:auto;overflow-x:hidden;padding:56px 40px 100px}
   .slide.active{opacity:1;visibility:visible;transform:none;z-index:5}
   .slide::before,.slide::after{content:'';position:absolute;border-radius:50%;z-index:0}
   .slide::before{width:44vw;height:44vw;top:-20vw;right:-14vw;background:var(--bA);opacity:.75}
@@ -444,6 +444,12 @@
     .bars,.ask{padding:12px}
   }
 
+
+  /* foto contoh nyata */
+  .pic{margin:16px 0 0;border:3px solid var(--ink);border-radius:20px;overflow:hidden;background:#fff;box-shadow:var(--shadow);max-width:100%}
+  .pic img{display:block;width:100%;height:auto;aspect-ratio:21/8;object-fit:cover}
+  .pic figcaption{padding:8px 14px;font-weight:700;font-size:13.5px;line-height:1.4;border-top:3px solid var(--ink);background:var(--butter2)}
+  @media (max-width:640px){.pic{border-radius:16px;box-shadow:4px 4px 0 var(--ink)}.pic img{aspect-ratio:16/9}.pic figcaption{font-size:12.5px;padding:7px 10px}}
 </style>
 </head>
 <body>
@@ -609,6 +615,7 @@
         </div>
       </div>
     </div>
+    <figure class="pic anim" style="--d:3.5"><img src="assets/foto/laptop-grafik-sederhana.jpg" alt="Laptop di meja dekat jendela menampilkan grafik batang berwarna biru" loading="lazy" style="object-position:50% 55%"><figcaption>Angka-angka ini biasanya tampil sebagai grafik di aplikasi atau layar komputer.</figcaption></figure>
   </div>
 </section>
 
@@ -763,6 +770,7 @@
       <span class="kicker anim" style="--d:0"><i data-lucide="flag"></i> Giliranmu!</span>
       <h2 class="title anim" style="--d:1">Misi: <span class="hl p">Analisis 2 Konten</span> Es Teh Bu Sri</h2>
       <p class="lead anim" style="--d:2">Kerjakan berkelompok. Pakai data contoh di samping, lalu tulis hasilnya di kertas.</p>
+      <figure class="pic anim" style="--d:2.5"><img src="assets/foto/es-teh-gelas.jpg" alt="Segelas es teh dengan es batu dan irisan jeruk nipis di atas talenan kayu" loading="lazy" style="object-position:50% 55%"><figcaption>Produk contoh misi: es teh. Bayangkan konten X dan Y untuk gelas seperti ini.</figcaption></figure>
       <div class="steps">
         <div class="step anim" style="--d:3"><div class="snum st1">1</div>
           <div><h3>Hitung persen pembeli</h3><p>Pembeli ÷ lihat × 100 untuk setiap konten.</p></div></div>

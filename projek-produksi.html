@@ -37,7 +37,7 @@
   .navbar-bg{display:none;position:fixed;left:0;right:0;bottom:0;height:calc(76px + env(safe-area-inset-bottom,0px));z-index:55;background:rgba(253,247,239,.94);border-top:3px solid var(--ink);backdrop-filter:blur(6px)}
 
   /* ===== SLIDES ===== */
-  .slide{position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;opacity:0;visibility:hidden;transform:translateX(46px);transition:opacity .5s ease,transform .55s cubic-bezier(.22,.9,.32,1),visibility .5s;overflow:hidden;padding:56px 40px 100px}
+  .slide{position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;opacity:0;visibility:hidden;transform:translateX(46px);transition:opacity .5s ease,transform .55s cubic-bezier(.22,.9,.32,1),visibility .5s;overflow-y:auto;overflow-x:hidden;padding:56px 40px 100px}
   .slide.active{opacity:1;visibility:visible;transform:none;z-index:5}
   .slide::before,.slide::after{content:'';position:absolute;border-radius:50%;z-index:0}
   .slide::before{width:44vw;height:44vw;top:-20vw;right:-14vw;background:var(--bA);opacity:.75}
@@ -334,6 +334,9 @@
 
   #confetti{position:fixed;inset:0;z-index:100;pointer-events:none}
 
+  .ph{margin:14px 0 0;background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);overflow:hidden;max-width:100%}
+  .ph img{display:block;width:100%;aspect-ratio:21/9;object-fit:cover}
+  .ph figcaption{padding:7px 14px;border-top:3px solid var(--ink);font-size:13px;font-weight:600;line-height:1.4;background:var(--butter2)}
   @media (max-width:960px){
     .s-hero .wrap,.s-def .wrap,.s-misi .wrap,.s-end .wrap{grid-template-columns:1fr}
     .wu-shell{grid-template-columns:1fr}
@@ -517,6 +520,7 @@
         <p><b>Seperti dapur warung bakso:</b> ada yang membuat bakso, ada yang merebus mi, ada yang meracik kuah, ada yang mengantar.
         Kalau semua orang mengerjakan hal yang sama, pesanan malah lama selesai!</p>
       </div>
+      <figure class="ph anim" style="--d:4"><img src="assets/foto/produksi-tim-laptop.jpg" loading="lazy" alt="Sekelompok anak muda berkumpul mengelilingi satu laptop sambil tersenyum dan bekerja bersama"><figcaption>Contoh: satu tim, satu tujuan, tiap orang punya peran.</figcaption></figure>
     </div>
     <div class="target-art anim" style="--d:3">
       <div class="pack">
@@ -651,6 +655,7 @@
           <span><i data-lucide="message-circle"></i> Tanya teman, bukan main</span>
           <span><i data-lucide="coffee"></i> Istirahat 2 menit tiap sesi</span>
         </div>
+        <figure class="ph"><img src="assets/foto/produksi-ponsel-tablet.jpg" loading="lazy" alt="Meja berisi produk kecantikan, tablet, dan ponsel yang dipegang tangan, difoto dari atas"><figcaption>Contoh meja kerja: produk, ponsel, dan tablet tertata rapi.</figcaption></figure>
       </div>
     </div>
   </div>

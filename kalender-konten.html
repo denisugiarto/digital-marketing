@@ -37,7 +37,7 @@
   .navbar-bg{display:none;position:fixed;left:0;right:0;bottom:0;height:calc(76px + env(safe-area-inset-bottom,0px));z-index:55;background:rgba(253,247,239,.94);border-top:3px solid var(--ink);backdrop-filter:blur(6px)}
 
   /* ===== SLIDES ===== */
-  .slide{position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;opacity:0;visibility:hidden;transform:translateX(46px);transition:opacity .5s ease,transform .55s cubic-bezier(.22,.9,.32,1),visibility .5s;overflow:hidden;padding:56px 40px 100px}
+  .slide{position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;opacity:0;visibility:hidden;transform:translateX(46px);transition:opacity .5s ease,transform .55s cubic-bezier(.22,.9,.32,1),visibility .5s;overflow-y:auto;overflow-x:hidden;padding:56px 40px 100px}
   .slide.active{opacity:1;visibility:visible;transform:none;z-index:5}
   .slide::before,.slide::after{content:'';position:absolute;border-radius:50%;z-index:0}
   .slide::before{width:44vw;height:44vw;top:-20vw;right:-14vw;background:var(--bA);opacity:.75}
@@ -264,7 +264,7 @@
   .plant-card .lab2{align-self:flex-start;font-family:'Fredoka';font-weight:700;font-size:15px;display:flex;align-items:center;gap:8px}
   .plant-card .lab2 span{width:30px;height:30px;border-radius:50%;border:2.5px solid var(--ink);display:grid;place-items:center;font-size:15px}
   .plant-card .how{align-self:flex-start;font-size:13px;font-weight:600;color:var(--ink-soft);margin-top:2px}
-  .plant-svg{width:150px;height:170px;margin:4px 0}
+  .plant-svg{width:190px;height:230px;margin:4px 0}
   .plant-svg svg{width:100%;height:100%}
   .dstrip{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;width:100%}
   .dcell{border:2px solid var(--ink);border-radius:9px;padding:4px 2px;text-align:center;font-size:11px;font-weight:700;background:var(--cream);transition:.2s}
@@ -410,7 +410,7 @@
   @media (max-width:640px){
     .plant-grid{gap:14px}
     .plant-card{box-shadow:4px 4px 0 var(--ink);padding:12px 12px}
-    .plant-svg{width:110px;height:125px}
+    .plant-svg{width:130px;height:160px}
     .dcell{font-size:9.5px;padding:3px 1px}
     .fgrid.g3,.match-list.g3{grid-template-columns:1fr}
     .fgrid.g3 .fcard{min-height:200px}
@@ -426,6 +426,33 @@
     .tbtn{font-size:13.5px;padding:6px 10px}
   }
 
+
+  /* ===== FOTO CONTOH (Unsplash) ===== */
+  .foto-stack{display:grid;gap:16px;min-width:0}
+  .foto-fig{margin:0;min-width:0;max-width:100%;background:#fff;border:3px solid var(--ink);border-radius:20px;box-shadow:var(--shadow);overflow:hidden}
+  .foto-fig img{display:block;width:100%;height:clamp(104px,19vh,176px);object-fit:cover}
+  .foto-fig figcaption{padding:7px 14px;border-top:3px solid var(--ink);background:var(--butter2);font-weight:700;font-size:13px;line-height:1.35}
+  .foto-fig.mb{margin-bottom:16px}
+  .agenda-row{margin-top:30px;display:flex;gap:36px;align-items:center}
+  .agenda-row .goal-list{margin-top:0;flex:1 1 auto;min-width:0}
+  .agenda-row .foto-fig{flex:0 0 300px}
+  .agenda-row .foto-fig img{height:auto;aspect-ratio:4/3}
+  .agenda-row .foto-fig.port{flex-basis:250px}
+  .agenda-row .foto-fig.port img{aspect-ratio:3/4}
+  @media (max-width:960px){
+    .agenda-row{flex-direction:column;align-items:stretch;gap:16px;margin-top:20px}
+    .agenda-row .foto-fig,.agenda-row .foto-fig.port{flex:0 0 auto;width:100%}
+    .agenda-row .foto-fig img,.agenda-row .foto-fig.port img{height:clamp(96px,16vh,140px);aspect-ratio:auto}
+  }
+  .art-foto{gap:14px}
+  .art-foto svg{width:min(250px,100%)!important}
+  .art-foto .foto-fig{width:min(380px,100%)}
+  @media (max-width:640px){
+    .foto-fig{border-radius:16px;box-shadow:4px 4px 0 var(--ink)}
+    .foto-fig img{height:clamp(96px,16vh,130px)}
+    .foto-fig figcaption{padding:6px 11px;font-size:12px}
+    .art-foto svg{width:min(190px,100%)!important}
+  }
 </style>
 </head>
 <body>
@@ -492,7 +519,8 @@
   <div class="wrap">
     <span class="kicker anim" style="--d:0"><i data-lucide="map"></i> Rencana Belajar Hari Ini</span>
     <h2 class="title anim" style="--d:1">Hari ini kita akan...</h2>
-    <div class="goal-list">
+    <div class="agenda-row">
+      <div class="goal-list">
       <div class="goal anim" style="--d:2">
         <div class="gnum g1">1</div>
         <div><h3>Tahu Kenapa Harus Rutin</h3><p>Posting sedikit tapi teratur lebih baik daripada banyak sekaligus lalu hilang.</p></div>
@@ -509,6 +537,8 @@
         <div class="gnum g4">4</div>
         <div><h3>Susun Kalender Kelompokmu</h3><p>Misi akhir: kalender konten 1 minggu di kertas atau Canva.</p></div>
       </div>
+    </div>
+    <figure class="foto-fig anim" style="--d:3"><img src="assets/foto/kalender-sticky-note.jpg" alt="Papan putih dengan kertas sticky note oranye dan biru berisi daftar tugas yang tersusun rapi" loading="lazy" style="object-position:50% 40%"><figcaption>Satu sticky note = satu ide konten, mudah digeser.</figcaption></figure>
     </div>
   </div>
 </section>
@@ -530,7 +560,7 @@
         <div class="lab2"><span style="background:var(--pink2)">B</span> 7 gelas sekaligus</div>
         <div class="how">Semua air dituang hari Senin, lalu lupa disiram.</div>
         <div class="plant-svg" id="plantB"></div>
-        <div class="dstrip" id="stripB"></div>
+        <div class="dstrip b" id="stripB"></div>
       </div>
     </div>
     <div class="plant-q anim" style="--d:3" id="plantQ">
@@ -558,7 +588,7 @@
         Dengan kalender konten, kelompokmu tahu <b>hari ini posting apa</b>. Tidak bingung, tidak lupa, dan followers tahu kapan harus menunggu.</p>
       </div>
     </div>
-    <div class="target-art anim" style="--d:3">
+    <div class="target-art art-foto anim" style="--d:3">
       <svg viewBox="0 0 360 340" aria-hidden="true">
         <rect x="20" y="20" width="320" height="300" rx="26" fill="#fff" stroke="#453A4E" stroke-width="4"/>
         <text x="180" y="56" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="18" fill="#453A4E">Kalender Es Teh Bu Sri</text>
@@ -581,6 +611,7 @@
           <rect x="176" y="282" width="126" height="14" rx="7"/>
         </g>
       </svg>
+      <figure class="foto-fig anim" style="--d:3"><img src="assets/foto/kalender-planner.jpg" alt="Buku planner bulanan terbuka dengan kolom hari Senin sampai Minggu dan dua spidol di atasnya" loading="lazy" style="object-position:50% 45%"><figcaption>Planner kosong siap diisi jadwal posting.</figcaption></figure>
     </div>
   </div></div>
 </section>
@@ -903,30 +934,35 @@ const LET=['A','B','C'];
 /* ================= PEMANASAN : SIRAM TANAMAN ================= */
 const DAYS=['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'];
 const PLANT={
-  A:{h:[34,44,54,64,74,84,96],t:[0,0,0,0,0,0,0],w:[1,1,1,1,1,1,1]},
-  B:{h:[40,40,38,34,30,26,22],t:[0,.2,.4,.6,.75,.9,1],w:[7,0,0,0,0,0,0]}
+  A:{h:[34,52,70,88,104,118,130],t:[0,0,0,0,0,0,0],w:[1,1,1,1,1,1,1]},
+  B:{h:[34,34,30,26,22,18,14],t:[0,.1,.35,.6,.8,.95,1],w:[7,0,0,0,0,0,0],p:[1,.5,0,0,0,0,0]}
 };
 function blend(a,b,t){
   const p=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
   const x=p(a),y=p(b);
   return '#'+x.map((v,i)=>Math.round(v+(y[i]-v)*t).toString(16).padStart(2,'0')).join('');
 }
-function plantSVG(h,t,puddle,flower){
-  const leaf=blend('#3FBF8F','#C9A66B',t), droop=t*50, top=150-h;
-  const pair=y=>[-1,1].map(s=>`<g transform="translate(80 ${y})"><ellipse cx="${s*17}" cy="0" rx="17" ry="8" fill="${leaf}" stroke="#453A4E" stroke-width="3" transform="rotate(${-s*(25-droop)})"/></g>`).join('');
+function plantSVG(h,t,puddle,flower,sc=1){
+  const leaf=blend('#3FBF8F','#B9985C',t), droop=t*50, top=150-h, bend=t*18, soil=puddle>0?'#9CC9F0':blend('#FFCBB5','#E0BE8C',t);
+  const bx=f=>80+bend*f*f;
+  const pair=(y,f)=>[-1,1].map(s=>`<g transform="translate(${bx(f)} ${y})"><ellipse cx="${s*17*sc}" cy="0" rx="${17*sc}" ry="${8*sc}" fill="${leaf}" stroke="#453A4E" stroke-width="3" transform="rotate(${-s*(25-droop)})"/></g>`).join('');
+  const water=puddle>0?`<ellipse cx="80" cy="194" rx="${72*puddle}" ry="${9*puddle}" fill="#C5DCF2" stroke="#453A4E" stroke-width="2.5"/>
+    <path d="M38 142 q-6 14 -2 24 M122 142 q6 14 2 24" fill="none" stroke="#6FA8DC" stroke-width="4" stroke-linecap="round"/>`:'';
+  const cracks=t>.5?'<path d="M50 150 l6 -4 l5 5 M92 148 l5 4 l6 -4 M70 152 l3 -3" fill="none" stroke="#453A4E" stroke-width="2" stroke-linecap="round"/>':'';
   return `<svg viewBox="0 0 160 205" aria-hidden="true">
-    ${puddle?'<ellipse cx="80" cy="194" rx="72" ry="9" fill="#C5DCF2" stroke="#453A4E" stroke-width="2.5"/>':''}
-    <path d="M80 150 L80 ${top}" stroke="#453A4E" stroke-width="5" stroke-linecap="round"/>
-    ${pair(top+h*.7)}${h>50?pair(top+h*.35):''}
-    <circle cx="80" cy="${top}" r="${flower?11:6}" fill="${flower?'#FFC531':leaf}" stroke="#453A4E" stroke-width="3"/>
-    <rect x="38" y="142" width="84" height="14" rx="4" fill="#FFCBB5" stroke="#453A4E" stroke-width="3"/>
+    ${water}
+    <path d="M80 150 Q80 ${150-h*.5} ${80+bend} ${top}" fill="none" stroke="#453A4E" stroke-width="${5*sc}" stroke-linecap="round"/>
+    ${pair(top+h*.7,.3)}${h>50?pair(top+h*.35,.7):''}
+    <circle cx="${80+bend}" cy="${top}" r="${(flower?11:6)*sc}" fill="${flower?'#FFC531':leaf}" stroke="#453A4E" stroke-width="3"/>
+    <rect x="38" y="142" width="84" height="14" rx="4" fill="${soil}" stroke="#453A4E" stroke-width="3"/>
+    ${cracks}
     <path d="M45 156 h70 l-8 34 h-54 z" fill="#FF7E67" stroke="#453A4E" stroke-width="3" stroke-linejoin="round"/>
   </svg>`;
 }
 function renderPlant(k,day){
   const P=PLANT[k],d=Math.max(day,0);
-  document.getElementById('plant'+k).innerHTML=plantSVG(P.h[d],day<0?0:P.t[d],k==='B'&&day===0,k==='A'&&day===6);
-  document.getElementById('strip'+k).innerHTML=DAYS.map((n,i)=>
+  document.getElementById('plant'+k).innerHTML=plantSVG(P.h[d],day<0?0:P.t[d],day<0?0:(P.p?P.p[d]:0),k==='A'&&day===6,k==='A'?1.3:1);
+  document.getElementById('strip'+k).innerHTML=DAYS.map((n,i)=>k==='B'&&i>0?'':
     `<div class="dcell${i===day?' on':''}">${n.slice(0,3)}<b>${i<=day&&P.w[i]?`<i data-lucide="droplet"></i>${P.w[i]}`:''}</b></div>`).join('');
 }
 renderPlant('A',-1);renderPlant('B',-1);window.lucide&&lucide.createIcons();

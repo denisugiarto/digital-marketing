@@ -37,7 +37,7 @@
   .navbar-bg{display:none;position:fixed;left:0;right:0;bottom:0;height:calc(76px + env(safe-area-inset-bottom,0px));z-index:55;background:rgba(253,247,239,.94);border-top:3px solid var(--ink);backdrop-filter:blur(6px)}
 
   /* ===== SLIDES ===== */
-  .slide{position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;opacity:0;visibility:hidden;transform:translateX(46px);transition:opacity .5s ease,transform .55s cubic-bezier(.22,.9,.32,1),visibility .5s;overflow:hidden;padding:56px 40px 100px}
+  .slide{position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;opacity:0;visibility:hidden;transform:translateX(46px);transition:opacity .5s ease,transform .55s cubic-bezier(.22,.9,.32,1),visibility .5s;overflow-y:auto;overflow-x:hidden;padding:56px 40px 100px}
   .slide.active{opacity:1;visibility:visible;transform:none;z-index:5}
   .slide::before,.slide::after{content:'';position:absolute;border-radius:50%;z-index:0}
   .slide::before{width:44vw;height:44vw;top:-20vw;right:-14vw;background:var(--bA);opacity:.75}
@@ -515,6 +515,33 @@
     .cb-checks{grid-template-columns:1fr}
     .hs-grid{grid-template-columns:1fr}
   }
+
+  /* ===== FOTO CONTOH (Unsplash) ===== */
+  .foto-stack{display:grid;gap:16px;min-width:0}
+  .foto-fig{margin:0;min-width:0;max-width:100%;background:#fff;border:3px solid var(--ink);border-radius:20px;box-shadow:var(--shadow);overflow:hidden}
+  .foto-fig img{display:block;width:100%;height:clamp(104px,19vh,176px);object-fit:cover}
+  .foto-fig figcaption{padding:7px 14px;border-top:3px solid var(--ink);background:var(--butter2);font-weight:700;font-size:13px;line-height:1.35}
+  .foto-fig.mb{margin-bottom:16px}
+  .agenda-row{margin-top:30px;display:flex;gap:36px;align-items:center}
+  .agenda-row .goal-list{margin-top:0;flex:1 1 auto;min-width:0}
+  .agenda-row .foto-fig{flex:0 0 300px}
+  .agenda-row .foto-fig img{height:auto;aspect-ratio:4/3}
+  .agenda-row .foto-fig.port{flex-basis:250px}
+  .agenda-row .foto-fig.port img{aspect-ratio:3/4}
+  @media (max-width:960px){
+    .agenda-row{flex-direction:column;align-items:stretch;gap:16px;margin-top:20px}
+    .agenda-row .foto-fig,.agenda-row .foto-fig.port{flex:0 0 auto;width:100%}
+    .agenda-row .foto-fig img,.agenda-row .foto-fig.port img{height:clamp(96px,16vh,140px);aspect-ratio:auto}
+  }
+  .art-foto{gap:14px}
+  .art-foto svg{width:min(250px,100%)!important}
+  .art-foto .foto-fig{width:min(380px,100%)}
+  @media (max-width:640px){
+    .foto-fig{border-radius:16px;box-shadow:4px 4px 0 var(--ink)}
+    .foto-fig img{height:clamp(96px,16vh,130px)}
+    .foto-fig figcaption{padding:6px 11px;font-size:12px}
+    .art-foto svg{width:min(190px,100%)!important}
+  }
 </style>
 </head>
 <body>
@@ -577,7 +604,8 @@
   <div class="wrap">
     <span class="kicker anim" style="--d:0"><i data-lucide="map"></i> Rencana Belajar Hari Ini</span>
     <h2 class="title anim" style="--d:1">Hari ini kita akan...</h2>
-    <div class="goal-list">
+    <div class="agenda-row">
+      <div class="goal-list">
       <div class="goal anim" style="--d:2">
         <div class="gnum g1">1</div>
         <div><h3>Kenal Rumus 3K</h3><p>Kait, Kasih Nilai, Kasih Ajakan: tiga bagian caption yang bikin orang membeli.</p></div>
@@ -594,6 +622,8 @@
         <div class="gnum g4">4</div>
         <div><h3>Pilih Hashtag yang Tepat</h3><p>Sedikit, nyambung, dan jujur. Misi akhir: 3 caption untuk foto produk dari Pertemuan 5.</p></div>
       </div>
+    </div>
+    <figure class="foto-fig port anim" style="--d:3"><img src="assets/foto/caption-kamera-hp.jpg" alt="Tangan memegang ponsel dengan layar kamera yang sedang membidik tanaman hijau" loading="lazy" style="object-position:50% 50%"><figcaption>Foto produkmu siap diberi caption.</figcaption></figure>
     </div>
   </div>
 </section>
@@ -649,6 +679,8 @@
         terakhir <b>mengajak</b>: "Ayo, mampir dulu!" Caption bekerja dengan cara yang sama.</p>
       </div>
     </div>
+    <div class="foto-stack">
+      <figure class="foto-fig anim" style="--d:3"><img src="assets/foto/caption-foto-ke-caption.jpg" alt="Tangan memegang ponsel yang menampilkan foto secangkir kopi di atas meja kayu" loading="lazy" style="object-position:50% 52%"><figcaption>Foto menarik dulu, lalu caption yang membuatnya bermakna.</figcaption></figure>
     <div class="k3-card anim" style="--d:3">
       <h4><i data-lucide="message-square-text"></i> Contoh caption Es Teh Jumbo</h4>
       <div class="k3-row"><span class="k3-tag" style="background:var(--peach2)"><i data-lucide="magnet"></i> K1 · Kait</span>
@@ -657,6 +689,7 @@
         <p>"Gelas 700 ml, esnya dari air matang. Segar sampai jam pulang."<small>Manfaat yang jujur untuk pembeli.</small></p></div>
       <div class="k3-row"><span class="k3-tag" style="background:var(--butter2)"><i data-lucide="megaphone"></i> K3 · Kasih Ajakan</span>
         <p>"Mampir ke stan kami di depan gerbang, ya!"<small>Kasih tahu pembeli harus melakukan apa.</small></p></div>
+    </div>
     </div>
   </div></div>
 </section>

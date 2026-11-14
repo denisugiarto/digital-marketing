@@ -37,7 +37,7 @@
   .navbar-bg{display:none;position:fixed;left:0;right:0;bottom:0;height:calc(76px + env(safe-area-inset-bottom,0px));z-index:55;background:rgba(253,247,239,.94);border-top:3px solid var(--ink);backdrop-filter:blur(6px)}
 
   /* ===== SLIDES ===== */
-  .slide{position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;opacity:0;visibility:hidden;transform:translateX(46px);transition:opacity .5s ease,transform .55s cubic-bezier(.22,.9,.32,1),visibility .5s;overflow:hidden;padding:56px 40px 100px}
+  .slide{position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;opacity:0;visibility:hidden;transform:translateX(46px);transition:opacity .5s ease,transform .55s cubic-bezier(.22,.9,.32,1),visibility .5s;overflow-y:auto;overflow-x:hidden;padding:56px 40px 100px}
   .slide.active{opacity:1;visibility:visible;transform:none;z-index:5}
   .slide::before,.slide::after{content:'';position:absolute;border-radius:50%;z-index:0}
   .slide::before{width:44vw;height:44vw;top:-20vw;right:-14vw;background:var(--bA);opacity:.75}
@@ -527,6 +527,11 @@
     .fld2{grid-template-columns:1fr}
     .checks{grid-template-columns:1fr}
   }
+  /* ===== FOTO CONTOH ===== */
+  .pfig{margin:18px 0 0;min-width:0;max-width:100%;background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+  .pfig img{display:block;width:100%;aspect-ratio:16/9;max-height:230px;object-fit:cover}
+  .pfig figcaption{padding:8px 14px;border-top:3px solid var(--ink);font-size:13.5px;font-weight:600;line-height:1.45}
+  @media (max-width:640px){.pfig{margin-top:14px;border-radius:14px}.pfig img{aspect-ratio:16/10}.pfig figcaption{padding:7px 12px;font-size:12.5px}}
 </style>
 </head>
 <body>
@@ -660,6 +665,7 @@
         <div><h3>Ajakan</h3><p>Apa yang harus dilakukan pembeli: datang, pesan, atau tanya.</p></div></div>
       <div class="ord anim" style="--d:4.5"><span class="on" style="width:38px;height:38px;font-size:16px;background:var(--lav2)">4</span>
         <div><h3>Info Tambahan</h3><p>Jam buka, lokasi, akun usaha. Kecil saja, tapi tetap terbaca.</p></div></div>
+      <figure class="pfig anim" style="--d:4;margin-top:6px"><img src="assets/foto/papan-pengumuman.jpg" alt="Papan pengumuman penuh poster dan selebaran warna-warni yang ditempel berdekatan" loading="lazy"><figcaption>Di dunia nyata, poster bersaing dengan puluhan poster lain. Hanya yang hierarkinya jelas yang dilirik lebih dulu.</figcaption></figure>
     </div>
   </div></div>
 </section>
@@ -751,6 +757,7 @@
             <div class="p-c" id="pbCc"><i data-lucide="megaphone"></i><span></span></div>
           </div>
         </div>
+        <figure class="pfig anim" style="--d:4;max-width:420px;margin:16px auto 0"><img src="assets/foto/meja-desainer.jpg" alt="Meja desainer dari atas: laptop, papan gambar digital, contoh palet warna, dan spidol berwarna" loading="lazy" style="max-height:150px"><figcaption>Desainer menyusun poster di layar sambil memilih warna dari contoh palet.</figcaption></figure>
       </div>
     </div>
   </div>

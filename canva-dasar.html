@@ -37,7 +37,7 @@
   .navbar-bg{display:none;position:fixed;left:0;right:0;bottom:0;height:calc(76px + env(safe-area-inset-bottom,0px));z-index:55;background:rgba(253,247,239,.94);border-top:3px solid var(--ink);backdrop-filter:blur(6px)}
 
   /* ===== SLIDES ===== */
-  .slide{position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;opacity:0;visibility:hidden;transform:translateX(46px);transition:opacity .5s ease,transform .55s cubic-bezier(.22,.9,.32,1),visibility .5s;overflow:hidden;padding:56px 40px 100px}
+  .slide{position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;opacity:0;visibility:hidden;transform:translateX(46px);transition:opacity .5s ease,transform .55s cubic-bezier(.22,.9,.32,1),visibility .5s;overflow-y:auto;overflow-x:hidden;padding:56px 40px 100px}
   .slide.active{opacity:1;visibility:visible;transform:none;z-index:5}
   .slide::before,.slide::after{content:'';position:absolute;border-radius:50%;z-index:0}
   .slide::before{width:44vw;height:44vw;top:-20vw;right:-14vw;background:var(--bA);opacity:.75}
@@ -541,6 +541,11 @@
     .kn-card .k-c{font-size:11.5px;margin-top:6px}
     .messy{height:400px}
   }
+  /* ===== FOTO CONTOH ===== */
+  .pfig{margin:18px 0 0;min-width:0;max-width:100%;background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+  .pfig img{display:block;width:100%;aspect-ratio:16/9;max-height:230px;object-fit:cover}
+  .pfig figcaption{padding:8px 14px;border-top:3px solid var(--ink);font-size:13.5px;font-weight:600;line-height:1.45}
+  @media (max-width:640px){.pfig{margin-top:14px;border-radius:14px}.pfig img{aspect-ratio:16/10}.pfig figcaption{padding:7px 12px;font-size:12.5px}}
 </style>
 </head>
 <body>
@@ -680,6 +685,7 @@
         <span class="ri" style="background:var(--lav2)"><i data-lucide="maximize"></i></span>
         <div><h3>Ruang Kosong</h3><p>Beri jarak di tepi dan di antara tulisan. Mata butuh "napas".</p></div>
       </div>
+      <figure class="pfig anim" style="--d:4;margin-top:0"><img src="assets/foto/meja-desainer.jpg" alt="Meja desainer dari atas: laptop, papan gambar digital, contoh palet warna, dan spidol berwarna" loading="lazy"><figcaption>Desainer memilih warna dari contoh palet sebelum memakainya di layar.</figcaption></figure>
     </div>
   </div></div>
 </section>
@@ -745,6 +751,7 @@
           <div class="t3">Rp3.000</div>
         </div>
         <div class="same"><i data-lucide="lightbulb"></i><span><b>Rumus gampang:</b> warna <b>terang</b> berpasangan dengan warna <b>gelap</b>. Terang + terang atau gelap + gelap biasanya susah dibaca.</span></div>
+        <figure class="pfig anim" style="--d:4"><img src="assets/foto/papan-poster.jpg" alt="Dinding papan pengumuman penuh poster dengan warna dan huruf yang berbeda-beda" loading="lazy"><figcaption>Poster mana yang paling mudah dibaca dari jauh? Biasanya yang warna tulisannya kontras dengan latarnya.</figcaption></figure>
       </div>
     </div>
   </div>
